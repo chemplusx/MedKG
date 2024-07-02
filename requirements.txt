@@ -1,0 +1,2 @@
+neo4j==5.20.0
+nebula3-python==3.5.0

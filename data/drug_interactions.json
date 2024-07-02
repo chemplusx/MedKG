@@ -1,0 +1,452 @@
+[
+    {
+        "drugbank_id": "DB00001",
+        "drug_name": "Lepirudin",
+        "targets": [
+            {
+                "target_name": "Prothrombin",
+                "action": "inhibitor",
+                "general_function": "Thrombospondin receptor activity",
+                "specific_function": "Thrombin, which cleaves bonds after Arg and Lys, converts fibrinogen to fibrin and activates factors V, VII, VIII, XIII, and, in complex with thrombomodulin, protein C. Functions in blood homeostasis, inflammation and wound healing.",
+                "polypeptide_id": "P00734",
+                "gene_name": "F2",
+                "organism": "Humans",
+                "known_action": "",
+                "uniprot_accession": "THRB_HUMAN",
+                "Molecular_Weight": "70036.295",
+                "Isoelectric_Point": "5.7"
+            }
+        ],
+        "enzymes": [],
+        "carriers": [],
+        "transporters": []
+    },
+    {
+        "drugbank_id": "DB00002",
+        "drug_name": "Cetuximab",
+        "targets": [
+            {
+                "target_name": "Epidermal growth factor receptor",
+                "action": "binder",
+                "general_function": "Ubiquitin protein ligase binding",
+                "specific_function": "Receptor tyrosine kinase binding ligands of the EGF family and activating several signaling cascades to convert extracellular cues into appropriate cellular responses. Known ligands include EGF, TGFA/TGF-alpha, amphiregulin, epigen/EPGN, BTC/betacellulin, epiregulin/EREG and HBEGF/heparin-binding EGF. Ligand binding triggers receptor homo- and/or heterodimerization and autophosphorylation on key cytoplasmic residues. The phosphorylated receptor recruits adapter proteins like GRB2 which in turn activates complex downstream signaling cascades. Activates at least 4 major downstream signaling cascades including the RAS-RAF-MEK-ERK, PI3 kinase-AKT, PLCgamma-PKC and STATs modules. May also activate the NF-kappa-B signaling cascade. Also directly phosphorylates other proteins like RGS16, activating its GTPase activity and probably coupling the EGF receptor signaling to the G protein-coupled receptor signaling. Also phosphorylates MUC1 and increases its interaction with SRC and CTNNB1/beta-catenin.Isoform 2 may act as an antagonist of EGF action.",
+                "polypeptide_id": "P00533",
+                "gene_name": "EGFR",
+                "organism": "Humans",
+                "known_action": "",
+                "uniprot_accession": "EGFR_HUMAN",
+                "Molecular_Weight": "134276.185",
+                "Isoelectric_Point": "6.67"
+            },
+            {
+                "target_name": "Low affinity immunoglobulin gamma Fc region receptor III-B",
+                "action": "binder",
+                "general_function": null,
+                "specific_function": "Receptor for the Fc region of immunoglobulins gamma. Low affinity receptor. Binds complexed or aggregated IgG and also monomeric IgG. Contrary to III-A, is not capable to mediate antibody-dependent cytotoxicity and phagocytosis. May serve as a trap for immune complexes in the peripheral circulation which does not activate neutrophils.",
+                "polypeptide_id": "O75015",
+                "gene_name": "FCGR3B",
+                "organism": "Humans",
+                "known_action": "",
+                "uniprot_accession": "FCG3B_HUMAN",
+                "Molecular_Weight": "26215.64",
+                "Isoelectric_Point": "6.71"
+            },
+            {
+                "target_name": "Complement C1q subcomponent subunit A",
+                "action": "binder",
+                "general_function": null,
+                "specific_function": "C1q associates with the proenzymes C1r and C1s to yield C1, the first component of the serum complement system. The collagen-like regions of C1q interact with the Ca(2+)-dependent C1r(2)C1s(2) proenzyme complex, and efficient activation of C1 takes place on interaction of the globular heads of C1q with the Fc regions of IgG or IgM antibody present in immune complexes.",
+                "polypeptide_id": "P02745",
+                "gene_name": "C1QA",
+                "organism": "Humans",
+                "known_action": "",
+                "uniprot_accession": "C1QA_HUMAN",
+                "Molecular_Weight": "26016.47",
+                "Isoelectric_Point": "9.45"
+            },
+            {
+                "target_name": "Complement C1q subcomponent subunit B",
+                "action": "binder",
+                "general_function": null,
+                "specific_function": "C1q associates with the proenzymes C1r and C1s to yield C1, the first component of the serum complement system. The collagen-like regions of C1q interact with the Ca(2+)-dependent C1r(2)C1s(2) proenzyme complex, and efficient activation of C1 takes place on interaction of the globular heads of C1q with the Fc regions of IgG or IgM antibody present in immune complexes.",
+                "polypeptide_id": "P02746",
+                "gene_name": "C1QB",
+                "organism": "Humans",
+                "known_action": "",
+                "uniprot_accession": "C1QB_HUMAN",
+                "Molecular_Weight": "26721.62",
+                "Isoelectric_Point": "8.87"
+            },
+            {
+                "target_name": "Complement C1q subcomponent subunit C",
+                "action": "binder",
+                "general_function": null,
+                "specific_function": "C1q associates with the proenzymes C1r and C1s to yield C1, the first component of the serum complement system. The collagen-like regions of C1q interact with the Ca(2+)-dependent C1r(2)C1s(2) proenzyme complex, and efficient activation of C1 takes place on interaction of the globular heads of C1q with the Fc regions of IgG or IgM antibody present in immune complexes.",
+                "polypeptide_id": "P02747",
+                "gene_name": "C1QC",
+                "organism": "Humans",
+                "known_action": "",
+                "uniprot_accession": "C1QC_HUMAN",
+                "Molecular_Weight": "25773.56",
+                "Isoelectric_Point": "8.58"
+            },
+            {
+                "target_name": "Low affinity immunoglobulin gamma Fc region receptor III-A",
+                "action": "binder",
+                "general_function": null,
+                "specific_function": "Receptor for the Fc region of IgG. Binds complexed or aggregated IgG and also monomeric IgG. Mediates antibody-dependent cellular cytotoxicity (ADCC) and other antibody-dependent responses, such as phagocytosis.",
+                "polypeptide_id": "P08637",
+                "gene_name": "FCGR3A",
+                "organism": "Humans",
+                "known_action": "",
+                "uniprot_accession": "FCG3A_HUMAN",
+                "Molecular_Weight": "29088.895",
+                "Isoelectric_Point": "8.21"
+            },
+            {
+                "target_name": "High affinity immunoglobulin gamma Fc receptor I",
+                "action": "binder",
+                "general_function": "Receptor signaling protein activity",
+                "specific_function": "High affinity receptor for the Fc region of immunoglobulins gamma. Functions in both innate and adaptive immune responses.",
+                "polypeptide_id": "P12314",
+                "gene_name": "FCGR1A",
+                "organism": "Humans",
+                "known_action": "",
+                "uniprot_accession": "FCGR1_HUMAN",
+                "Molecular_Weight": "42631.525",
+                "Isoelectric_Point": "8.08"
+            },
+            {
+                "target_name": "Low affinity immunoglobulin gamma Fc region receptor II-a",
+                "action": "binder",
+                "general_function": null,
+                "specific_function": "Binds to the Fc region of immunoglobulins gamma. Low affinity receptor. By binding to IgG it initiates cellular responses against pathogens and soluble antigens. Promotes phagocytosis of opsonized antigens.",
+                "polypeptide_id": "P12318",
+                "gene_name": "FCGR2A",
+                "organism": "Humans",
+                "known_action": "",
+                "uniprot_accession": "FCG2A_HUMAN",
+                "Molecular_Weight": "35000.42",
+                "Isoelectric_Point": "6.78"
+            }
+        ],
+        "enzymes": [],
+        "carriers": [],
+        "transporters": []
+    },
+    {
+        "drugbank_id": "DB00003",
+        "drug_name": "Dornase alfa",
+        "targets": [],
+        "enzymes": [],
+        "carriers": [],
+        "transporters": []
+    },
+    {
+        "drugbank_id": "DB00004",
+        "drug_name": "Denileukin diftitox",
+        "targets": [
+            {
+                "target_name": "Interleukin-2 receptor subunit alpha",
+                "action": "binder",
+                "general_function": "Interleukin-2 receptor activity",
+                "specific_function": "Receptor for interleukin-2. The receptor is involved in the regulation of immune tolerance by controlling regulatory T cells (TREGs) activity. TREGs suppress the activation and expansion of autoreactive T cells.",
+                "polypeptide_id": "P01589",
+                "gene_name": "IL2RA",
+                "organism": "Humans",
+                "known_action": "",
+                "uniprot_accession": "IL2RA_HUMAN",
+                "Molecular_Weight": "30818.915",
+                "Isoelectric_Point": "6.49"
+            },
+            {
+                "target_name": "Interleukin-2 receptor subunit beta",
+                "action": "agonist",
+                "general_function": "Interleukin-2 receptor activity",
+                "specific_function": "Receptor for interleukin-2. This beta subunit is involved in receptor mediated endocytosis and transduces the mitogenic signals of IL2.",
+                "polypeptide_id": "P14784",
+                "gene_name": "IL2RB",
+                "organism": "Humans",
+                "known_action": "",
+                "uniprot_accession": "IL2RB_HUMAN",
+                "Molecular_Weight": "61116.59",
+                "Isoelectric_Point": "4.68"
+            },
+            {
+                "target_name": "Cytokine receptor common subunit gamma",
+                "action": "",
+                "general_function": "Interleukin-2 binding",
+                "specific_function": "Common subunit for the receptors for a variety of interleukins.",
+                "polypeptide_id": "P31785",
+                "gene_name": "IL2RG",
+                "organism": "Humans",
+                "known_action": "",
+                "uniprot_accession": "IL2RG_HUMAN",
+                "Molecular_Weight": "42286.68",
+                "Isoelectric_Point": "6.31"
+            }
+        ],
+        "enzymes": [],
+        "carriers": [],
+        "transporters": []
+    },
+    {
+        "drugbank_id": "DB00005",
+        "drug_name": "Etanercept",
+        "targets": [
+            {
+                "target_name": "Tumor necrosis factor",
+                "action": "inhibitor",
+                "general_function": "Tumor necrosis factor receptor binding",
+                "specific_function": "Cytokine that binds to TNFRSF1A/TNFR1 and TNFRSF1B/TNFBR. It is mainly secreted by macrophages and can induce cell death of certain tumor cell lines. It is potent pyrogen causing fever by direct action or by stimulation of interleukin-1 secretion and is implicated in the induction of cachexia, Under certain conditions it can stimulate cell proliferation and induce cell differentiation. Impairs regulatory T-cells (Treg) function in individuals with rheumatoid arthritis via FOXP3 dephosphorylation. Upregulates the expression of protein phosphatase 1 (PP1), which dephosphorylates the key 'Ser-418' residue of FOXP3, thereby inactivating FOXP3 and rendering Treg cells functionally defective (PubMed:23396208). Key mediator of cell death in the anticancer action of BCG-stimulated neutrophils in combination with DIABLO/SMAC mimetic in the RT4v6 bladder cancer cell line (PubMed:22517918).The TNF intracellular domain (ICD) form induces IL12 production in dendritic cells.",
+                "polypeptide_id": "P01375",
+                "gene_name": "TNF",
+                "organism": "Humans",
+                "known_action": "",
+                "uniprot_accession": "TNFA_HUMAN",
+                "Molecular_Weight": "25644.15",
+                "Isoelectric_Point": "6.92"
+            },
+            {
+                "target_name": "Lymphotoxin-alpha",
+                "action": "antibody",
+                "general_function": "Receptor binding",
+                "specific_function": "Cytokine that in its homotrimeric form binds to TNFRSF1A/TNFR1, TNFRSF1B/TNFBR and TNFRSF14/HVEM. In its heterotrimeric form with LTB binds to TNFRSF3/LTBR. Lymphotoxin is produced by lymphocytes and cytotoxic for a wide range of tumor cells in vitro and in vivo.",
+                "polypeptide_id": "P01374",
+                "gene_name": "LTA",
+                "organism": "Humans",
+                "known_action": "",
+                "uniprot_accession": "TNFB_HUMAN",
+                "Molecular_Weight": "22296.57",
+                "Isoelectric_Point": "9.36"
+            },
+            {
+                "target_name": "High affinity immunoglobulin gamma Fc receptor I",
+                "action": "ligand",
+                "general_function": "Receptor signaling protein activity",
+                "specific_function": "High affinity receptor for the Fc region of immunoglobulins gamma. Functions in both innate and adaptive immune responses.",
+                "polypeptide_id": "P12314",
+                "gene_name": "FCGR1A",
+                "organism": "Humans",
+                "known_action": "",
+                "uniprot_accession": "FCGR1_HUMAN",
+                "Molecular_Weight": "42631.525",
+                "Isoelectric_Point": "8.08"
+            },
+            {
+                "target_name": "Low affinity immunoglobulin gamma Fc region receptor II-a",
+                "action": "ligand",
+                "general_function": null,
+                "specific_function": "Binds to the Fc region of immunoglobulins gamma. Low affinity receptor. By binding to IgG it initiates cellular responses against pathogens and soluble antigens. Promotes phagocytosis of opsonized antigens.",
+                "polypeptide_id": "P12318",
+                "gene_name": "FCGR2A",
+                "organism": "Humans",
+                "known_action": "",
+                "uniprot_accession": "FCG2A_HUMAN",
+                "Molecular_Weight": "35000.42",
+                "Isoelectric_Point": "6.78"
+            },
+            {
+                "target_name": "Low affinity immunoglobulin gamma Fc region receptor II-b",
+                "action": "ligand",
+                "general_function": null,
+                "specific_function": "Receptor for the Fc region of complexed or aggregated immunoglobulins gamma. Low affinity receptor. Involved in a variety of effector and regulatory functions such as phagocytosis of immune complexes and modulation of antibody production by B-cells. Binding to this receptor results in down-modulation of previous state of cell activation triggered via antigen receptors on B-cells (BCR), T-cells (TCR) or via another Fc receptor. Isoform IIB1 fails to mediate endocytosis or phagocytosis. Isoform IIB2 does not trigger phagocytosis.",
+                "polypeptide_id": "P31994",
+                "gene_name": "FCGR2B",
+                "organism": "Humans",
+                "known_action": "",
+                "uniprot_accession": "FCG2B_HUMAN",
+                "Molecular_Weight": "34043.355",
+                "Isoelectric_Point": "6.12"
+            },
+            {
+                "target_name": "Low affinity immunoglobulin gamma Fc region receptor II-c",
+                "action": "ligand",
+                "general_function": "Transmembrane signaling receptor activity",
+                "specific_function": "Receptor for the Fc region of complexed immunoglobulins gamma. Low affinity receptor. Involved in a variety of effector and regulatory functions such as phagocytosis of immune complexes and modulation of antibody production by B-cells.",
+                "polypeptide_id": "P31995",
+                "gene_name": "FCGR2C",
+                "organism": "Humans",
+                "known_action": "",
+                "uniprot_accession": "FCG2C_HUMAN",
+                "Molecular_Weight": "35577.96",
+                "Isoelectric_Point": "6.9"
+            },
+            {
+                "target_name": "Low affinity immunoglobulin gamma Fc region receptor III-A",
+                "action": "ligand",
+                "general_function": null,
+                "specific_function": "Receptor for the Fc region of IgG. Binds complexed or aggregated IgG and also monomeric IgG. Mediates antibody-dependent cellular cytotoxicity (ADCC) and other antibody-dependent responses, such as phagocytosis.",
+                "polypeptide_id": "P08637",
+                "gene_name": "FCGR3A",
+                "organism": "Humans",
+                "known_action": "",
+                "uniprot_accession": "FCG3A_HUMAN",
+                "Molecular_Weight": "29088.895",
+                "Isoelectric_Point": "8.21"
+            },
+            {
+                "target_name": "Low affinity immunoglobulin gamma Fc region receptor III-B",
+                "action": "ligand",
+                "general_function": null,
+                "specific_function": "Receptor for the Fc region of immunoglobulins gamma. Low affinity receptor. Binds complexed or aggregated IgG and also monomeric IgG. Contrary to III-A, is not capable to mediate antibody-dependent cytotoxicity and phagocytosis. May serve as a trap for immune complexes in the peripheral circulation which does not activate neutrophils.",
+                "polypeptide_id": "O75015",
+                "gene_name": "FCGR3B",
+                "organism": "Humans",
+                "known_action": "",
+                "uniprot_accession": "FCG3B_HUMAN",
+                "Molecular_Weight": "26215.64",
+                "Isoelectric_Point": "6.71"
+            },
+            {
+                "target_name": "Complement component 1q (C1q)",
+                "action": "ligand",
+                "general_function": null,
+                "specific_function": "C1q associates with the proenzymes C1r and C1s to yield C1, the first component of the serum complement system. The collagen-like regions of C1q interact with the Ca(2+)-dependent C1r(2)C1s(2) proenzyme complex, and efficient activation of C1 takes place on interaction of the globular heads of C1q with the Fc regions of IgG or IgM antibody present in immune complexes.",
+                "polypeptide_id": "P02745",
+                "gene_name": "C1QA",
+                "organism": "Humans",
+                "known_action": "",
+                "uniprot_accession": "C1QA_HUMAN",
+                "Molecular_Weight": "26016.47",
+                "Isoelectric_Point": "9.45"
+            },
+            {
+                "target_name": "Complement component 1q (C1q)",
+                "action": "ligand",
+                "general_function": null,
+                "specific_function": "C1q associates with the proenzymes C1r and C1s to yield C1, the first component of the serum complement system. The collagen-like regions of C1q interact with the Ca(2+)-dependent C1r(2)C1s(2) proenzyme complex, and efficient activation of C1 takes place on interaction of the globular heads of C1q with the Fc regions of IgG or IgM antibody present in immune complexes.",
+                "polypeptide_id": "P02746",
+                "gene_name": "C1QB",
+                "organism": "Humans",
+                "known_action": "",
+                "uniprot_accession": "C1QB_HUMAN",
+                "Molecular_Weight": "26721.62",
+                "Isoelectric_Point": "8.87"
+            },
+            {
+                "target_name": "Complement component 1q (C1q)",
+                "action": "ligand",
+                "general_function": null,
+                "specific_function": "C1q associates with the proenzymes C1r and C1s to yield C1, the first component of the serum complement system. The collagen-like regions of C1q interact with the Ca(2+)-dependent C1r(2)C1s(2) proenzyme complex, and efficient activation of C1 takes place on interaction of the globular heads of C1q with the Fc regions of IgG or IgM antibody present in immune complexes.",
+                "polypeptide_id": "P02747",
+                "gene_name": "C1QC",
+                "organism": "Humans",
+                "known_action": "",
+                "uniprot_accession": "C1QC_HUMAN",
+                "Molecular_Weight": "25773.56",
+                "Isoelectric_Point": "8.58"
+            }
+        ],
+        "enzymes": [],
+        "carriers": [],
+        "transporters": []
+    },
+    {
+        "drugbank_id": "DB00006",
+        "drug_name": "Bivalirudin",
+        "targets": [
+            {
+                "target_name": "Prothrombin",
+                "action": "inhibitor",
+                "general_function": "Thrombospondin receptor activity",
+                "specific_function": "Thrombin, which cleaves bonds after Arg and Lys, converts fibrinogen to fibrin and activates factors V, VII, VIII, XIII, and, in complex with thrombomodulin, protein C. Functions in blood homeostasis, inflammation and wound healing.",
+                "polypeptide_id": "P00734",
+                "gene_name": "F2",
+                "organism": "Humans",
+                "known_action": "",
+                "uniprot_accession": "THRB_HUMAN",
+                "Molecular_Weight": "70036.295",
+                "Isoelectric_Point": "5.7"
+            }
+        ],
+        "enzymes": [
+            {
+                "target_name": "Myeloperoxidase",
+                "action": "inhibitor",
+                "general_function": "Peroxidase activity",
+                "specific_function": "Part of the host defense system of polymorphonuclear leukocytes. It is responsible for microbicidal activity against a wide range of organisms. In the stimulated PMN, MPO catalyzes the production of hypohalous acids, primarily hypochlorous acid in physiologic situations, and other toxic intermediates that greatly enhance PMN microbicidal activity.",
+                "polypeptide_id": "P05164",
+                "gene_name": "MPO",
+                "organism": "Humans",
+                "known_action": "",
+                "uniprot_accession": "PERM_HUMAN",
+                "Molecular_Weight": "83867.71",
+                "Isoelectric_Point": "9.14"
+            }
+        ],
+        "carriers": [],
+        "transporters": []
+    },
+    {
+        "drugbank_id": "DB00007",
+        "drug_name": "Leuprolide",
+        "targets": [
+            {
+                "target_name": "Gonadotropin-releasing hormone receptor",
+                "action": "agonist",
+                "general_function": "Peptide binding",
+                "specific_function": "Receptor for gonadotropin releasing hormone (GnRH) that mediates the action of GnRH to stimulate the secretion of the gonadotropic hormones luteinizing hormone (LH) and follicle-stimulating hormone (FSH). This receptor mediates its action by association with G-proteins that activate a phosphatidylinositol-calcium second messenger system. Isoform 2 may act as an inhibitor of GnRH-R signaling.",
+                "polypeptide_id": "P30968",
+                "gene_name": "GNRHR",
+                "organism": "Humans",
+                "known_action": "",
+                "uniprot_accession": "GNRHR_HUMAN",
+                "Molecular_Weight": "37730.355",
+                "Isoelectric_Point": "9.93"
+            }
+        ],
+        "enzymes": [],
+        "carriers": [],
+        "transporters": []
+    },
+    {
+        "drugbank_id": "DB00008",
+        "drug_name": "Peginterferon alfa-2a",
+        "targets": [
+            {
+                "target_name": "Interferon alpha/beta receptor 2",
+                "action": "agonist",
+                "general_function": "Type i interferon receptor activity",
+                "specific_function": "Associates with IFNAR1 to form the type I interferon receptor. Receptor for interferons alpha and beta. Involved in IFN-mediated STAT1, STAT2 and STAT3 activation. Isoform 1 and isoform 2 are directly involved in signal transduction due to their association with the TYR kinase, JAK1. Isoform 3 is a potent inhibitor of type I IFN receptor activity.",
+                "polypeptide_id": "P48551",
+                "gene_name": "IFNAR2",
+                "organism": "Humans",
+                "known_action": "",
+                "uniprot_accession": "INAR2_HUMAN",
+                "Molecular_Weight": "57758.24",
+                "Isoelectric_Point": "4.11"
+            },
+            {
+                "target_name": "Interferon alpha/beta receptor 1",
+                "action": "agonist",
+                "general_function": "Type i interferon receptor activity",
+                "specific_function": "Associates with IFNAR2 to form the type I interferon receptor. Receptor for interferons alpha and beta. Binding to type I IFNs triggers tyrosine phosphorylation of a number of proteins including JAKs, TYK2, STAT proteins and IFNR alpha- and beta-subunits themselves. Can also transduce IFNB signals without the help of IFNAR2, and not activating the Jak-STAT pathway.",
+                "polypeptide_id": "P17181",
+                "gene_name": "IFNAR1",
+                "organism": "Humans",
+                "known_action": "",
+                "uniprot_accession": "INAR1_HUMAN",
+                "Molecular_Weight": "63524.81",
+                "Isoelectric_Point": "5.56"
+            }
+        ],
+        "enzymes": [
+            {
+                "target_name": "Cytochrome P450 1A2",
+                "action": "inhibitor",
+                "general_function": "Oxidoreductase activity, acting on paired donors, with incorporation or reduction of molecular oxygen, reduced flavin or flavoprotein as one donor, and incorporation of one atom of oxygen",
+                "specific_function": "Cytochromes P450 are a group of heme-thiolate monooxygenases. In liver microsomes, this enzyme is involved in an NADPH-dependent electron transport pathway. It oxidizes a variety of structurally unrelated compounds, including steroids, fatty acids, and xenobiotics. Most active in catalyzing 2-hydroxylation. Caffeine is metabolized primarily by cytochrome CYP1A2 in the liver through an initial N3-demethylation. Also acts in the metabolism of aflatoxin B1 and acetaminophen. Participates in the bioactivation of carcinogenic aromatic and heterocyclic amines. Catalizes the N-hydroxylation of heterocyclic amines and the O-deethylation of phenacetin.",
+                "polypeptide_id": "P05177",
+                "gene_name": "CYP1A2",
+                "organism": "Humans",
+                "known_action": "",
+                "uniprot_accession": "CP1A2_HUMAN",
+                "Molecular_Weight": "58293.76",
+                "Isoelectric_Point": "9.43"
+            }
+        ],
+        "carriers": [],
+        "transporters": []
+    }
+]
