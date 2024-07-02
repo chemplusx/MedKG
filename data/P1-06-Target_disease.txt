@@ -1,0 +1,53 @@
+
+TTD - Therapeutic Targets Database Full Data Download File
+Title - TTD targets information in raw format
+Version 10.1.01 (2024.01.10)
+Provided by IDRB   Lab of Innovative Drug Reasearch and Bioinformatics
+                   College of Pharmaceutical Sciences
+                   Zhejiang University
+                   https://idrblab.org/
+Provided by BIDD   BioInformatic and Drug Design Group
+                   Department of Pharmacy
+                   National Unviersity of Singapore
+                   https://bidd.group/
+Any question about data provided here, please contact with:
+Dr. Zhou (zhou_ying@zju.edu.cn) and Dr. Zhang (zhangyintao@zju.edu.cn)
+
+--------------------------------------------------------------------------------------------------------
+Abbreviations:
+TARGETID	TTD Target ID
+TARGNAME	Target Name
+INDICATI	Clinical Status	Disease Entry [ICD-11]
+--------------------------------------------------------------------------------------------------------
+
+T00033	TARGETID	T00033
+T00033	TARGNAME	Transforming growth factor alpha (TGFA)
+T00033	INDICATI	Phase 1/2	Chronic kidney disease	[ICD-11: GB61]
+
+T00039	TARGETID	T00039
+T00039	TARGNAME	CTGF messenger RNA (CTGF mRNA)
+T00039	INDICATI	Phase 2	Fibrosis	[ICD-11: GA14-GC01]
+
+T00043	TARGETID	T00043
+T00043	TARGNAME	HUMAN cyclin G-associated kinase (GAK)
+T00043	INDICATI	Phase 3	COVID-19	[ICD-11: 1D6Y]
+T00043	INDICATI	Approved	Rheumatoid arthritis	[ICD-11: FA20]
+
+T00099	TARGETID	T00099
+T00099	TARGNAME	HUMAN calpain-1/calpain small subunit 1 heterodimer (CAPN1/CAPNS1)
+T00099	INDICATI	Phase 2	COVID-19	[ICD-11: 1D6Y]
+
+T00100	TARGETID	T00100
+T00100	TARGNAME	Ubiquitin-activating enzyme (UBA)
+T00100	INDICATI	Phase 1	Solid tumour/cancer	[ICD-11: 2A00-2F9Z]
+
+T00140	TARGETID	T00140
+T00140	TARGNAME	Arachidonate 5-lipoxygenase (5-LOX)
+T00140	INDICATI	Terminated	Allergic/hypersensitivity disorder	[ICD-11: 4A80-4A8Z]
+T00140	INDICATI	Terminated	Arterial occlusive disease	[ICD-11: BD40]
+T00140	INDICATI	Approved	Asthma	[ICD-11: CA23]
+T00140	INDICATI	Phase 2	Atopic eczema	[ICD-11: EA80]
+T00140	INDICATI	Phase 2	Carcinoid syndrome	[ICD-11: 5B10]
+T00140	INDICATI	Discontinued in Phase 2	Cardiovascular disease	[ICD-11: BA00-BE2Z]
+T00140	INDICATI	Discontinued in Phase 2	Chronic obstructive pulmonary disease	[ICD-11: CA22]
+T00140	INDICATI	Discontinued in Phase 2	Eczema	[ICD-11: EA80-EA89]
