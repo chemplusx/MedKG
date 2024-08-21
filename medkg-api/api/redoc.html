@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>API Documentation</title>
+    <script src="https://cdn.jsdelivr.net/npm/redoc@next/bundles/redoc.standalone.js"></script>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+        #redoc-container {
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div id="redoc-container"></div>
+    <script>
+        Redoc.init('/openapi.yaml', {}, document.getElementById('redoc-container'))
+    </script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Swagger UI</title>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.2.0/swagger-ui.min.css" >
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.2.0/swagger-ui-bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.2.0/swagger-ui-standalone-preset.min.js"></script>
+</head>
+<body>
+    <div id="swagger-ui"></div>
+    <script>
+        const ui = SwaggerUIBundle({
+            url: "/openapi.yaml", // URL to your OpenAPI specification
+            dom_id: '#swagger-ui',
+            presets: [
+                SwaggerUIBundle.presets.apis,
+                SwaggerUIStandalonePreset
+            ],
+            layout: "StandaloneLayout"
+        });
+    </script>
+</body>
+</html>
