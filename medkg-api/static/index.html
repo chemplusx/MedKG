@@ -1,0 +1,385 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Graph Visualization</title>
+    <style>
+        #cy {
+            width: 100%;
+            height: 600px;
+            border: 1px solid #ccc;
+        }
+    </style>
+    <script src="https://unpkg.com/cytoscape/dist/cytoscape.min.js"></script>
+</head>
+<body>
+    <h1>Graph Visualization</h1>
+    <div id="cy"></div>
+
+    <script>
+        // Fetch the graph data from the backend
+        fetch('/nodes/graph?limit=2&term=cancer')
+            .then(response => response.json())
+            .then(data => {
+                // Initialize Cytoscape
+                const cy = cytoscape({
+                    container: document.getElementById('cy'),
+                    elements: data,
+                    style: [
+                     {   
+                            selector: 'node[score]', // Select only nodes with the 'score' attribute
+                            style: {
+                                'background-color': '#666',
+                                'label': 'data(id)',
+                                'width': 'mapData(score, 0, 10, 20, 60)', // Map width based on score
+                                'height': 'mapData(score, 0, 10, 20, 60)', // Map height based on score
+                            }
+                        },
+                        {
+                            selector: 'node',
+                            style: {
+                                'background-color': '#66ff66',
+                                'label': 'data(label)',
+                                'width': 'mapData(score, 0, 10, 20, 60)',
+                                'height': 'mapData(score, 0, 10, 20, 60)',
+                            }
+                        },
+                        {
+                            selector: 'edge',
+                            style: {
+                                'width': 2,
+                                'line-color': '#ccc',
+                                'target-arrow-color': '#ccc',
+                                'target-arrow-shape': 'triangle'
+                            }
+                        }
+                    ],
+                    layout: {
+                        name: 'circle', // Use the built-in COSE layout
+                        fit: true, // Fit the layout to the container
+                        padding: 10,
+                        // nodeRepulsion: 4500,
+                        idealEdgeLength: 100,
+                        edgeElasticity: 0.45,
+                        nestingFactor: 0.1,
+                        gravity: 0.25,
+                        // numIter: 2500,
+                        animate: 'end',
+                        // animationDuration: 1000,
+                    }
+                });
+
+                cy.contextMenus({
+                    menuItems: [
+                        {
+                        id: 'remove',
+                        content: 'Remove',
+                        tooltipText: 'Remove this node',
+                        selector: 'node',
+                        onClickFunction: function (event) {
+                            var target = event.target || event.cyTarget;
+                            target.remove();
+                        }
+                        }
+                    ]
+                });
+                cy.on('tap', 'node', function(event) {
+                    var node = event.target;
+                    console.log('Tapped node ' + node.id());
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching data or initializing Cytoscape:', error);
+            });
+    </script>
+</body>
+</html> -->
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Graph Visualization</title>
+    <!-- Import Materialize CSS and icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        #cy {
+            width: 100%;
+            height: 600px;
+            border: 1px solid #ccc;
+            margin-top: 20px;
+        }
+        .controls {
+            padding: 20px;
+        }
+        .details-section {
+            margin-top: 20px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .legend-item {
+            margin-right: 20px;
+            margin-bottom: 10px;
+        }
+        .node-details {
+            margin-top: 20px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h4 class="center-align">Graph Visualization</h4>
+
+        <div class="row controls">
+            <div class="input-field col s6">
+                <i class="material-icons prefix">search</i>
+                <input id="term" type="text" value="cancer">
+                <label for="term">Search Term</label>
+            </div>
+
+            <div class="input-field col s4">
+                <i class="material-icons prefix">filter_list</i>
+                <input id="limit" type="number" value="2" min="1">
+                <label for="limit">Limit</label>
+            </div>
+
+            <div class="input-field col s2">
+                <button id="searchBtn" class="btn waves-effect waves-light" type="button">
+                    Search
+                    <i class="material-icons right">send</i>
+                </button>
+            </div>
+        </div>
+
+        <div id="cy"></div>
+
+        <div class="details-section">
+            <h5>Legends</h5>
+            <div class="legend">
+                <div class="legend-item">
+                    <div style="background-color: #66bb6a; width: 20px; height: 20px; display: inline-block;"></div> Node
+                </div>
+                <div class="legend-item">
+                    <div style="background-color: #666; width: 20px; height: 20px; display: inline-block;"></div> Node with Score
+                </div>
+                <div class="legend-item">
+                    <div style="width: 20px; height: 2px; background-color: #ccc; display: inline-block;"></div> Edge
+                </div>
+            </div>
+
+            <a class="waves-effect waves-light btn-small" id="showMoreBtn">
+                <i class="material-icons left">expand_more</i>Show More
+            </a>
+
+            <div class="node-details" id="nodeDetails">
+                <h6>Node Details</h6>
+                <ul class="collection" id="detailsList">
+                    <!-- Details will be populated here -->
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Import Materialize JavaScript and Cytoscape.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="https://unpkg.com/cytoscape/dist/cytoscape.min.js"></script>
+
+    <!-- Cytoscape context menus plugin -->
+    <script src="https://unpkg.com/cytoscape-context-menus/cytoscape-context-menus.js"></script>
+
+    <!-- jQuery (required by the context menus plugin) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <!-- Cytoscape context menus CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/cytoscape-context-menus/cytoscape-context-menus.css">
+
+    <script src="https://unpkg.com/layout-base/layout-base.js"></script>
+<script src="https://unpkg.com/cose-base/cose-base.js"></script>
+<script src="static/cytoscape-cose-bilkent.js"></script>
+<script src="static/page_ready.js"></script>
+<script src="static/network_customizations.js"></script>
+<script src="static/graph_events.js"></script>
+<script src="static/draw_network.js"></script>
+<script src="static/add_drop.js"></script>
+<script src="static/search_in_graph.js"></script>
+
+    <script>
+        function fetchAndRenderGraph() {
+            const term = document.getElementById('term').value;
+            const limit = document.getElementById('limit').value;
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const id = urlParams.get('id');
+            const name = urlParams.get('name');
+            const type = urlParams.get('type');
+            
+
+            fetch(`/nodes/graph?limit=${limit}&term=${term}`)
+                .then(response => response.json())
+                .then(data => {
+                    const cy = cytoscape({
+                        container: document.getElementById('cy'),
+                        elements: data,
+                        style: [
+                                {   
+                                    selector: 'node[score]',
+                                    style: {
+                                        'background-color': '#666',
+                                        'label': 'data(id)',
+                                        'width': 'mapData(score, 0, 10, 20, 60)',
+                                        'height': 'mapData(score, 0, 10, 20, 60)',
+                                        'font-size': '10px'
+                                    }
+                                },
+                                {
+                                    selector: 'node',
+                                    style: {
+                                        'background-color': '#66bb6a',
+                                        'label': 'data(label)',
+                                        'width': 'mapData(score, 0, 10, 20, 60)',
+                                        'height': 'mapData(score, 0, 10, 20, 60)',
+                                        'font-size': '10px'
+                                    }
+                                },
+                                {
+                                    selector: 'edge',
+                                    style: {
+                                        'width': 2,
+                                        'label': 'data(label)',
+                                        'line-color': '#ad1a66',
+                                        'target-arrow-color': '#ad1a66',
+                                        'curve-style': "bezier",
+                                        'target-arrow-shape': 'triangle',
+                                        'text-rotation': 'autorotate',  // Ensure the label rotates with the edge
+                                        'text-margin-x': 5,  // Adjust as needed to position the label
+                                        'text-margin-y': 5,   // Adjust as needed to position the label
+                                        'font-size': '5px'
+                                    }
+                                }
+                            ],
+
+                        layout: {
+                            // name: 'cose-bilkent',
+                            // fit: true,
+                            // padding: 10,
+                            // idealEdgeLength: 100,
+                            // edgeElasticity: 0.45,
+                            // nestingFactor: 0.1,
+                            // gravity: 0.25,
+                            // animate: 'end',
+
+                            name: 'cose-bilkent',
+                            animate: 'end',
+                            animationEasing: 'ease-out',
+                            animationDuration: 1000,
+                            randomize: true
+                        }
+                    });
+
+                    cy.contextMenus({
+                        menuItems: [
+                            {
+                                id: 'remove',
+                                content: 'Remove',
+                                tooltipText: 'Remove this node',
+                                selector: 'node',
+                                onClickFunction: function (event) {
+                                    var target = event.target || event.cyTarget;
+                                    target.remove();
+                                }
+                            }
+                        ]
+                    });
+
+                    cy.on('tap', 'node', function(event) {
+                        var node = event.target;
+                        displayNodeDetails(node.data());
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching data or initializing Cytoscape:', error);
+                });
+        }
+
+        function beautifyObject(obj) {
+            let output = '<ul>';
+
+            for (const subKey in obj) {
+                if (obj.hasOwnProperty(subKey)) {
+                    output += '<li>';
+                    if (typeof obj[subKey] === 'object' && obj[subKey] !== null) {
+                        // Recursive call for nested objects
+                        output += `<strong>${subKey}:</strong> ${beautifyObject(obj[subKey])}`;
+                    } else {
+                        output += `<strong>${subKey}:</strong> ${obj[subKey]}`;
+                    }
+                    output += '</li>';
+                }
+            }
+
+            output += '</ul>';
+            return output;
+        }
+
+        function displayNodeDetails(data) {
+            const detailsList = document.getElementById('detailsList');
+            detailsList.innerHTML = ''; // Clear previous details
+            properties = data['properties'];
+            for (const key in properties) {
+                if (properties.hasOwnProperty(key)) {
+                    const listItem = document.createElement('li');
+                    listItem.className = 'collection-item';
+
+                    if (typeof properties[key] === 'object' && properties[key] !== null) {
+                        // Handle objects by recursively displaying their contents
+                        listItem.innerHTML = `<strong>${key}:</strong> ${beautifyObject(properties[key])}`;
+                    } else {
+                        listItem.innerHTML = `<strong>${key}:</strong> ${properties[key]}`;
+                    }
+
+                    detailsList.appendChild(listItem);
+                }
+            }
+
+            const nodeDetails = document.getElementById('nodeDetails');
+            nodeDetails.style.display = 'block';
+        }
+
+        document.getElementById('searchBtn').addEventListener('click', fetchAndRenderGraph);
+
+        document.getElementById('showMoreBtn').addEventListener('click', function() {
+            const nodeDetails = document.getElementById('nodeDetails');
+            if (nodeDetails.style.display === 'none' || nodeDetails.style.display === '') {
+                nodeDetails.style.display = 'block';
+                this.innerHTML = '<i class="material-icons left">expand_less</i>Show Less';
+            } else {
+                nodeDetails.style.display = 'none';
+                this.innerHTML = '<i class="material-icons left">expand_more</i>Show More';
+            }
+        });
+
+        // Initial load
+        fetchAndRenderGraph();
+    </script>
+</body>
+</html>
+

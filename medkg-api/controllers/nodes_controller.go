@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"log"
 	"net/http"
 
 	"chemplusx.com/medkg-api/models"
@@ -67,10 +68,12 @@ func GetNodesByRequestHandler(client neo4j.DriverWithContext) gin.HandlerFunc {
 
 func SearchNodesHandler(client neo4j.DriverWithContext) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		log.Println("SearchNodesHandler")
 		term := c.Query("term")
 		limit := c.DefaultQuery("limit", "10")
 		nodes, err := ni.SearchNodes(client, term, limit)
 		if err != nil {
+			log.Println(err)
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
@@ -78,18 +81,36 @@ func SearchNodesHandler(client neo4j.DriverWithContext) gin.HandlerFunc {
 	}
 }
 
-func GetNetworkGraphForSearchTermHandler(client neo4j.DriverWithContext) gin.HandlerFunc {
+func SearchNodesInGraphHandler(client neo4j.DriverWithContext) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		log.Println("SearchNodesInGraphHandler")
 		term := c.Query("term")
 		limit := c.DefaultQuery("limit", "10")
-		nodes, relationships, err := ni.GetNetworkGraphForSearchTerm(client, term, limit)
+		file := c.DefaultQuery("file", "graph.json")
+		nodes, err := ni.SearchNodesInGraph(client, term, limit, file)
+		if err != nil {
+			log.Println(err)
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+		c.JSON(http.StatusOK, nodes)
+	}
+}
+
+func GetNetworkGraphForIdHandler(client neo4j.DriverWithContext) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		id := c.Query("id")
+		name := c.Query("name")
+		typeN := c.Query("type")
+		limit := c.DefaultQuery("limit", "10")
+		nodes, relationships, err := ni.GetNetworkGraphForId(client, id, name, typeN, limit)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
 		response := map[string]interface{}{
-			"nodes":         nodes,
-			"relationships": relationships,
+			"nodes": nodes,
+			"edges": relationships,
 		}
 		c.JSON(http.StatusOK, response)
 	}
