@@ -8,7 +8,7 @@ import (
 )
 
 func GetOpenAPISpec() (*openapi3.T, error) {
-	specBytes, err := ioutil.ReadFile("api/openapi.yaml")
+	specBytes, err := ioutil.ReadFile("static/openapi.yaml")
 	if err != nil {
 		log.Fatalf("Failed to read OpenAPI spec: %v", err)
 	}

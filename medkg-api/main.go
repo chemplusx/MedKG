@@ -9,17 +9,22 @@ import (
 func main() {
 	r := gin.Default()
 
-	server.InitRouter(r)
-	err := r.SetTrustedProxies([]string{"192.168.1.0/24", "10.0.0.0/16"})
-	if err != nil {
-		panic("Invalid trusted proxies")
-	}
-
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{
 			"message": "pong",
 		})
 	})
+	server.InitRouter(r)
+	// err := r.SetTrustedProxies([]string{"192.168.1.0/24", "10.0.0.0/16"})
+	// if err != nil {
+	// 	panic("Invalid trusted proxies")
+	// }
+
+	// r.GET("/ping", func(c *gin.Context) {
+	// 	c.JSON(200, gin.H{
+	// 		"message": "pong",
+	// 	})
+	// })
 
 	// Load the OpenAPI specification
 
