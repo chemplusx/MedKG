@@ -172,11 +172,11 @@
                                 </li>
                                 <li class="list-group-item list-group-item-action p-1" id="pathways">
                                     <img src="images/pathways.png" width="25px" class="mr-1" alt="pathways" />
-                                    <small>Pathways (Reactome & KEGG)</small>
+                                    <small>Pathways (Reactome)</small>
                                 </li>
                                 <li class="list-group-item list-group-item-action p-1" id="diseases">
                                     <img src="images/diseases.png" width="25px" class="mr-1" alt="diseases" />
-                                    <small>Diseases (OMIM/Orphanet & KEGG)</small>
+                                    <small>Diseases (OMIM/Orphanet)</small>
                                 </li>
                                 <!-- <li class="list-group-item list-group-item-action p-1" id="hpo">
                     <img src="images/phenotypes.png" width="25px" class="mr-1" alt="phenotypes"/>
@@ -350,15 +350,6 @@
                             </div>
                         </div>
 
-                        <div class="p-0 mt-4 text-break">
-                            <h5 class="row alert alert-secondary p-1 mb-0 pb-2 border-bottom-0 border-secondary"
-                                href="#search_parameters"><b>Query Parameters</b></h5>
-                            <ul class="list-group list-group-flush row p-1 mt-0 border border-secondary"
-                                id="search_parameters">
-                                <li class="list-group-item">Job ID: <b>1725318346</b></li>
-                            </ul>
-                        </div>
-
                         <div class="mt-4">
                             <h5 class="row alert alert-secondary mb-0 p-1 pb-2 border-bottom-0 border-secondary mb-1">
                                 <b>Download Options</b></h5>
@@ -440,6 +431,21 @@
     <script src="js/add_drop.js"></script>
     <script src="js/network_customization.js"></script>
     <script src="js/page_ready.js"></script>
+
+    <!-- <script>
+        function fetchAndRenderGraph() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const id = urlParams.get('id');
+            const name = urlParams.get('name');
+            const type = urlParams.get('type');
+            
+
+            LoadGraph(id, name, 'data/'+$('#network_f_name').val(), type);
+        }
+
+        fetchAndRenderGraph();
+
+    </script> -->
 
 </body>
 

@@ -4,4 +4,11 @@ $( function() {
     $( "#orderingComponents" ).disableSelection();
     $( "#orderingComponents_more" ).sortable();
     $( "#orderingComponents_more" ).disableSelection();
+
+    const urlParams = new URLSearchParams(window.location.search);
+            const id = urlParams.get('id');
+            const name = urlParams.get('name');
+            const type = urlParams.get('type');
+
+            LoadGraph(id, name, 'data/'+$('#network_f_name').val(), type);
 });

@@ -5,7 +5,7 @@ import json
 graph = Graph("bolt://localhost:7690", auth=("neo4j", "password"))
 
 # Load the JSON data
-with open('D:\workspace\MedKG\data\hp.json', 'r') as f:
+with open('hp.json', 'r') as f:
     data = json.load(f)
 
 data = data['graphs'][0] # Get the first graph

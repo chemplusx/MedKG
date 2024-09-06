@@ -146,7 +146,7 @@
     <script>
         document.getElementById('searchBtn').addEventListener('click', function() {
             const term = document.getElementById('searchTerm').value;
-            fetch(`/nodes/search?term=${term}`)
+            fetch(`nodes/search?term=${term}`)
                 .then(response => response.json())
                 .then(data => {
                     const resultsTable = document.getElementById('resultsTable');

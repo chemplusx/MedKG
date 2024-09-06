@@ -278,7 +278,7 @@ func GetNetworkGraphForId(driver neo4j.DriverWithContext, id string, name string
 
 			labels := "Disease|Tissue|Biological_process|Chromosome|Gene|Transcript|Protein|Amino_acid_sequence|Peptide|Modified_protein|Drug|Functional_region|Metabolite|Protein_structure|Pathway|Biological_sample"
 
-			query := "MATCH (node:" + typeN + ")-[r]-(m:" + labels + ") where node.id='" + id + "'"
+			query := "MATCH (node:" + typeN + ")-[r]-(m:" + labels + ") where elementId(node)='" + id + "'"
 
 			if name != "" {
 				query += " and node.name='" + name + "'"
@@ -305,6 +305,8 @@ func GetNetworkGraphForId(driver neo4j.DriverWithContext, id string, name string
 				nme := "noname"
 				if val, ok := node["name"]; ok && val != nil {
 					nme = node["name"].(string)
+				} else if val, ok := node["id"]; ok && val != nil {
+					nme = node["id"].(string)
 				}
 
 				ssource := models.Node{
@@ -326,6 +328,8 @@ func GetNetworkGraphForId(driver neo4j.DriverWithContext, id string, name string
 				nme = "noname"
 				if val, ok := nnode["name"]; ok && val != nil {
 					nme = nnode["name"].(string)
+				} else if val, ok := node["id"]; ok && val != nil {
+					nme = node["id"].(string)
 				}
 
 				target := models.Node{
@@ -367,6 +371,8 @@ func GetNetworkGraphForId(driver neo4j.DriverWithContext, id string, name string
 						nme = "noname"
 						if val, ok := node2["name"]; ok && val != nil {
 							nme = node2["name"].(string)
+						} else if val, ok := node["id"]; ok && val != nil {
+							nme = node["id"].(string)
 						}
 
 						nodeLabel := nnode["label"].(string)

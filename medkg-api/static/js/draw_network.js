@@ -8,7 +8,8 @@ var cy = window.cy = cytoscape({
 	style: my_style,
 	elements: [],
 	layout: {
-		name: 'medKGLayout',
+		name: 'cose-bilkent',
+  		rows: 4,
 		fit: 'viewport',
 		//separated: 1,
 		//lesslayer: 0,
@@ -29,6 +30,11 @@ function LoadGraph(id, name, file, type='empty'){
 		success: function( result ) {
 
 			cy.add(result)
+			var layout = cy.layout({
+				name: 'cose-bilkent',
+				rows: 4
+			  });
+			  layout.run();
 			
 				$('#search_parameters').append( '<li class="list-group-item"><b>Query Terms:</b></br>');
 				// result.search.forEach((s) => {
