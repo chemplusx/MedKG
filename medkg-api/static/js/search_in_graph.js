@@ -11,7 +11,7 @@ function split( val ) {
           minLength: 1,
           source: function( request, response ) {
               $.ajax( {
-                url: "/search_in_graph",
+                url: "search_in_graph",
                 dataType: "json",
                 data: {
                   term: request.term,

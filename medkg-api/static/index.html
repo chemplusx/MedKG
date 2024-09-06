@@ -233,7 +233,7 @@
             const type = urlParams.get('type');
             
 
-            fetch(`/nodes/graph?limit=${limit}&term=${term}`)
+            fetch(`nodes/graph?limit=${limit}&term=${term}`)
                 .then(response => response.json())
                 .then(data => {
                     const cy = cytoscape({
