@@ -13,7 +13,7 @@ var cy = window.cy = cytoscape({
 		fit: 'viewport',
 		//separated: 1,
 		//lesslayer: 0,
-		orderOfNodeTypes: [1,2,3,5,6,4,7]
+		orderOfNodeTypes: [1,2,3,5,6,4,7,8,9,10,11,12,13,14,15]
 		//orderOfNodeTypes: [3,1,2,4,5,6,7]
 	}
 });
@@ -28,11 +28,13 @@ function LoadGraph(id, name, file, type='empty'){
 		  type: type
 		},
 		success: function( result ) {
-
+			// remove any data present in the network
+			cy.remove(cy.elements());
 			cy.add(result)
 			var layout = cy.layout({
-				name: 'cose-bilkent',
-				rows: 4
+				name: 'medKGLayout',
+				rows: 4,
+				orderOfNodeTypes: [1,2,3,5,6,4,7,8,9,10,11,12,13,14,15],
 			  });
 			  layout.run();
 			
