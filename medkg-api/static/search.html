@@ -6,6 +6,12 @@
     <title>Search Results</title>
     <!-- Import Materialize CSS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+    <link rel="stylesheet" href="css/jquery-ui.css">
+    <link rel="stylesheet" href="css/custom.css">
     <style>
         body {
             display: flex;
@@ -20,7 +26,7 @@
         header {
             background-color: #3f51b5;
             color: white;
-            padding: 20px 0;
+            padding: 10px 0;
         }
 
         footer {
@@ -96,9 +102,33 @@
 <body>
     <!-- Header -->
     <header>
-        <div class="container">
-            <h1 class="header-title">MedKG Database</h1>
-        </div>
+        <nav class="navbar navbar-expand-sm pr-0" 
+        style="background-color: #3f51b5;
+            color: white;">
+            <a class="navbar-brand" style="color:white;margin-left: 4rem;">
+                <b>
+                    <center>MedKG</center>
+                </b>
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#top_menu"
+                aria-controls="top_menu" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+
+            <div class="collapse navbar-collapse" id="top_menu">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item pl-3 pr-3 border-right">
+                        <a class="nav-link navmenuitem" href="index.php" style="color: white;">Search</span></a>
+                    </li>
+                    <li class="nav-item pl-3">
+                        <a class="nav-link navmenuitem" href="project.php" style="color: white;">Project/Team</a>
+                    </li>
+                </ul>
+
+                <img src="images/logo.svg" class="col-sm-4" height="60px" alt="logos" />
+            </div>
+        </nav>
     </header>
 
     <!-- Main Content -->

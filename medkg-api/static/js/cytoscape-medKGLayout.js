@@ -218,42 +218,48 @@ var Layout = function () {
 		let bb = { x1: 0, y1: 0, w: cy.width(), h: cy.height() };
 
 		// counting all type of nodes
-		var lookup = {Protein_N:0,Protein:0,Pathway:0,kegg_Pathway:0,HPO:0,Drug:0,Disease:0,kegg_Disease:0,Compound:0,Prediction:0};
+		var lookup = {Disease: 0,Phenotype: 0,Drug: 0,Compound: 0,Gene: 0,Tissue: 0,Protein: 0,Peptide: 0,Transcript: 0,Modified_protein: 0,Chromosome: 0,Metabolite: 0,Pathway: 0,Biological_process: 0,Molecular_function: 0,Cellular_component: 0,Modification: 0,Phenotype: 0,Known_variant: 0,Clinically_relevant_variant: 0,Amino_acid_sequence: 0,Experiment: 0,Experimental_factor: 0};
+		// Disease: 1,Phenotype: 2,Drug: 3,Compound: 4,Gene: 5,Tissue: 6,Protein: 7,Peptide: 8,Transcript: 9,Modified_protein: 10,Chromosome: 11,Metabolite: 12,Pathway: 13,Biological_process: 14,Molecular_function: 15,Cellular_component: 16,Modification: 17,Phenotype: 18,Known_variant: 19,Clinically_relevant_variant: 20,Amino_acid_sequence: 21,Experiment: 22,Experimental_factor: 23
 		for (var item, i = 0; item = nodes[i++];) {
 			lookup[item.data().Node_Type]++;
 		}
 
 		if(!lesslayer && !separated){
 			var missingCircle;
-			if(lookup.Protein === 0){
+
+			if(lookup.Disease === 0){
 				missingCircle = orderOfNodeTypes[0];
 				for (var x in orderOfNodeTypes){
 					if(orderOfNodeTypes[x] > missingCircle)
 						orderOfNodeTypes[x]--;
 				}
 			}
-			if(lookup.Protein_N === 0){
+
+			if(lookup.Phenotype === 0){
 				missingCircle = orderOfNodeTypes[1];
 				for (var x in orderOfNodeTypes){
 					if(orderOfNodeTypes[x] > missingCircle)
 						orderOfNodeTypes[x]--;
 				}
 			}
-			if((lookup.Pathway + lookup.kegg_Pathway) === 0){
+
+
+			if(lookup.Drug === 0){
 				missingCircle = orderOfNodeTypes[2];
 				for (var x in orderOfNodeTypes){
 					if(orderOfNodeTypes[x] > missingCircle)
 						orderOfNodeTypes[x]--;
 				}
 			}
-			if(lookup.HPO === 0){
+			if(lookup.Compound === 0){
 				missingCircle = orderOfNodeTypes[3];
 				for (var x in orderOfNodeTypes){
 					if(orderOfNodeTypes[x] > missingCircle)
 						orderOfNodeTypes[x]--;
 				}
 			}
-			if(lookup.Drug === 0){
+
+			if(lookup.Gene === 0){
 				missingCircle = orderOfNodeTypes[4];
 				for (var x in orderOfNodeTypes){
 					if(orderOfNodeTypes[x] > missingCircle)
@@ -261,7 +267,7 @@ var Layout = function () {
 				}
 			}
 
-			if((lookup.Disease + lookup.kegg_Disease) === 0){
+			if(lookup.Tissue === 0){
 				missingCircle = orderOfNodeTypes[5];
 				for (var x in orderOfNodeTypes){
 					if(orderOfNodeTypes[x] > missingCircle)
@@ -269,26 +275,116 @@ var Layout = function () {
 				}
 			}
 
-			if((lookup.Compound + lookup.Prediction) === 0){
+			if(lookup.Protein === 0){
 				missingCircle = orderOfNodeTypes[6];
 				for (var x in orderOfNodeTypes){
 					if(orderOfNodeTypes[x] > missingCircle)
 						orderOfNodeTypes[x]--;
 				}
 			}
+
+			if(lookup.Peptide === 0){
+				missingCircle = orderOfNodeTypes[7];
+				for (var x in orderOfNodeTypes){
+					if(orderOfNodeTypes[x] > missingCircle)
+						orderOfNodeTypes[x]--;
+				}
+			}
+
+			if(lookup.Transcript === 0){
+				missingCircle = orderOfNodeTypes[8];
+				for (var x in orderOfNodeTypes){
+					if(orderOfNodeTypes[x] > missingCircle)
+
+						orderOfNodeTypes[x]--;
+				}
+			}
+
+			if(lookup.Modified_protein === 0){
+				missingCircle = orderOfNodeTypes[9];
+				for (var x in orderOfNodeTypes){
+					if(orderOfNodeTypes[x] > missingCircle)
+						orderOfNodeTypes[x]--;
+				}
+			}
+
+			if(lookup.Chromosome === 0){
+				missingCircle = orderOfNodeTypes[10];
+				for (var x in orderOfNodeTypes){
+					if(orderOfNodeTypes[x] > missingCircle)
+						orderOfNodeTypes[x]--;
+				}
+			}
+
+
+
+
+
+
+			// if(lookup.Protein === 0){
+			// 	missingCircle = orderOfNodeTypes[0];
+			// 	for (var x in orderOfNodeTypes){
+			// 		if(orderOfNodeTypes[x] > missingCircle)
+			// 			orderOfNodeTypes[x]--;
+			// 	}
+			// }
+			// if(lookup.Peptide === 0){
+			// 	missingCircle = orderOfNodeTypes[1];
+			// 	for (var x in orderOfNodeTypes){
+			// 		if(orderOfNodeTypes[x] > missingCircle)
+			// 			orderOfNodeTypes[x]--;
+			// 	}
+			// }
+			// if((lookup.Pathway + lookup.kegg_Pathway) === 0){
+			// 	missingCircle = orderOfNodeTypes[2];
+			// 	for (var x in orderOfNodeTypes){
+			// 		if(orderOfNodeTypes[x] > missingCircle)
+			// 			orderOfNodeTypes[x]--;
+			// 	}
+			// }
+			// if(lookup.HPO === 0){
+			// 	missingCircle = orderOfNodeTypes[3];
+			// 	for (var x in orderOfNodeTypes){
+			// 		if(orderOfNodeTypes[x] > missingCircle)
+			// 			orderOfNodeTypes[x]--;
+			// 	}
+			// }
+			// if(lookup.Drug === 0){
+			// 	missingCircle = orderOfNodeTypes[4];
+			// 	for (var x in orderOfNodeTypes){
+			// 		if(orderOfNodeTypes[x] > missingCircle)
+			// 			orderOfNodeTypes[x]--;
+			// 	}
+			// }
+
+			// if((lookup.Disease + lookup.kegg_Disease) === 0){
+			// 	missingCircle = orderOfNodeTypes[5];
+			// 	for (var x in orderOfNodeTypes){
+			// 		if(orderOfNodeTypes[x] > missingCircle)
+			// 			orderOfNodeTypes[x]--;
+			// 	}
+			// }
+
+			// if((lookup.Compound + lookup.Prediction) === 0){
+			// 	missingCircle = orderOfNodeTypes[6];
+			// 	for (var x in orderOfNodeTypes){
+			// 		if(orderOfNodeTypes[x] > missingCircle)
+			// 			orderOfNodeTypes[x]--;
+			// 	}
+			// }
 		}
 
 		let startAngles = {};
 		let incValofTypes = {};
 		if(lesslayer){
 			startAngles = {Protein:0,Pathway:90,Disease:180,Drug:270};
-			incValofTypes = {Protein:2*Math.PI/(lookup.Protein+lookup.Protein_N),
+			incValofTypes = {Protein:2*Math.PI/(lookup.Protein+lookup.Peptide),
 								 Pathway:2*Math.PI/(lookup.Pathway+lookup.kegg_Pathway),
 								 Disease:2*Math.PI/(lookup.Disease+lookup.kegg_Disease+lookup.HPO),
 								 Drug:2*Math.PI/(lookup.Drug+lookup.Compound+lookup.Prediction)};
 		}else{
-			startAngles = {Protein_N:0,Protein:50,Pathway:100,HPO:150,Drug:205,Disease:255,Compound:310};
-			incValofTypes = {Protein_N:2*Math.PI/lookup.Protein_N,
+			startAngles = {Peptide:0,Protein:50,Pathway:100,HPO:150,Drug:205,Disease:255,Compound:310};
+			incValofTypes = {Peptide:2*Math.PI/lookup.Peptide,
 								 Protein:2*Math.PI/lookup.Protein,
 								 Pathway:2*Math.PI/(lookup.Pathway+lookup.kegg_Pathway),
 								 HPO:2*Math.PI/lookup.HPO,
@@ -308,139 +404,309 @@ var Layout = function () {
 			centery = cy.height() / 2;
 			if(lesslayer){
 				switch (ele.data().Node_Type) {
-					case 'Protein':
-						radius = r * orderOfNodeTypes[0];
-						theta = startAngles.Protein += incValofTypes.Protein;
-					break;
-					case 'Protein_N':
-						radius = r * orderOfNodeTypes[0];
-						theta = startAngles.Protein += incValofTypes.Protein;
-					break;
-					case 'Pathway':
-						radius = r * orderOfNodeTypes[1];
-						theta = startAngles.Pathway += incValofTypes.Pathway;
-					break;
-					case 'kegg_Pathway':
-						radius = r * orderOfNodeTypes[1];
-						theta = startAngles.Pathway += incValofTypes.Pathway;
-					break;
-					case 'HPO':
-						radius = r * orderOfNodeTypes[2];
-						theta = startAngles.Disease += incValofTypes.Disease;
-					break;
 					case 'Disease':
-						radius = r * orderOfNodeTypes[2];
+						radius = r * orderOfNodeTypes[0];
 						theta = startAngles.Disease += incValofTypes.Disease;
 					break;
-					case 'kegg_Disease':
-						radius = r * orderOfNodeTypes[2];
+					case 'Phenotype':
+						radius = r * orderOfNodeTypes[0];
 						theta = startAngles.Disease += incValofTypes.Disease;
 					break;
 					case 'Drug':
-						radius = r * orderOfNodeTypes[3];
+						radius = r * orderOfNodeTypes[1];
 						theta = startAngles.Drug += incValofTypes.Drug;
 					break;
 					case 'Compound':
-						radius = r * orderOfNodeTypes[3];
+						radius = r * orderOfNodeTypes[1];
 						theta = startAngles.Drug += incValofTypes.Drug;
 					break;
-					case 'Prediction':
-						radius = r * orderOfNodeTypes[3];
-						theta = startAngles.Drug += incValofTypes.Drug;
+					case 'Gene':
+						radius = r * orderOfNodeTypes[2];
+						theta = startAngles.Protein += incValofTypes.Protein;
 					break;
+					case 'Tissue':
+						radius = r * orderOfNodeTypes[3];
+						theta = startAngles.Protein += incValofTypes.Protein;
+					break;
+					case 'Protein':
+						radius = r * orderOfNodeTypes[4];
+						theta = startAngles.Protein += incValofTypes.Protein;
+					break;
+					case 'Peptide':
+						radius = r * orderOfNodeTypes[4];
+						theta = startAngles.Protein += incValofTypes.Protein;
+					break;
+					case 'Transcript':
+						radius = r * orderOfNodeTypes[4];
+						theta = startAngles.Protein += incValofTypes.Protein;
+					break;
+					case 'Modified_protein':
+						radius = r * orderOfNodeTypes[4];
+						theta = startAngles.Protein += incValofTypes.Protein;
+					break;
+					case 'Chromosome':
+						radius = r * orderOfNodeTypes[5];
+						theta = startAngles.Protein += incValofTypes.Protein;
+					break;
+					case 'Metabolite':
+						radius = r * orderOfNodeTypes[6];
+						theta = startAngles.Protein += incValofTypes.Protein;
+					break;
+					case 'Pathway':
+						radius = r * orderOfNodeTypes[7];
+						theta = startAngles.Pathway += incValofTypes.Pathway;
+					break;
+					case 'Biological_process':
+						radius = r * orderOfNodeTypes[8];
+						theta = startAngles.Pathway += incValofTypes.Pathway;
+					break;
+
+
+
+					// case 'Protein':
+					// 	radius = r * orderOfNodeTypes[0];
+					// 	theta = startAngles.Protein += incValofTypes.Protein;
+					// break;
+					// case 'Peptide':
+					// 	radius = r * orderOfNodeTypes[0];
+					// 	theta = startAngles.Protein += incValofTypes.Protein;
+					// break;
+					// case 'Pathway':
+					// 	radius = r * orderOfNodeTypes[1];
+					// 	theta = startAngles.Pathway += incValofTypes.Pathway;
+					// break;
+					// case 'kegg_Pathway':
+					// 	radius = r * orderOfNodeTypes[1];
+					// 	theta = startAngles.Pathway += incValofTypes.Pathway;
+					// break;
+					// case 'HPO':
+					// 	radius = r * orderOfNodeTypes[2];
+					// 	theta = startAngles.Disease += incValofTypes.Disease;
+					// break;
+					// case 'Disease':
+					// 	radius = r * orderOfNodeTypes[2];
+					// 	theta = startAngles.Disease += incValofTypes.Disease;
+					// break;
+					// case 'kegg_Disease':
+					// 	radius = r * orderOfNodeTypes[2];
+					// 	theta = startAngles.Disease += incValofTypes.Disease;
+					// break;
+					// case 'Drug':
+					// 	radius = r * orderOfNodeTypes[3];
+					// 	theta = startAngles.Drug += incValofTypes.Drug;
+					// break;
+					// case 'Compound':
+					// 	radius = r * orderOfNodeTypes[3];
+					// 	theta = startAngles.Drug += incValofTypes.Drug;
+					// break;
+					// case 'Prediction':
+					// 	radius = r * orderOfNodeTypes[3];
+					// 	theta = startAngles.Drug += incValofTypes.Drug;
+					// break;
 				}
 			}else{
 				switch (ele.data().Node_Type) {
-					case 'Protein':
-						if(lookup.Protein === 1 && orderOfNodeTypes[0] === 1){
+
+					case 'Disease':
+						if(lookup.Disease === 1 && orderOfNodeTypes[0] === 1){
 							radius = 0;
 							theta = 1;
 						}else{
 							radius = r * orderOfNodeTypes[0];
-							theta = startAngles.Protein += incValofTypes.Protein;
+							theta = startAngles.Disease += incValofTypes.Disease;
 						}
 					break;
-					case 'Protein_N':
-						if(lookup.Protein_N === 1 && orderOfNodeTypes[1] === 1){
+					case 'Phenotype':
+						if(lookup.Phenotype === 1 && orderOfNodeTypes[1] === 1){
 							radius = 0;
 							theta = 1;
 						}else{
 							radius = r * orderOfNodeTypes[1];
-							theta = startAngles.Protein_N += incValofTypes.Protein_N;
+							theta = startAngles.Disease += incValofTypes.Disease;
 						}
 					break;
-					case 'Pathway':
-						if(lookup.Pathway === 1 && orderOfNodeTypes[2] === 1){
+					case 'Drug':
+						if(lookup.Drug === 1 && orderOfNodeTypes[2] === 1){
 							radius = 0;
 							theta = 1;
 						}else{
 							radius = r * orderOfNodeTypes[2];
-							theta = startAngles.Pathway += incValofTypes.Pathway;
+							theta = startAngles.Drug += incValofTypes.Drug;
 						}
 					break;
-					case 'kegg_Pathway':
-						if(lookup.Pathway === 1 && orderOfNodeTypes[2] === 1){
-							radius = 0;
-							theta = 1;
-						}else{
-							radius = r * orderOfNodeTypes[2];
-							theta = startAngles.Pathway += incValofTypes.Pathway;
-						}
-					break;
-					case 'HPO':
-						if(lookup.HPO === 1 && orderOfNodeTypes[3] === 1){
+					case 'Compound':
+						if(lookup.Compound === 1 && orderOfNodeTypes[3] === 1){
 							radius = 0;
 							theta = 1;
 						}else{
 							radius = r * orderOfNodeTypes[3];
-							theta = startAngles.HPO += incValofTypes.HPO;
+							theta = startAngles.Drug += incValofTypes.Drug;
 						}
 					break;
-					case 'Drug':
-						if(lookup.Drug === 1 && orderOfNodeTypes[4] === 1){
+					case 'Gene':
+						if(lookup.Gene === 1 && orderOfNodeTypes[4] === 1){
 							radius = 0;
 							theta = 1;
 						}else{
 							radius = r * orderOfNodeTypes[4];
-							theta = startAngles.Drug += incValofTypes.Drug;
+							theta = startAngles.Protein += incValofTypes.Protein;
 						}
 					break;
-					case 'Disease':
-						if(lookup.Disease === 1 && orderOfNodeTypes[5] === 1){
+					case 'Tissue':
+						if(lookup.Tissue === 1 && orderOfNodeTypes[5] === 1){
 							radius = 0;
 							theta = 1;
 						}else{
 							radius = r * orderOfNodeTypes[5];
-							theta = startAngles.Disease += incValofTypes.Disease;
+							theta = startAngles.Protein += incValofTypes.Protein;
 						}
 					break;
-					case 'kegg_Disease':
-						if(lookup.Disease === 1 && orderOfNodeTypes[5] === 1){
-							radius = 0;
-							theta = 1;
-						}else{
-							radius = r * orderOfNodeTypes[5];
-							theta = startAngles.Disease += incValofTypes.Disease;
-						}
-					break;
-					case 'Compound':
-						if(lookup.Compound === 1 && orderOfNodeTypes[6] === 1){
+					case 'Protein':
+						if(lookup.Protein === 1 && orderOfNodeTypes[6] === 1){
 							radius = 0;
 							theta = 1;
 						}else{
 							radius = r * orderOfNodeTypes[6];
-							theta = startAngles.Compound += incValofTypes.Compound;
+							theta = startAngles.Protein += incValofTypes.Protein;
 						}
 					break;
-					case 'Prediction':
-						if(lookup.Compound === 1 && orderOfNodeTypes[6] === 1){
+					case 'Peptide':
+						if(lookup.Peptide === 1 && orderOfNodeTypes[7] === 1){
 							radius = 0;
 							theta = 1;
 						}else{
-							radius = r * orderOfNodeTypes[6];
-							theta = startAngles.Compound += incValofTypes.Compound;
+							radius = r * orderOfNodeTypes[7];
+							theta = startAngles.Protein += incValofTypes.Protein;
 						}
 					break;
+					case 'Transcript':
+						if(lookup.Transcript === 1 && orderOfNodeTypes[8] === 1){
+							radius = 0;
+							theta = 1;
+						}else{
+							radius = r * orderOfNodeTypes[8];
+							theta = startAngles.Protein += incValofTypes.Protein;
+						}
+					break;
+					case 'Modified_protein':
+						if(lookup.Modified_protein === 1 && orderOfNodeTypes[9] === 1){
+							radius = 0;
+							theta = 1;
+						}else{
+							radius = r * orderOfNodeTypes[9];
+							theta = startAngles.Protein += incValofTypes.Protein;
+						}
+					break;
+					case 'Chromosome':
+						if(lookup.Chromosome === 1 && orderOfNodeTypes[10] === 1){
+							radius = 0;
+							theta = 1;
+						}else{
+							radius = r * orderOfNodeTypes[10];
+
+							theta = startAngles.Protein += incValofTypes.Protein;
+						}
+					break;
+					case 'Metabolite':
+						if(lookup.Metabolite === 1 && orderOfNodeTypes[11] === 1){
+							radius = 0;
+							theta = 1;
+						}else{
+							radius = r * orderOfNodeTypes[11];
+							theta = startAngles.Protein += incValofTypes.Protein;
+						}
+					break;
+
+					// case 'Protein':
+					// 	if(lookup.Protein === 1 && orderOfNodeTypes[0] === 1){
+					// 		radius = 0;
+					// 		theta = 1;
+					// 	}else{
+					// 		radius = r * orderOfNodeTypes[0];
+					// 		theta = startAngles.Protein += incValofTypes.Protein;
+					// 	}
+					// break;
+					// case 'Peptide':
+					// 	if(lookup.Peptide === 1 && orderOfNodeTypes[1] === 1){
+					// 		radius = 0;
+					// 		theta = 1;
+					// 	}else{
+					// 		radius = r * orderOfNodeTypes[1];
+					// 		theta = startAngles.Peptide += incValofTypes.Peptide;
+					// 	}
+					// break;
+					// case 'Pathway':
+					// 	if(lookup.Pathway === 1 && orderOfNodeTypes[2] === 1){
+					// 		radius = 0;
+					// 		theta = 1;
+					// 	}else{
+					// 		radius = r * orderOfNodeTypes[2];
+					// 		theta = startAngles.Pathway += incValofTypes.Pathway;
+					// 	}
+					// break;
+					// case 'kegg_Pathway':
+					// 	if(lookup.Pathway === 1 && orderOfNodeTypes[2] === 1){
+					// 		radius = 0;
+					// 		theta = 1;
+					// 	}else{
+					// 		radius = r * orderOfNodeTypes[2];
+					// 		theta = startAngles.Pathway += incValofTypes.Pathway;
+					// 	}
+					// break;
+					// case 'HPO':
+					// 	if(lookup.HPO === 1 && orderOfNodeTypes[3] === 1){
+					// 		radius = 0;
+					// 		theta = 1;
+					// 	}else{
+					// 		radius = r * orderOfNodeTypes[3];
+					// 		theta = startAngles.HPO += incValofTypes.HPO;
+					// 	}
+					// break;
+					// case 'Drug':
+					// 	if(lookup.Drug === 1 && orderOfNodeTypes[4] === 1){
+					// 		radius = 0;
+					// 		theta = 1;
+					// 	}else{
+					// 		radius = r * orderOfNodeTypes[4];
+					// 		theta = startAngles.Drug += incValofTypes.Drug;
+					// 	}
+					// break;
+					// case 'Disease':
+					// 	if(lookup.Disease === 1 && orderOfNodeTypes[5] === 1){
+					// 		radius = 0;
+					// 		theta = 1;
+					// 	}else{
+					// 		radius = r * orderOfNodeTypes[5];
+					// 		theta = startAngles.Disease += incValofTypes.Disease;
+					// 	}
+					// break;
+					// case 'kegg_Disease':
+					// 	if(lookup.Disease === 1 && orderOfNodeTypes[5] === 1){
+					// 		radius = 0;
+					// 		theta = 1;
+					// 	}else{
+					// 		radius = r * orderOfNodeTypes[5];
+					// 		theta = startAngles.Disease += incValofTypes.Disease;
+					// 	}
+					// break;
+					// case 'Compound':
+					// 	if(lookup.Compound === 1 && orderOfNodeTypes[6] === 1){
+					// 		radius = 0;
+					// 		theta = 1;
+					// 	}else{
+					// 		radius = r * orderOfNodeTypes[6];
+					// 		theta = startAngles.Compound += incValofTypes.Compound;
+					// 	}
+					// break;
+					// case 'Prediction':
+					// 	if(lookup.Compound === 1 && orderOfNodeTypes[6] === 1){
+					// 		radius = 0;
+					// 		theta = 1;
+					// 	}else{
+					// 		radius = r * orderOfNodeTypes[6];
+					// 		theta = startAngles.Compound += incValofTypes.Compound;
+					// 	}
+					// break;
 				}
 			}
 			//console.log(radius);
@@ -557,46 +823,130 @@ var Layout = function () {
 
 			if(lesslayer){
 				switch (ele.data().Node_Type) {
-					case 'Protein':
-						c = centersOf4Circle(orderOfNodeTypes[0],width,height);
-						theta = startAngles.Protein += incValofTypes.Protein;
-					break;
-					case 'Protein_N':
-						c = centersOf4Circle(orderOfNodeTypes[0],width,height);
-						theta = startAngles.Protein += incValofTypes.Protein;
-					break;
-					case 'Pathway':
-						c = centersOf4Circle(orderOfNodeTypes[1],width,height);
-						theta = startAngles.Pathway += incValofTypes.Pathway;
-					break;
-					case 'kegg_Pathway':
-						c = centersOf4Circle(orderOfNodeTypes[1],width,height);
-						theta = startAngles.Pathway += incValofTypes.Pathway;
-					break;
-					case 'HPO':
-						c = centersOf4Circle(orderOfNodeTypes[2],width,height);
-						theta = startAngles.Disease += incValofTypes.Disease;
-					break;
 					case 'Disease':
-						c = centersOf4Circle(orderOfNodeTypes[2],width,height);
+						c = centersOf4Circle(orderOfNodeTypes[0],width,height);
 						theta = startAngles.Disease += incValofTypes.Disease;
 					break;
-					case 'kegg_Disease':
-						c = centersOf4Circle(orderOfNodeTypes[2],width,height);
+					case 'Phenotype':
+						c = centersOf4Circle(orderOfNodeTypes[0],width,height);
 						theta = startAngles.Disease += incValofTypes.Disease;
 					break;
 					case 'Drug':
-						c = centersOf4Circle(orderOfNodeTypes[3],width,height);
+						c = centersOf4Circle(orderOfNodeTypes[1],width,height);
 						theta = startAngles.Drug += incValofTypes.Drug;
 					break;
 					case 'Compound':
-						c = centersOf4Circle(orderOfNodeTypes[3],width,height);
+						c = centersOf4Circle(orderOfNodeTypes[1],width,height);
 						theta = startAngles.Drug += incValofTypes.Drug;
 					break;
-					case 'Prediction':
-						c = centersOf4Circle(orderOfNodeTypes[3],width,height);
-						theta = startAngles.Drug += incValofTypes.Drug;
+					case 'Gene':
+						c = centersOf4Circle(orderOfNodeTypes[2],width,height);
+						theta = startAngles.Protein += incValofTypes.Protein;
 					break;
+					case 'Tissue':
+						c = centersOf4Circle(orderOfNodeTypes[2],width,height);
+						theta = startAngles.Protein += incValofTypes.Protein;
+					break;
+					case 'Protein':
+						c = centersOf4Circle(orderOfNodeTypes[3],width,height);
+						theta = startAngles.Protein += incValofTypes.Protein;
+					break;
+					case 'Peptide':
+						c = centersOf4Circle(orderOfNodeTypes[3],width,height);
+						theta = startAngles.Protein += incValofTypes.Protein;
+					break;
+					case 'Transcript':
+						c = centersOf4Circle(orderOfNodeTypes[3],width,height);
+						theta = startAngles.Protein += incValofTypes.Protein;
+					break;
+					case 'Modified_protein':
+						c = centersOf4Circle(orderOfNodeTypes[3],width,height);
+						theta = startAngles.Protein += incValofTypes.Protein;
+					break;
+					case 'Chromosome':
+						c = centersOf4Circle(orderOfNodeTypes[3],width,height);
+						theta = startAngles.Protein += incValofTypes.Protein;
+					break;
+					case 'Metabolite':
+						c = centersOf4Circle(orderOfNodeTypes[3],width,height);
+						theta = startAngles.Protein += incValofTypes.Protein;
+					break;
+					case 'Pathway':
+						c = centersOf4Circle(orderOfNodeTypes[4],width,height);
+						theta = startAngles.Pathway += incValofTypes.Pathway;
+					break;
+					case 'Biological_process':
+						c = centersOf4Circle(orderOfNodeTypes[4],width,height);
+						theta = startAngles.Pathway += incValofTypes.Pathway;
+					break;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+					// case 'Protein':
+					// 	c = centersOf4Circle(orderOfNodeTypes[0],width,height);
+					// 	theta = startAngles.Protein += incValofTypes.Protein;
+					// break;
+					// case 'Peptide':
+					// 	c = centersOf4Circle(orderOfNodeTypes[1],width,height);
+					// 	theta = startAngles.Protein += incValofTypes.Protein;
+					// break;
+					// case 'Pathway':
+					// 	c = centersOf4Circle(orderOfNodeTypes[1],width,height);
+					// 	theta = startAngles.Pathway += incValofTypes.Pathway;
+					// break;
+					// case 'kegg_Pathway':
+					// 	c = centersOf4Circle(orderOfNodeTypes[1],width,height);
+					// 	theta = startAngles.Pathway += incValofTypes.Pathway;
+					// break;
+					// case 'HPO':
+					// 	c = centersOf4Circle(orderOfNodeTypes[2],width,height);
+					// 	theta = startAngles.Disease += incValofTypes.Disease;
+					// break;
+					// case 'Disease':
+					// 	c = centersOf4Circle(orderOfNodeTypes[2],width,height);
+					// 	theta = startAngles.Disease += incValofTypes.Disease;
+					// break;
+					// case 'kegg_Disease':
+					// 	c = centersOf4Circle(orderOfNodeTypes[2],width,height);
+					// 	theta = startAngles.Disease += incValofTypes.Disease;
+					// break;
+					// case 'Drug':
+					// 	c = centersOf4Circle(orderOfNodeTypes[3],width,height);
+					// 	theta = startAngles.Drug += incValofTypes.Drug;
+					// break;
+					// case 'Compound':
+					// 	c = centersOf4Circle(orderOfNodeTypes[3],width,height);
+					// 	theta = startAngles.Drug += incValofTypes.Drug;
+					// break;
+					// case 'Prediction':
+					// 	c = centersOf4Circle(orderOfNodeTypes[3],width,height);
+					// 	theta = startAngles.Drug += incValofTypes.Drug;
+					// break;
 				}
 			}else{
 				//console.log(orderOfNodeTypes);
@@ -605,6 +955,30 @@ var Layout = function () {
 				console.log('prot_counter: '+prot_counter);
 				console.log('number of prot: '+lookup.Protein);*/
 				switch (ele.data().Node_Type) {
+					case 'Disease':
+						c = centersOf7Circle(orderOfNodeTypes[0],width,height,yshift);
+						theta = startAngles.Disease += incValofTypes.Disease;
+					break;
+					case 'Phenotype':
+						c = centersOf7Circle(orderOfNodeTypes[0],width,height,yshift);
+						theta = startAngles.Disease += incValofTypes.Disease;
+					break;
+					case 'Drug':
+						c = centersOf7Circle(orderOfNodeTypes[1],width,height,yshift);
+						theta = startAngles.Drug += incValofTypes.Drug;
+					break;
+					case 'Compound':
+						c = centersOf7Circle(orderOfNodeTypes[1],width,height,yshift);
+						theta = startAngles.Drug += incValofTypes.Drug;
+					break;
+					case 'Gene':
+						c = centersOf7Circle(orderOfNodeTypes[2],width,height,yshift);
+						theta = startAngles.Protein += incValofTypes.Protein;
+					break;
+					case 'Tissue':
+						c = centersOf7Circle(orderOfNodeTypes[2],width,height,yshift);
+						theta = startAngles.Protein += incValofTypes.Protein;
+					break;
 					case 'Protein':
 						//c = centersOf7Circle(orderOfNodeTypes[0],width,height);
 
@@ -613,50 +987,93 @@ var Layout = function () {
 						//console.log(c);
 						prot_counter++;
 						theta = startAngles.Protein += incValofTypes.Protein;
-						/*
-						console.log(lookup);
-						console.log(lookup.Protein);
-						*/
-
 					break;
-					case 'Protein_N':
+					case 'Peptide':
 						//if(orderOfNodeTypes[0] > 2)
 							//yshift = (height / 36)*0.5;
 						c = centersOf7Circle(orderOfNodeTypes[1],width,height,yshift);
-						theta = startAngles.Protein_N += incValofTypes.Protein_N;
+						theta = startAngles.Peptide += incValofTypes.Peptide;
+					break;
+					case 'Transcript':
+						c = centersOf7Circle(orderOfNodeTypes[2],width,height,yshift);
+						theta = startAngles.Protein += incValofTypes.Protein;
+					break;
+					case 'Modified_protein':
+						c = centersOf7Circle(orderOfNodeTypes[3],width,height,yshift);
+						theta = startAngles.Protein += incValofTypes.Protein;
+					break;
+					case 'Chromosome':
+						c = centersOf7Circle(orderOfNodeTypes[4],width,height,yshift);
+						theta = startAngles.Protein += incValofTypes.Protein;
+					break;
+					case 'Metabolite':
+						c = centersOf7Circle(orderOfNodeTypes[5],width,height,yshift);
+						theta = startAngles.Protein += incValofTypes.Protein;
 					break;
 					case 'Pathway':
-						c = centersOf7Circle(orderOfNodeTypes[2],width,height,yshift);
+						c = centersOf7Circle(orderOfNodeTypes[6],width,height,yshift);
 						theta = startAngles.Pathway += incValofTypes.Pathway;
 					break;
-					case 'kegg_Pathway':
-						c = centersOf7Circle(orderOfNodeTypes[2],width,height,yshift);
+					case 'Biological_process':
+
+						c = centersOf7Circle(orderOfNodeTypes[7],width,height,yshift);
 						theta = startAngles.Pathway += incValofTypes.Pathway;
 					break;
-					case 'HPO':
-						c = centersOf7Circle(orderOfNodeTypes[3],width,height,yshift);
-						theta = startAngles.HPO += incValofTypes.HPO;
-					break;
-					case 'Drug':
-						c = centersOf7Circle(orderOfNodeTypes[4],width,height,yshift);
-						theta = startAngles.Drug += incValofTypes.Drug;
-					break;
-					case 'Disease':
-						c = centersOf7Circle(orderOfNodeTypes[5],width,height,yshift);
-						theta = startAngles.Disease += incValofTypes.Disease;
-					break;
-					case 'kegg_Disease':
-						c = centersOf7Circle(orderOfNodeTypes[5],width,height,yshift);
-						theta = startAngles.Disease += incValofTypes.Disease;
-					break;
-					case 'Compound':
-						c = centersOf7Circle(orderOfNodeTypes[6],width,height,yshift);
-						theta = startAngles.Compound += incValofTypes.Compound;
-					break;
-					case 'Prediction':
-						c = centersOf7Circle(orderOfNodeTypes[6],width,height,yshift);
-						theta = startAngles.Compound += incValofTypes.Compound;
-					break;
+					
+
+
+					// case 'Protein':
+					// 	//c = centersOf7Circle(orderOfNodeTypes[0],width,height);
+
+					// 	//c = {x:prot_width*prot_counter, y:(height / 36)*0.25};
+					// 	c = {x:prot_width*prot_counter, y:prot_y};
+					// 	//console.log(c);
+					// 	prot_counter++;
+					// 	theta = startAngles.Protein += incValofTypes.Protein;
+					// 	/*
+					// 	console.log(lookup);
+					// 	console.log(lookup.Protein);
+					// 	*/
+
+					// break;
+					// case 'Peptide':
+					// 	//if(orderOfNodeTypes[0] > 2)
+					// 		//yshift = (height / 36)*0.5;
+					// 	c = centersOf7Circle(orderOfNodeTypes[1],width,height,yshift);
+					// 	theta = startAngles.Peptide += incValofTypes.Peptide;
+					// break;
+					// case 'Pathway':
+					// 	c = centersOf7Circle(orderOfNodeTypes[2],width,height,yshift);
+					// 	theta = startAngles.Pathway += incValofTypes.Pathway;
+					// break;
+					// case 'kegg_Pathway':
+					// 	c = centersOf7Circle(orderOfNodeTypes[2],width,height,yshift);
+					// 	theta = startAngles.Pathway += incValofTypes.Pathway;
+					// break;
+					// case 'HPO':
+					// 	c = centersOf7Circle(orderOfNodeTypes[3],width,height,yshift);
+					// 	theta = startAngles.HPO += incValofTypes.HPO;
+					// break;
+					// case 'Drug':
+					// 	c = centersOf7Circle(orderOfNodeTypes[4],width,height,yshift);
+					// 	theta = startAngles.Drug += incValofTypes.Drug;
+					// break;
+					// case 'Disease':
+					// 	c = centersOf7Circle(orderOfNodeTypes[5],width,height,yshift);
+					// 	theta = startAngles.Disease += incValofTypes.Disease;
+					// break;
+					// case 'kegg_Disease':
+					// 	c = centersOf7Circle(orderOfNodeTypes[5],width,height,yshift);
+					// 	theta = startAngles.Disease += incValofTypes.Disease;
+					// break;
+					// case 'Compound':
+					// 	c = centersOf7Circle(orderOfNodeTypes[6],width,height,yshift);
+					// 	theta = startAngles.Compound += incValofTypes.Compound;
+					// break;
+					// case 'Prediction':
+					// 	c = centersOf7Circle(orderOfNodeTypes[6],width,height,yshift);
+					// 	theta = startAngles.Compound += incValofTypes.Compound;
+					// break;
 				}
 			}
 

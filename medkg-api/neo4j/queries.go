@@ -2,6 +2,7 @@ package neo4j
 
 import (
 	"context"
+	"log"
 	"strconv"
 
 	"chemplusx.com/medkg-api/models"
@@ -230,7 +231,7 @@ func SearchNodesInGraph(driver neo4j.DriverWithContext, term string, limit strin
 			var nodes []models.Node
 			for records.Next(ctx) {
 				record := records.Record()
-				// id := record.Values[0].(string)
+				id := record.Values[0].(string)
 				types := record.Values[1].([]interface{})
 				node := record.Values[2].(map[string]interface{})
 				nme := "noname"
@@ -238,11 +239,11 @@ func SearchNodesInGraph(driver neo4j.DriverWithContext, term string, limit strin
 					nme = node["name"].(string)
 				}
 
-				id := uuid.NewString()
+				// id := uuid.NewString()
 
-				if val, ok := node["id"]; ok && val != nil {
-					id = node["id"].(string)
-				}
+				// if val, ok := node["id"]; ok && val != nil {
+				// 	id = node["id"].(string)
+				// }
 				nodes = append(nodes, models.Node{
 					ID:         id,
 					Label:      nme,
@@ -284,8 +285,9 @@ func GetNetworkGraphForId(driver neo4j.DriverWithContext, id string, name string
 				query += " and node.name='" + name + "'"
 			}
 
-			query += " RETURN node {.*, embedding: null, synonyms_str: null} AS node, r, m {.*, label: labels(m)[0], embedding:null, synonyms_str: null} as m limit " + limit
+			query += " RETURN node {.*, embedding: null, synonyms_str: null, internal_id: elementId(node)} AS node, r, m {.*, label: labels(m)[0], embedding:null, synonyms_str: null, internal_id: elementId(m)} as m limit " + limit
 
+			log.Println(query)
 			records, _ := tx.Run(ctx, query, nil)
 
 			// Collect All data	for the first level
@@ -308,9 +310,14 @@ func GetNetworkGraphForId(driver neo4j.DriverWithContext, id string, name string
 				} else if val, ok := node["id"]; ok && val != nil {
 					nme = node["id"].(string)
 				}
+				id1 := "noID"
+
+				if idd, ok := node["id"]; ok {
+					id1 = idd.(string)
+				}
 
 				ssource := models.Node{
-					ID:          node["id"].(string),
+					ID:          id1,
 					Label:       nme,
 					Properties:  node,
 					DisplayName: nme,
@@ -332,8 +339,14 @@ func GetNetworkGraphForId(driver neo4j.DriverWithContext, id string, name string
 					nme = node["id"].(string)
 				}
 
+				id1 = "noID"
+
+				if idd, ok := nnode["id"]; ok {
+					id1 = idd.(string)
+				}
+
 				target := models.Node{
-					ID:          nnode["id"].(string),
+					ID:          id1,
 					Label:       nme,
 					Properties:  nnode,
 					DisplayName: nme,
@@ -356,7 +369,7 @@ func GetNetworkGraphForId(driver neo4j.DriverWithContext, id string, name string
 				})
 				// Second level Search, by fetching just next neighbors of this node. By node.id
 
-				records1, err := tx.Run(ctx, "MATCH (node:"+nodeLabel+"{id:'"+nnode["id"].(string)+"'})-[r1]-(m:"+labels+") RETURN r1, m {.*, label: labels(m)[0], embedding: null, synonyms_str: null} as m limit toInteger($limit)", map[string]interface{}{"limit": 5})
+				records1, err := tx.Run(ctx, "MATCH (node:"+nodeLabel+")-[r1]-(m:"+labels+") where elementId(node)=\""+nnode["internal_id"].(string)+"\" RETURN r1, m {.*, label: labels(m)[0], embedding: null, synonyms_str: null} as m limit toInteger($limit)", map[string]interface{}{"limit": 5})
 
 				if err == nil {
 					for records1.Next(ctx) {
@@ -377,8 +390,13 @@ func GetNetworkGraphForId(driver neo4j.DriverWithContext, id string, name string
 
 						nodeLabel := nnode["label"].(string)
 
+						id1 = "noID"
+
+						if idd, ok := node2["id"]; ok {
+							id1 = idd.(string)
+						}
 						target2 := models.Node{
-							ID:          node2["id"].(string),
+							ID:          id1,
 							Label:       nme,
 							Properties:  node2,
 							DisplayName: nme,

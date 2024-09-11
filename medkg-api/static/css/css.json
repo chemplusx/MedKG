@@ -5,7 +5,7 @@
         "background-color": "#666",
         "text-opacity"	  : "0.5",
         "label"		  	  : "data(display_name)",
-        "font-size"    	  : "10px",
+        "font-size"    	  : "8px",
         "text-valign"  	  : "center",
         "text-halign"  	  : "center",
         "text-wrap"	 	  : "ellipsis",
@@ -120,7 +120,7 @@
         "style": {
             "border-color"	  : "#000000",
             "border-width"	  : "2px",
-            "font-size"		  : "15px",
+            "font-size"		  : "8px",
             "text-wrap"	 	  : "wrap",
             "text-max-width"  : 250
         }
@@ -131,12 +131,12 @@
     },
     {
         "selector": "edge.highlight",
-        "style": { "width":"3px","opacity":"1","font-size": "10px",
+        "style": { "width":"3px","opacity":"1","font-size": "6px",
         "mid-target-arrow-color": "#FFF" }
     },
     {
         "selector": "edge.highlightededge",
-        "style": { "width":"3px","opacity":"1","font-size": "10px"}
+        "style": { "width":"3px","opacity":"1","font-size": "6px"}
     },
     {
         "selector": "edge.semitransp",
@@ -150,7 +150,7 @@
       }
     },
     {
-      "selector": "node[Node_Type='kegg_Pathway']",
+      "selector": "node[Node_Type='Biological_process']",
       "style": {
         "shape": "diamond",
         "background-color": "#07779F"
@@ -164,13 +164,6 @@
       }
     },
     {
-      "selector": "node[Node_Type='kegg_Disease']",
-      "style": {
-        "shape": "triangle",
-        "background-color": "#EC7063"
-      }
-    },
-    {
       "selector": "node[Node_Type='Protein']",
       "style": {
         "shape": "ellipse",
@@ -178,14 +171,14 @@
       }
     },
     {
-      "selector": "node[Node_Type='Protein_N']",
+      "selector": "node[Node_Type='Transcript']",
       "style": {
         "shape": "ellipse",
         "background-color": "#F8C471"
       }
     },
     {
-      "selector": "node[Node_Type='HPO']",
+      "selector": "node[Node_Type='Metabolite']",
       "style": {
         "shape": "pentagon",
         "background-color": "#7030a0"
@@ -211,7 +204,7 @@
       }
     },
     {
-      "selector": "node[Node_Type='Prediction']",
+      "selector": "node[Node_Type='Phenotype']",
       "style": {
         "shape": "hexagon",
         "background-color": "white",
@@ -229,7 +222,7 @@
         "opacity": "0.25",
         "label": "data(label)",
         "text-rotation": "autorotate",
-        "text-margin-x": "10px",
+        "text-margin-x": "5px",
         "font-size": "0px"
       }
     },
@@ -240,13 +233,13 @@
       }
     },
     {
-      "selector": "edge[Edge_Type='Drug']",
+      "selector": "edge[Edge_Type='BELONGS_TO_PROTEIN']",
       "style": {
         "line-color": "#078307"
       }
     },
     {
-      "selector": "edge[Edge_Type='Chembl']",
+      "selector": "edge[Edge_Type='HAS_SEQUENCE']",
       "style": {
         "line-color": "#5a90d4"
       }
@@ -258,31 +251,31 @@
       }
     },
     {
-      "selector": "edge[Edge_Type='drugChembl']",
+      "selector": "edge[Edge_Type='AN_OFF_LABEL_USE_FOR']",
       "style": {
         "line-color": "#5a90d4"
       }
     },
     {
-      "selector": "edge[Edge_Type='drugPrediction']",
+      "selector": "edge[Edge_Type='IS_AN_INDICATION_FOR']",
       "style": {
         "line-color": "#d03f3f"
       }
     },
     {
-      "selector": "edge[Edge_Type='compoundPrediction']",
+      "selector": "edge[Edge_Type='HAS_CARRIER']",
       "style": {
         "line-color": "#d03f3f"
       }
     },
     {
-      "selector": "edge[Edge_Type='Prediction']",
+      "selector": "edge[Edge_Type='IS_A_CONTRAINDICATION_FOR']",
       "style": {
         "line-color": "#d03f3f"
       }
     },
     {
-      "selector": "edge[Edge_Type='PredChem']",
+      "selector": "edge[Edge_Type='IS_A_BIOMARKER_OF']",
       "style": {
         "line-color": "violet"
       }
