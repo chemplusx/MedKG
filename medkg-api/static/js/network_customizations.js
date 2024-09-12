@@ -14,6 +14,7 @@ $('#layout').change(function () {
 	}
 });
 
+
 $('#changeOrderOfmedKG').click(function () {
 	var lsslayer;
 	var orders;
