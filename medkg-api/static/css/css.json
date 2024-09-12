@@ -229,61 +229,89 @@
     {
       "selector": "edge.nolabel",
       "style": {
-        "label": ""
+        "label": "",
+        "target-arrow-color": "#ccc",
+        "target-arrow-shape": "triangle"
       }
     },
     {
       "selector": "edge[Edge_Type='BELONGS_TO_PROTEIN']",
       "style": {
-        "line-color": "#078307"
+        "line-color": "#078307",
+        "target-arrow-color": "#078307",
+        "target-arrow-shape": "triangle"
       }
     },
     {
       "selector": "edge[Edge_Type='HAS_SEQUENCE']",
       "style": {
-        "line-color": "#5a90d4"
-      }
-    },
-    {
-      "selector": "edge[Edge_Type='predictionChembl']",
-      "style": {
-        "line-color": "#5a90d4"
+        "line-color": "#5a90d4",
+        "target-arrow-color": "#5a90d4",
+        "target-arrow-shape": "triangle"
       }
     },
     {
       "selector": "edge[Edge_Type='AN_OFF_LABEL_USE_FOR']",
       "style": {
-        "line-color": "#5a90d4"
+        "line-color": "#5a90d4",
+        "target-arrow-color": "#5a90d4",
+        "target-arrow-shape": "triangle"
       }
     },
     {
       "selector": "edge[Edge_Type='IS_AN_INDICATION_FOR']",
       "style": {
-        "line-color": "#d03f3f"
+        "line-color": "#d03f3f",
+        "target-arrow-color": "#d03f3f",
+        "target-arrow-shape": "triangle"
       }
     },
     {
       "selector": "edge[Edge_Type='HAS_CARRIER']",
       "style": {
-        "line-color": "#d03f3f"
+        "line-color": "#d03f3f",
+        "target-arrow-color": "#ff9999",
+        "target-arrow-shape": "triangle"
       }
     },
     {
       "selector": "edge[Edge_Type='IS_A_CONTRAINDICATION_FOR']",
       "style": {
-        "line-color": "#d03f3f"
+        "line-color": "#d03f3f",
+        "target-arrow-color": "#d03f3f",
+        "target-arrow-shape": "triangle"
       }
     },
     {
       "selector": "edge[Edge_Type='IS_A_BIOMARKER_OF']",
       "style": {
-        "line-color": "violet"
+        "line-color": "violet",
+        "target-arrow-color": "#violet",
+        "target-arrow-shape": "triangle"
       }
     },
     {
       "selector": "edge[Edge_Type='ASSOCIATED_WITH']",
       "style": {
-        "line-color": "light-blue"
+        "line-color": "blue",
+        "target-arrow-color": "#blue",
+        "target-arrow-shape": "triangle"
+      }
+    },
+    {
+      "selector": "edge[Edge_Type='HAS_PARENT']",
+      "style": {
+        "line-color": "#009933",
+        "target-arrow-color": "#009933",
+        "target-arrow-shape": "triangle"
+      }
+    },
+    {
+      "selector": "edge[Edge_Type='HAS_ENZYME']",
+      "style": {
+        "line-color": "#669999",
+        "target-arrow-color": "#669999",
+        "target-arrow-shape": "triangle"
       }
     }
     ]
