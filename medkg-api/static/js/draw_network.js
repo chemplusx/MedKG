@@ -82,20 +82,24 @@ function createDetailsCard(title, data) {
 
 
 function LoadGraph(id, name, file, type='empty'){
-	
+	neighbour = $('#neighbour-type').val();
+	if (neighbour === 'Any'){
+		neighbour = null;
+	}
 	$.ajax( {
 		url: "nodes/graph",
 		data: {
 		  id: id,
 		  name: name,
-		  type: type
+		  type: type,
+		  neighbour: neighbour
 		},
 		success: function( result ) {
 			// remove any data present in the network
 			cy.remove(cy.elements());
 			cy.add(result)
 			var layout = cy.layout({
-				name: 'medKGLayout',
+				name: $('#layout').val(),
 				rows: 4,
 				orderOfNodeTypes: [1,2,3,5,6,4,7,8,9,10,11,12,13,14,15],
 			  });
@@ -281,7 +285,7 @@ function expandForNodeId(nodeId, name, type){
 			// cy.nodes().forEach(node => node.lock());
 			cy.add(result)
 			var layout = cy.layout({
-				name: 'medKGLayout',
+				name: $('#layout').val(),
 				rows: 4,
 				orderOfNodeTypes: [1,2,3,5,6,4,7,8,9,10,11,12,13,14,15],
 			  });

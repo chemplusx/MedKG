@@ -1,5 +1,18 @@
 
-layout
+$('#layout').change(function () {
+	if($(this).val()=='medKGLayout'){
+		$('#medKGLayout_settings').show();
+		$('#changeOrderOfCrossbar').click();
+		return true;
+	}else{
+		$('#medKGLayout_settings').hide();
+		var layout = cy.layout({
+			name: $(this).val(),
+			fit: 'viewport'
+		});
+		layout.run();
+	}
+});
 
 $('#changeOrderOfCrossbar').click(function () {
 	var lsslayer;

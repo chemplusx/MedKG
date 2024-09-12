@@ -52,65 +52,25 @@ cy.on('tap', function(event){
 
 cy.on('select', function(e){
 	var ele = e.target;
-	if(ele.data().source){
-		conn_nodes = ele.connectedNodes();
-		el1 = conn_nodes[0].data();
-		if(conn_nodes.length === 1){
-			// self interaction
-			el2 = conn_nodes[0].data();
-		}else{
-			el2 = conn_nodes[1].data();
-		}
-		ele.connectedNodes().addClass('highlightednode');
 
-		ele.animate({
-			style: {width: "3px","opacity":"1","font-size": "10px"}
-		});
+	var target = e.target || e.cyTarget;
+	var detailsContent = document.getElementById('details-content');
+		
+		// Clear previous content
+	detailsContent.innerHTML = '';
 
-		$.ajax({
-			type:"POST",
-			url:'selected_edge.php',
-			data: {node1:el1,node2:el2,Edge:ele.data()},
-			success: function(result){
-				if($('#selected_edges').hasClass('d-none')){
-					$('#selected_edges').append('<h5 class="row alert alert-secondary p-1 mb-0 border-bottom-0 border-secondary">Selected Edges</h5>');
-					$('#selected_edges').removeClass('d-none');
-				}
-				$('#selected_edges').append(result);
-			}
-		});
+	// Add general info card
+	var generalInfo = {
+		'ID': target.id(),
+		'Type': target.isNode() ? 'Node' : 'Edge'
+	};
+	detailsContent.innerHTML += createDetailsCard('General Information', generalInfo);
 
+	// Add data card
+	detailsContent.innerHTML += createDetailsCard('Element Data', target.data()["properties"]);
 
-	}else{
-		var degree = 
-		(ele.outgoers()
-			.union(ele.incomers())
-			.length) / 2;
-		degree = Math.floor(degree);
-		$.ajax({
-			type:"POST",
-			url:'selected_node.php',
-			data: {node:ele.data(), degree:degree},
-			success: function(result){
-				if($('#selected_nodes').hasClass('d-none')){
-					$('#selected_nodes').append('<h5 class="row alert alert-secondary p-1 mb-0 border-bottom-0 border-secondary">Selected Nodes</h5>');
-					$('#selected_nodes').removeClass('d-none');
-					$('#makeNewSearchWithSelecteds_btn').removeClass('d-none');
-				}
-				$('#selected_nodes').append(result);
-			}
-		});
-
-		ele.addClass('zelected');
-		ele.connectedEdges().connectedNodes().addClass('highlightednode');
-
-		ele.connectedEdges().animate({
-			style: {width: "3px","opacity":"1","font-size": "10px"}
-		});
-	}
-	
-
-	
+	// Scroll to details section
+	document.getElementById('details-section').scrollIntoView({behavior: 'smooth'});
 });
 
 cy.on('mouseover', 'node', function(e) {

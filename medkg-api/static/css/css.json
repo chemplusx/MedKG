@@ -279,5 +279,11 @@
       "style": {
         "line-color": "violet"
       }
+    },
+    {
+      "selector": "edge[Edge_Type='ASSOCIATED_WITH']",
+      "style": {
+        "line-color": "light-blue"
+      }
     }
     ]
