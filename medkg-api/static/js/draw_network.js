@@ -8,6 +8,7 @@ var cy = window.cy = cytoscape({
 	container: $('#network'),
 	style: my_style,
 	elements: [],
+	userZoomingEnabled: false,
 	layout: {
 		name: 'medKGLayout',
   		rows: 4,
@@ -48,44 +49,69 @@ function createDetailsCard(title, data) {
 	let cardHtml = `
 		<div class="card details-card">
 			<div class="card-content">
-				<span class="card-title">${title}</span>
-				<table class="details-table">
-					<tbody>
-	`;
+				<span class="card-title">${title}</span>`;
+	// 			<table class="details-table">
+	// 				<tbody>
+	// `;
 
-	for (let key in data) {
-		if (data.hasOwnProperty(key)) {
-			let value = data[key];
-			if (typeof value === 'object' && value !== null) {
-				value = JSON.stringify(value);
-			}
-			if (value !== null && value !== '') {
-				cardHtml += `
-					<tr>
-						<td class="key">${key}</td>
-						<td class="value">${value}</td>
-					</tr>
-				`;
-			}
-		}
-	}
+	// for (let key in data) {
+	// 	if (data.hasOwnProperty(key)) {
+	// 		let value = data[key];
+	// 		if (typeof value === 'object' && value !== null) {
+	// 			value = JSON.stringify(value);
+	// 		}
+	// 		if (value !== null && value !== '') {
+	// 			cardHtml += `
+	// 				<tr>
+	// 					<td class="key">${key}</td>
+	// 					<td class="value" style="overflow: wrap;">${value}</td>
+	// 				</tr>
+	// 			`;
+	// 		}
+	// 	}
+	// }
 
-	cardHtml += `
-					</tbody>
-				</table>
-			</div>
+	// cardHtml += `
+	// 				</tbody>
+	// 			</table>
+	cardHtml += beautifyObject(data);
+	cardHtml +=
+			`</div>
 		</div>
 	`;
 
 	return cardHtml;
 }
 
+function beautifyObject(obj) {
+	let output = '<ul>';
+
+	for (const subKey in obj) {
+		if (subKey === "embedding" || subKey === "synonyms_str") {
+			continue;
+		}
+		if (obj.hasOwnProperty(subKey)) {
+			output += '<li style="margin-top: 1rem;">';
+			if (typeof obj[subKey] === 'object' && obj[subKey] !== null) {
+				// Recursive call for nested objects
+				output += `<strong style="display: inline-block; width: 10rem;">${subKey}:</strong> ${beautifyObject(obj[subKey])}`;
+			} else {
+				output += `<strong style="display: inline-block; width: 10rem;">${subKey}:</strong> ${obj[subKey]}`;
+			}
+			output += '</li>';
+		}
+	}
+
+	output += '</ul>';
+	return output;
+}
 
 function LoadGraph(id, name, file, type='empty'){
 	neighbour = $('#neighbour-type').val();
 	if (neighbour === 'Any'){
 		neighbour = null;
 	}
+	showLoading();
 	$.ajax( {
 		url: "nodes/graph",
 		data: {
@@ -96,6 +122,7 @@ function LoadGraph(id, name, file, type='empty'){
 		},
 		success: function( result ) {
 			// remove any data present in the network
+			hideLoading();
 			cy.remove(cy.elements());
 			cy.add(result)
 			var layout = cy.layout({
@@ -273,6 +300,7 @@ function expandForNodeId(nodeId, name, type){
 	if (neighbour === 'Any'){
 		neighbour = null;
 	}
+	showLoading();
 	$.ajax( {
 		url: "nodes/graph",
 		data: {
@@ -282,6 +310,7 @@ function expandForNodeId(nodeId, name, type){
 			neighbour: neighbour
 		},
 		success: function( result ) {
+			hideLoading();
 			// cy.nodes().forEach(node => node.lock());
 			cy.add(result)
 			var layout = cy.layout({
@@ -416,3 +445,12 @@ function expandForNodeId(nodeId, name, type){
 	
 	
 // });
+function showLoading() {
+	document.getElementById('loadingOverlay').style.display = 'flex';
+}
+
+// Function to hide the loading overlay
+function hideLoading() {
+	document.getElementById('loadingOverlay').style.display = 'none';
+}
+

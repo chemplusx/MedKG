@@ -23,6 +23,26 @@
             flex: 1;
         }
 
+        nav .brand-logo {
+            display: flex;
+            align-items: center;
+            padding: 6px;
+            padding-left: 4%;
+        }
+
+        nav .brand-logo img {
+            height: 5rem;
+            margin-right: 10px;
+        }
+
+        nav .nav-options {
+            margin-right: 3%;
+        }
+
+        nav .nav-options li {
+            margin-left: 20px;
+            padding: 1rem;
+        }
 
         footer {
             background-color: #3f51b5;
@@ -91,11 +111,11 @@
 <body>
     <!-- Header -->
     <header>
-        <nav>
+        <nav style="height: 6rem !important;">
             <div class="nav-wrapper">
                 <a href="#" class="brand-logo">
                     <img src="images/logo.svg" alt="MedKG Logo">
-                    </a>
+                </a>
                 <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
                 <ul class="right hide-on-med-and-down nav-options">
                     <li><a href="search">Search</a></li>

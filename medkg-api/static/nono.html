@@ -48,32 +48,40 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/js/bootstrap-select.min.js"></script>
-    
 
-    
+
+
     <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
         .network-manipulation {
             padding: 20px;
             border-radius: 4px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
-        .graph-options, .layer-order, .component-list, .network-customization {
+
+        .graph-options,
+        .layer-order,
+        .component-list,
+        .network-customization {
             margin-top: 20px;
         }
+
         #canvas_bg {
             position: sticky;
             top: 0;
         }
+
         .btn-group {
             display: flex;
             justify-content: space-between;
         }
+
         .btn-group .btn {
             flex: 1;
             margin: 0 5px;
         }
+
         .dropdown-content {
             width: 100% !important;
         }
@@ -105,45 +113,50 @@
             flex-direction: column;
             background-color: #fafafa;
         }
-        
+
         main {
             flex: 1 0 auto;
         }
-        
+
         nav {
             background-color: #3f51b5;
         }
-                
+
         .sidenav {
             width: 300px;
         }
-        
-        .sidenav li > a {
-            color: rgba(0,0,0,0.87);
+
+        .sidenav li>a {
+            color: rgba(0, 0, 0, 0.87);
         }
-        
+
         .card-panel {
             border-radius: 8px;
         }
-        
-        .input-field input[type=text]:focus + label {
+
+        .input-field input[type=text]:focus+label {
             color: #3f51b5;
         }
-        
+
         .input-field input[type=text]:focus {
             border-bottom: 1px solid #3f51b5;
             box-shadow: 0 1px 0 0 #3f51b5;
         }
-        
-        .dropdown-content li > a, .dropdown-content li > span {
+
+        .dropdown-content li>a,
+        .dropdown-content li>span {
             color: #3f51b5;
         }
-        
-        .btn, .btn-large, .btn-small {
+
+        .btn,
+        .btn-large,
+        .btn-small {
             background-color: #3f51b5;
         }
-        
-        .btn:hover, .btn-large:hover, .btn-small:hover {
+
+        .btn:hover,
+        .btn-large:hover,
+        .btn-small:hover {
             background-color: #5c6bc0;
         }
 
@@ -226,11 +239,11 @@
             display: flex;
             align-items: center;
             padding: 6px;
-            padding-left: 6%;
+            padding-left: 4%;
         }
-        
+
         nav .brand-logo img {
-            height: 50px;
+            height: 5rem;
             margin-right: 10px;
         }
 
@@ -240,24 +253,74 @@
 
         nav .nav-options li {
             margin-left: 20px;
+            padding: 1rem;
         }
-        
+
         @media only screen and (max-width: 992px) {
             nav .brand-logo {
                 left: 50%;
                 transform: translateX(-50%);
             }
         }
-        </style>
+
+        .network-manipulation {
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 8px;
+            background-color: #f5f5f5;
+        }
+
+        .card-panel {
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .collection-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+        }
+
+        .collection-item img {
+            margin-right: 10px;
+        }
+
+        .section h5 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"],
+        select {
+            border-radius: 5px;
+        }
+
+        #medKGLayout_settings {
+            margin-top: 20px;
+        }
+
+        .zoom-controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .section-5,
+        .section-6,
+        .section-7 {
+            margin-top: 3px !important;
+        }
+    </style>
 </head>
 
 <body>
     <header>
-        <nav>
+        <nav style="height: 6rem !important;">
             <div class="nav-wrapper">
                 <a href="#" class="brand-logo">
                     <img src="images/logo.svg" alt="MedKG Logo">
-                    </a>
+                </a>
                 <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
                 <ul class="right hide-on-med-and-down nav-options">
                     <li><a href="search">Search</a></li>
@@ -271,14 +334,14 @@
             <li><a href="team">Project/Team</a></li>
         </ul> -->
     </header>
-    
+
 
     <!-- if something went wrong... -->
     <div id="error_msg" title="Search Error!"></div>
 
     <div class="container-fluid">
         <div class="row" style="height: 1000px !important;">
-            <aside class="col-3">
+            <!-- <aside class="col-3">
                 <div class="network-manipulation">
                     <div id="selected_edges" class="hide"></div>
                     <div id="selected_nodes" class="hide"></div>
@@ -355,7 +418,6 @@
                                 <img src="images/phenotypes.png" width="25" alt="phenotypes">
                                 <span>Phenotypes</span>
                             </li>
-                            <!-- Add other list items here -->
                         </ul>
 
                         <div class="row">
@@ -370,30 +432,193 @@
                         <div id="component_list_container" class="hide">
                             <ul class="collection">
                                 <li class="collection-item removeNodes">Diseases (EFO)</li>
-                                <!-- Add other list items here -->
                             </ul>
                         </div>
                     </div>
 
-                    <div class="network-customization">
+                    <a class="waves-effect waves-light btn" id="network_customization">Customize Network Style</a>
+        
+                    <div id="network_customization_panel" class="network-customization">
+                        <h5>Customize Network Style</h5>
+                        
+                        <div class="select-wrapper">
+                            <select id="style_nodeGroup">
+                                <option value="all">Choose Node Type (Default All)</option>
+                                    <option value="Protein">Core genes/proteins</option>
+                                    <option value="Disease">Diseases</option>
+                                    <option value="Phenotype">Phenotypes</option>
+                                    <option value="Pathway">Pathways (Reactome)</option>
+                                    <option value="Drug">Drugs</option>
+                                    <option value="Compound">Compounds</option>
+                            </select>
+                        </div>
+
+                        <ul class="collection">
+                            <li class="collection-item">
+                                <div class="btn-group">
+                                    <a class="customizeStyle btn waves-effect waves-light" id="nodeSize_down">-</a>
+                                    <a class="customizeStyle btn disabled" id="nodeSize_res">Node Size</a>
+                                    <a class="customizeStyle btn waves-effect waves-light" id="nodeSize_up">+</a>
+                                </div>
+                            </li>
+                            <li class="collection-item">
+                                <div class="btn-group">
+                                    <a class="customizeStyle btn waves-effect waves-light" id="fontSize_down">-</a>
+                                    <a class="customizeStyle btn disabled" id="fontSize_res">Font Size</a>
+                                    <a class="customizeStyle btn waves-effect waves-light" id="fontSize_up">+</a>
+                                </div>
+                            </li>
+                            <li class="collection-item">
+                                <a class="dropdown-trigger btn" href="#" data-target="labelPositionDropdown">Label Position</a>
+                                <ul id="labelPositionDropdown" class="dropdown-content">
+                                    <li><a href="#!" class="customizeStyle" id="left">Left</a></li>
+                                    <li><a href="#!" class="customizeStyle" id="right">Right</a></li>
+                                    <li><a href="#!" class="customizeStyle" id="top">Top</a></li>
+                                    <li><a href="#!" class="customizeStyle" id="bottom">Bottom</a></li>
+                                    <li><a href="#!" class="customizeStyle" id="center">Center</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                        <div class="row">
+                            <div class="col s12 m6">
+                                <a class="waves-effect waves-light btn" id="edgelabel_on_off_btn">Edge Label Text On/Off</a>
+                            </div>
+                            <div class="col s12 m6">
+                                <a class="waves-effect waves-light btn" id="legend_on_off_btn">Node & Edge Legend On/Off</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="new-network">
+                        <a href="search" target="_blank" class="btn waves-effect waves-light">New Knowledge Graph</a>
+                    </div>
+                </div>
+            </aside> -->
+
+            <aside class="col s12 m3">
+                <div class="network-manipulation card-panel z-depth-2">
+                    <!-- Selected Items -->
+                    <div id="selected_edges" class="hide"></div>
+                    <div id="selected_nodes" class="hide"></div>
+                    <div id="makeNewSearchWithSelecteds_btn" class="hide">
+                        <button class="btn waves-effect waves-light" id="makeNewSearchWithSelecteds">New search with
+                            selected nodes</button>
+                    </div>
+
+                    <!-- Node Search -->
+                    <div class="section-1">
+                        <h5 class="cyan-text text-darken-2">Node Search</h5>
+                        <div class="input-field">
+                            <input class="autocomplete" name="node_search" id="node_search"
+                                placeholder="Type the name of the node" />
+                            <input type="hidden" name="node_search" id="network_f_name" value="1725318346" />
+                        </div>
+                    </div>
+
+                    <!-- Neighbour Type Selection -->
+                    <div class="section-2">
+                        <h5 class="cyan-text text-darken-2">Neighbour Type</h5>
+                        <div class="input-field">
+                            <select id="neighbour-type" class="browser-default">
+                                <option value="Any">Any</option>
+                                <option value="Drug">Drug</option>
+                                <option value="Protein">Protein</option>
+                                <option value="Disease">Disease</option>
+                                <option value="Metabolite">Metabolite</option>
+                                <option value="Phenotype">Phenotype</option>
+                                <option value="Peptide">Peptide</option>
+                                <option value="Gene">Gene</option>
+                                <option value="Pathway">Pathway</option>
+                                <option value="Chromosome">Chromosome</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Graph Options -->
+                    <div class="section-3">
+                        <h5 class="cyan-text text-darken-2">Graph Options</h5>
+                        <div class="input-field">
+                            <select id="layout" class="browser-default">
+                                <option value="medKGLayout">medKG Layout</option>
+                                <option value="medKGCircles">medKG Circles</option>
+                                <option value="circle">Circle</option>
+                                <option value="grid">Grid</option>
+                                <option value="cose">Cose</option>
+                                <option value="concentric">Concentric</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Order of Layers -->
+                    <div id="medKGLayout_settings" class="section-4">
+                        <h5 class="cyan-text text-darken-2">Order of Layers</h5>
+
+                        <ul id="orderingComponents_more" class="collection">
+                            <li class="collection-item">
+                                <img src="images/proteins.png" width="25" alt="core protein">
+                                <span>Core genes/proteins</span>
+                            </li>
+                            <li class="collection-item">
+                                <img src="images/drugs.png" width="25" alt="drugs">
+                                <span>Drugs</span>
+                            </li>
+                            <li class="collection-item">
+                                <img src="images/diseases.png" width="25" alt="disease">
+                                <span>Diseases</span>
+                            </li>
+                            <li class="collection-item">
+                                <img src="images/compounds.png" width="25" alt="compounds">
+                                <span>Compounds</span>
+                            </li>
+                            <li class="collection-item">
+                                <img src="images/gene_core.png" width="25" alt="genes">
+                                <span>Genes</span>
+                            </li>
+                            <li class="collection-item">
+                                <img src="images/gene_neigh.png" width="25" alt="metabolites">
+                                <span>Metabolites</span>
+                            </li>
+                            <li class="collection-item">
+                                <img src="images/phenotypes.png" width="25" alt="phenotypes">
+                                <span>Phenotypes</span>
+                            </li>
+                        </ul>
+
+                        <div class="center-align">
+                            <button class="btn waves-effect waves-light" id="changeOrderOfmedKG">Apply</button>
+                        </div>
+                    </div>
+
+                    <!-- Add/Remove Components -->
+                    <div class="section-5 center-align">
+                        <a class="waves-effect waves-light btn" id="add_remove_toggle">Add/Remove Components</a>
+                        <div id="component_list_container" class="hide">
+                            <ul class="collection">
+                                <li class="collection-item removeNodes">Diseases (EFO)</li>
+                                <!-- Add more list items -->
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Customize Network Style -->
+                    <div class="section-6 center-align">
                         <a class="waves-effect waves-light btn" id="network_customization">Customize Network Style</a>
-                        <div id="network_customization_panel" class="d-none">
-                            <div class="input-field">
+                        <div id="network_customization_panel" class="network-customization">
+                            <h5>Customize Network Style</h5>
+
+                            <div class="select-wrapper">
                                 <select id="style_nodeGroup">
                                     <option value="all">Choose Node Type (Default All)</option>
                                     <option value="Protein">Core genes/proteins</option>
-                                    <option value="Protein_N">Neighbouring genes/proteins</option>
-                                    <option value="Disease">Diseases (EFO)</option>
-                                    <option value="kegg_Disease">Diseases (KEGG)</option>
-                                    <option value="HPO">HPO Terms</option>
+                                    <option value="Disease">Diseases</option>
+                                    <option value="Phenotype">Phenotypes</option>
                                     <option value="Pathway">Pathways (Reactome)</option>
-                                    <option value="kegg_Pathway">Pathways (KEGG)</option>
                                     <option value="Drug">Drugs</option>
-                                    <option value="Compound">Compounds (ChEMBL)</option>
-                                    <option value="Prediction">Compounds (Predictions)</option>
+                                    <option value="Compound">Compounds</option>
                                 </select>
-                                <label>Node Type</label>
                             </div>
+
                             <ul class="collection">
                                 <li class="collection-item">
                                     <div class="btn-group">
@@ -410,7 +635,8 @@
                                     </div>
                                 </li>
                                 <li class="collection-item">
-                                    <a class="dropdown-trigger btn" href="#" data-target="labelPositionDropdown">Label Position</a>
+                                    <a class="dropdown-trigger btn" href="#" data-target="labelPositionDropdown">Label
+                                        Position</a>
                                     <ul id="labelPositionDropdown" class="dropdown-content">
                                         <li><a href="#!" class="customizeStyle" id="left">Left</a></li>
                                         <li><a href="#!" class="customizeStyle" id="right">Right</a></li>
@@ -419,23 +645,38 @@
                                         <li><a href="#!" class="customizeStyle" id="center">Center</a></li>
                                     </ul>
                                 </li>
-                                <li class="collection-item">
-                                    <a class="waves-effect waves-light btn" id="edgelabel_on_off_btn">Edge Label Text On/Off</a>
-                                </li>
-                                <li class="collection-item">
-                                    <a class="waves-effect waves-light btn" id="legend_on_off_btn">Node & Edge Legend On/Off</a>
-                                </li>
                             </ul>
+
+                            <div class="row">
+                                <div class="col s12 m6">
+                                    <a class="waves-effect waves-light btn" id="edgelabel_on_off_btn">Edge Label Text
+                                        On/Off</a>
+                                </div>
+                                <div class="col s12 m6">
+                                    <a class="waves-effect waves-light btn" id="legend_on_off_btn">Node & Edge Legend
+                                        On/Off</a>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="new-network">
-                        <a href="search" target="_blank" class="btn waves-effect waves-light">New Knowledge Graph Query</a>
+                    <!-- Create New Knowledge Graph -->
+                    <div class="section-7 center-align">
+                        <a href="search" target="_blank" class="btn waves-effect waves-light">New Knowledge Graph</a>
                     </div>
                 </div>
             </aside>
-            <div class="col-9" id="network"> 
+
+
+            <div class="col-9" id="network">
+                <div class="overlay" id="loadingOverlay">
+                    <div class="spinner"></div>
+                </div>
                 <div id="canvas_bg" class="col s2">
+                    <div class="zoom-controls">
+                        <button id="zoom-in">Zoom In</button>
+                        <button id="zoom-out">Zoom Out</button>
+                    </div>
                     <!-- <img src="images/KG_Legend.png" class="responsive-img" id="canvas_bg_item" alt="KG Legend"> -->
                 </div>
             </div>
@@ -454,7 +695,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             var elems = document.querySelectorAll('select');
             M.FormSelect.init(elems);
             var dropdowns = document.querySelectorAll('.dropdown-trigger');
@@ -468,20 +709,20 @@
             // });
 
             // Add event listeners for customization buttons
-            document.querySelectorAll('.customizeStyle').forEach(function(elem) {
-                elem.addEventListener('click', function(e) {
+            document.querySelectorAll('.customizeStyle').forEach(function (elem) {
+                elem.addEventListener('click', function (e) {
                     e.preventDefault();
                     console.log('Customize style:', this.id);
                     // Add your customization logic here
                 });
             });
 
-            document.getElementById('edgelabel_on_off_btn').addEventListener('click', function() {
+            document.getElementById('edgelabel_on_off_btn').addEventListener('click', function () {
                 console.log('Toggle edge label');
                 // Add your toggle logic here
             });
 
-            document.getElementById('legend_on_off_btn').addEventListener('click', function() {
+            document.getElementById('legend_on_off_btn').addEventListener('click', function () {
                 console.log('Toggle legend');
                 // Add your toggle logic here
             });
@@ -489,7 +730,7 @@
             var collapsibleElems = document.querySelectorAll('.collapsible');
             M.Collapsible.init(collapsibleElems);
 
-            
+
         });
     </script>
 

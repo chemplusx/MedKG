@@ -365,3 +365,82 @@ footer {
   padding: 10px 0;
   text-align: center;
 }
+
+/* .network-customization {
+  display: none;
+}
+
+.network-customization.show {
+  display: block;
+} */
+
+#network_customization_panel {
+    position: absolute;
+    top: auto;
+    margin-top: -22rem;
+    left: 100%; /* Places the panel to the right of the button */
+    width: 300px; /* Adjust width as needed */
+    padding: 15px;
+    background-color: white;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    display: none; /* Initially hidden, toggle visibility with JS */
+    z-index: 1000; /* Ensure the panel is above the network */
+}
+
+#network_customization {
+    position: relative; /* Necessary for the absolute positioning of the panel */
+}
+
+.show-panel {
+    display: block !important; /* Show the panel when the button is clicked */
+}
+
+.zoom-controls {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.zoom-controls button {
+  margin: 5px;
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.zoom-controls button:hover {
+  background-color: #0056b3;
+}
+
+/* Loading Overlay */
+.overlay {
+  display: none; /* Hidden by default */
+  position: fixed; /* Overlay covers entire screen */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  z-index: 999; /* High z-index to overlay everything */
+  justify-content: center;
+  align-items: center;
+}
+
+.spinner {
+  border: 16px solid #f3f3f3; /* Light gray */
+  border-top: 16px solid #3498db; /* Blue */
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  animation: spin 2s linear infinite; /* Infinite spinner animation */
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
