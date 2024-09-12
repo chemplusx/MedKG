@@ -2,7 +2,7 @@ from neo4j import GraphDatabase
 import os
 
 # Neo4j connection details
-uri = "bolt://localhost:7690"
+uri = "bolt://localhost:7687"
 username = "neo4j"
 password = "password"
 

@@ -20,7 +20,7 @@ import os
 from py2neo import Graph, Node, NodeMatcher
 
 # Connect to Neo4j
-graph = Graph("bolt://localhost:7690", auth=("neo4j", "password"))
+graph = Graph("bolt://localhost:7687", auth=("neo4j", "password"))
 
 # Path to the file containing the JSON data
 directory_path = 'F:\json\diseases'
