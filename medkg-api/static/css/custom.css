@@ -124,3 +124,237 @@ input {
   z-index: 10;
   opacity: 0.5;
 }
+
+
+/* Customizing the context menu */
+.cy-context-menus-cxt-menu {
+  background-color: #2c3e50 !important;
+  border-radius: 10px !important;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3) !important;
+  padding: 10px !important;
+  color: #ecf0f1 !important;
+  font-family: 'Segoe UI', 'Helvetica Neue', sans-serif !important;
+  border: none !important;
+  transition: opacity 0.3s ease !important;
+}
+
+/* Menu item styling */
+.cy-context-menus-cxt-menuitem {
+  padding: 5px 10px;
+    margin: 8px 0;
+    border-radius: 6px; /* Softer corner radius for buttons */
+    background-color: #34495e; /* Slightly lighter than the background */
+    color: #ecf0f1; /* Text color */
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    font-size: 14px; /* Refined font size */
+}
+
+.cy-context-menus-cxt-menuitem:hover {
+  background-color: #1abc9c; /* Highlight background on hover */
+    color: white; /* Make text stand out more on hover */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Active item */
+.cy-context-menus-cxt-menuitem.active {
+  background-color: #3498db; /* Different color for active state */
+  color: white;
+}
+
+/* Disable text selection */
+.cy-context-menus-cxt-menuitem {
+  border: none;
+    outline: none;
+}
+
+.cy-context-menus-cxt-menuitem::before {
+  content: url('path-to-your-icon.svg'); /* Add an icon before text */
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.cy-context-menus-cxt-menu-item {
+  user-select: none;
+}
+
+/* .cy-context-menus-cxt-menu {
+  position: fixed !important;
+  z-index: 1000;
+} */
+
+/* Ensure the network container has a specific height */
+#network {
+  height: 100%; /* Adjust this value as needed */
+  position: relative;
+  overflow: hidden;
+}
+
+/* Style for Cytoscape container */
+#cy {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.container {
+  flex: 1;
+}
+
+body {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+  background-color: #fafafa;
+}
+
+main {
+  flex: 1 0 auto;
+}
+
+nav {
+  background-color: #3f51b5;
+}
+      
+.sidenav {
+  width: 300px;
+}
+
+.sidenav li > a {
+  color: rgba(0,0,0,0.87);
+}
+
+.card-panel {
+  border-radius: 8px;
+}
+
+.input-field input[type=text]:focus + label {
+  color: #3f51b5;
+}
+
+.input-field input[type=text]:focus {
+  border-bottom: 1px solid #3f51b5;
+  box-shadow: 0 1px 0 0 #3f51b5;
+}
+
+.dropdown-content li > a, .dropdown-content li > span {
+  color: #3f51b5;
+}
+
+.btn, .btn-large, .btn-small {
+  background-color: #3f51b5;
+}
+
+.btn:hover, .btn-large:hover, .btn-small:hover {
+  background-color: #5c6bc0;
+}
+
+footer {
+  background-color: #3f51b5;
+  color: white;
+  padding: 10px 0;
+  text-align: center;
+}
+
+.header-title {
+  font-size: 2.5rem;
+  margin: 0;
+  text-align: center;
+}
+
+.search-section {
+  margin: 30px 0;
+}
+
+.input-field input[type="text"] {
+  border-bottom: 1px solid #3f51b5;
+  box-shadow: none;
+}
+
+.input-field input[type="text"]:focus {
+  border-bottom: 2px solid #3f51b5;
+  box-shadow: 0 1px 0 0 #3f51b5;
+}
+
+.input-field .prefix.active {
+  color: #3f51b5;
+}
+
+.input-field label {
+  color: #9e9e9e;
+}
+
+.input-field label.active {
+  color: #3f51b5;
+}
+
+.search-button-container {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.results-table-wrapper {
+  margin-top: 30px;
+}
+
+.results-table-wrapper h5 {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.results-table-wrapper table {
+  border: 1px solid #ccc;
+}
+
+.results-table-wrapper table thead {
+  background-color: #f5f5f5;
+}
+
+.results-table-wrapper table tbody tr:hover {
+  background-color: #e8f0fe;
+}
+
+.waves-effect.waves-light a {
+  color: #3f51b5;
+}
+
+.autocomplete-content {
+  position: absolute;
+  width: 100%;
+  z-index: 1000;
+}
+
+nav .brand-logo {
+  display: flex;
+  align-items: center;
+  padding: 6px;
+  padding-left: 6%;
+}
+
+nav .brand-logo img {
+  height: 50px;
+  margin-right: 10px;
+}
+
+nav .nav-options {
+  margin-right: 3%;
+}
+
+nav .nav-options li {
+  margin-left: 20px;
+}
+
+@media only screen and (max-width: 992px) {
+  nav .brand-logo {
+      left: 50%;
+      transform: translateX(-50%);
+  }
+}

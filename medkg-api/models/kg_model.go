@@ -2,6 +2,7 @@ package models
 
 type Node struct {
 	ID          string                 `json:"id"`
+	NodeId      string                 `json:"node_id"`
 	Label       string                 `json:"label"`
 	DisplayName string                 `json:"display_name"`
 	NodeType    string                 `json:"Node_Type"`

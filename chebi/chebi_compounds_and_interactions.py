@@ -14,7 +14,7 @@ mysql_config = {
 }
 
 # Neo4j connection details
-neo4j_uri = "bolt://localhost:7690"
+neo4j_uri = "bolt://localhost:7687"
 neo4j_user = "neo4j"
 neo4j_password = "password"
 

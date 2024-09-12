@@ -8,7 +8,7 @@ if DATA_DIR is None:
 
 
 # Neo4j connection parameters
-uri = "bolt://localhost:7690"
+uri = "bolt://localhost:7687"
 username = "neo4j"
 password = "password"
 

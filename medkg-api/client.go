@@ -64,7 +64,7 @@ func main() {
 	defer conn.Close()
 
 	done := make(chan struct{})
-	client, err := neo4j.NewClient("bolt://localhost:7690", "neo4j", "password")
+	client, err := neo4j.NewClient("bolt://localhost:7687", "neo4j", "password")
 	if err != nil {
 		log.Fatalf("Failed to create Neo4j client: %v", err)
 	}

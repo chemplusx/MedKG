@@ -103,7 +103,9 @@ func GetNetworkGraphForIdHandler(client neo4j.DriverWithContext) gin.HandlerFunc
 		name := c.Query("name")
 		typeN := c.Query("type")
 		limit := c.DefaultQuery("limit", "10")
-		nodes, relationships, err := ni.GetNetworkGraphForId(client, id, name, typeN, limit)
+		neighbour := c.DefaultQuery("neighbour", "")
+		// nodes, relationships, err := ni.GetNetworkGraphForId(client, id, name, typeN, limit, neighbour)
+		nodes, relationships, err := ni.GetNetworkGraphForIdAndDepth(client, id, name, typeN, limit, neighbour, 2)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return

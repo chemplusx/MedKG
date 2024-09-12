@@ -36,7 +36,7 @@ def process_data(tx, data):
         )
 
 # Neo4j connection parameters
-uri = "bolt://localhost:7690"  # Replace with your Neo4j server URI
+uri = "bolt://localhost:7687"  # Replace with your Neo4j server URI
 username = "neo4j"     # Replace with your Neo4j username
 password = "password"     # Replace with your Neo4j password
 

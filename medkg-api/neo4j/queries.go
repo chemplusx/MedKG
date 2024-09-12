@@ -263,7 +263,7 @@ func SearchNodesInGraph(driver neo4j.DriverWithContext, term string, limit strin
 	return result.([]models.Node), nil
 }
 
-func GetNetworkGraphForId(driver neo4j.DriverWithContext, id string, name string, typeN string, limit string) ([]map[string]interface{}, []map[string]interface{}, error) {
+func GetNetworkGraphForId(driver neo4j.DriverWithContext, id string, name string, typeN string, limit string, neighbour string) ([]map[string]interface{}, []map[string]interface{}, error) {
 	ctx := context.Background()
 
 	err := driver.VerifyConnectivity(ctx)
@@ -279,7 +279,10 @@ func GetNetworkGraphForId(driver neo4j.DriverWithContext, id string, name string
 
 			labels := "Disease|Tissue|Biological_process|Chromosome|Gene|Transcript|Protein|Amino_acid_sequence|Peptide|Modified_protein|Drug|Functional_region|Metabolite|Protein_structure|Pathway|Biological_sample"
 
-			query := "MATCH (node:" + typeN + ")-[r]-(m:" + labels + ") where elementId(node)='" + id + "'"
+			if neighbour != "" {
+				labels = neighbour
+			}
+			query := "MATCH (node:" + typeN + ")-[r*2]-(m:" + labels + ") where elementId(node)='" + id + "'"
 
 			if name != "" {
 				query += " and node.name='" + name + "'"
@@ -288,6 +291,8 @@ func GetNetworkGraphForId(driver neo4j.DriverWithContext, id string, name string
 			query += " RETURN node {.*, embedding: null, synonyms_str: null, internal_id: elementId(node)} AS node, r, m {.*, label: labels(m)[0], embedding:null, synonyms_str: null, internal_id: elementId(m)} as m limit " + limit
 
 			log.Println(query)
+
+			// query = "MATCH p=(node:Disease)-[r*2]-(m:Disease|Tissue|Biological_process|Chromosome|Gene|Transcript|Protein|Amino_acid_sequence|Peptide|Modified_protein|Drug|Functional_region|Metabolite|Protein_structure|Pathway|Biological_sample) where elementId(node)='4:4b9b25d3-4d29-42f7-a285-9ca6caddc8a1:1694884' and node.name='Parkinson disease' RETURN p limit 10"
 			records, _ := tx.Run(ctx, query, nil)
 
 			// Collect All data	for the first level
@@ -314,6 +319,8 @@ func GetNetworkGraphForId(driver neo4j.DriverWithContext, id string, name string
 
 				if idd, ok := node["id"]; ok {
 					id1 = idd.(string)
+				} else {
+					id1 = node["internal_id"].(string)
 				}
 
 				ssource := models.Node{
@@ -326,7 +333,7 @@ func GetNetworkGraphForId(driver neo4j.DriverWithContext, id string, name string
 
 				if _, ok := exists[node["id"]]; !ok {
 					nodes = append(nodes, map[string]interface{}{"data": ssource})
-					exists[node["id"]] = true
+					exists[ssource.ID] = true
 				}
 
 				nnode := record.Values[2].(map[string]interface{})
@@ -343,6 +350,8 @@ func GetNetworkGraphForId(driver neo4j.DriverWithContext, id string, name string
 
 				if idd, ok := nnode["id"]; ok {
 					id1 = idd.(string)
+				} else {
+					id1 = nnode["internal_id"].(string)
 				}
 
 				target := models.Node{
@@ -355,7 +364,7 @@ func GetNetworkGraphForId(driver neo4j.DriverWithContext, id string, name string
 
 				if _, ok := exists[nnode["id"]]; !ok {
 					nodes = append(nodes, map[string]interface{}{"data": target})
-					exists[nnode["id"]] = true
+					exists[target.ID] = true
 				}
 
 				relationships = append(relationships, map[string]interface{}{
@@ -369,7 +378,7 @@ func GetNetworkGraphForId(driver neo4j.DriverWithContext, id string, name string
 				})
 				// Second level Search, by fetching just next neighbors of this node. By node.id
 
-				records1, err := tx.Run(ctx, "MATCH (node:"+nodeLabel+")-[r1]-(m:"+labels+") where elementId(node)=\""+nnode["internal_id"].(string)+"\" RETURN r1, m {.*, label: labels(m)[0], embedding: null, synonyms_str: null} as m limit toInteger($limit)", map[string]interface{}{"limit": 5})
+				records1, err := tx.Run(ctx, "MATCH (node:"+nodeLabel+")-[r1]-(m:"+labels+") where elementId(node)=\""+nnode["internal_id"].(string)+"\" RETURN r1, m {.*, label: labels(m)[0], embedding: null, synonyms_str: null, internal_id: elementId(m)} as m limit toInteger($limit)", map[string]interface{}{"limit": 5})
 
 				if err == nil {
 					for records1.Next(ctx) {
@@ -394,6 +403,8 @@ func GetNetworkGraphForId(driver neo4j.DriverWithContext, id string, name string
 
 						if idd, ok := node2["id"]; ok {
 							id1 = idd.(string)
+						} else {
+							id1 = node2["internal_id"].(string)
 						}
 						target2 := models.Node{
 							ID:          id1,
@@ -405,7 +416,7 @@ func GetNetworkGraphForId(driver neo4j.DriverWithContext, id string, name string
 
 						if _, ok := exists[node2["id"]]; !ok {
 							nodes = append(nodes, map[string]interface{}{"data": target2})
-							exists[node2["id"]] = true
+							exists[target2.ID] = true
 						}
 
 						relationships = append(relationships, map[string]interface{}{
@@ -422,149 +433,6 @@ func GetNetworkGraphForId(driver neo4j.DriverWithContext, id string, name string
 
 			}
 
-			// if typeN == "" {
-			// 	labels = "Disease|Tissue|Biological_process|Chromosome|Gene|Transcript|Protein|Amino_acid_sequence|Peptide|Modified_protein|Drug|Functional_region|Metabolite|Protein_structure|Pathway|Biological_sample"
-			// } else {
-			// 	labels = typeN
-			// }
-			// // records, err := tx.Run(ctx, "CALL db.index.fulltext.queryNodes('allIndex', $term) YIELD node, score MATCH (node:"+labels+")-[r1]->(n2)-[r2]->(n3)-[r3]->(m:"+labels+") RETURN node {.*, embedding: null, synonyms_str: null, score: score } AS node, r1, n2 {.*, embedding: null, synonyms_str: null } as n2, r2, n3 {.*, embedding: null, synonyms_str: null } as n3, r3, m {.*, embedding: null, synonyms_str: null } as m limit toInteger($limit)", map[string]interface{}{"term": term, "limit": limit})
-
-			// records, err := tx.Run(ctx, "MATCH (node:"+labels+")-[r1]->(n2)-[r3]->(m) where node.id='"+id+"' and node.name='"+name+"' RETURN node {.*, embedding: null, synonyms_str: null} AS node, r1, n2 {.*, embedding: null, synonyms_str: null } as n2, r3, m {.*, embedding: null, synonyms_str: null } as m limit toInteger($limit)", map[string]interface{}{"limit": limit})
-
-			// log.Println("MATCH (node:"+labels+")-[r1]->(n2)-[r3]->(m) where node.id='"+id+"' and node.name='"+name+"' RETURN node {.*, embedding: null, synonyms_str: null} AS node, r1, n2 {.*, embedding: null, synonyms_str: null } as n2, r3, m {.*, embedding: null, synonyms_str: null } as m limit toInteger($limit)", map[string]interface{}{"limit": limit})
-			// if err != nil {
-			// 	log.Println(err)
-			// 	return nil, err
-			// }
-
-			// var nodes []map[string]interface{}
-
-			// var relationships []map[string]interface{}
-			// exists := make(map[interface{}]bool)
-			// for records.Next(ctx) {
-			// 	record := records.Record()
-			// 	node := record.Values[0].(map[string]interface{})
-			// 	rel := record.Values[1].(neo4j.Relationship)
-			// 	relProps := rel.Props
-			// 	relProps["type"] = rel.Type
-			// 	relProps["id"] = rel.ElementId
-
-			// 	// 1 id, _ := uuid.NewRandom()
-			// 	nme := "noname"
-			// 	if val, ok := node["name"]; ok && val != nil {
-			// 		nme = node["name"].(string)
-			// 	}
-			// 	source := models.Node{
-			// 		ID:    node["id"].(string),
-			// 		Label: nme,
-			// 		// Score:      node["score"].(float64),
-			// 		Properties: node,
-			// 	}
-
-			// 	if _, ok := exists[node["id"]]; !ok {
-			// 		nodes = append(nodes, map[string]interface{}{
-			// 			"data": source})
-			// 		exists[node["id"]] = true
-			// 	}
-
-			// 	// 2
-			// 	node1 := record.Values[2].(map[string]interface{})
-			// 	nme = "noname"
-			// 	if val, ok := node1["name"]; ok && val != nil {
-			// 		nme = node1["name"].(string)
-			// 	}
-			// 	target := models.Node{
-			// 		ID:         node1["id"].(string),
-			// 		Label:      nme,
-			// 		Properties: node1,
-			// 	}
-
-			// 	if _, ok := exists[node1["id"]]; !ok {
-			// 		nodes = append(nodes, map[string]interface{}{
-			// 			"data": target})
-			// 		exists[node1["id"]] = true
-			// 	}
-
-			// 	relationships = append(relationships, map[string]interface{}{
-			// 		"data": models.Relationship{
-			// 			ID:         rel.ElementId,
-			// 			Label:      relProps["type"].(string),
-			// 			Properties: relProps,
-			// 			Source:     source.ID,
-			// 			Target:     target.ID,
-			// 		},
-			// 	})
-
-			// 	// source = target
-
-			// 	// 3
-			// 	// node = record.Values[4].(map[string]interface{})
-			// 	// rel = record.Values[3].(neo4j.Relationship)
-			// 	// relProps = rel.Props
-			// 	// relProps["type"] = rel.Type
-			// 	// relProps["id"] = rel.ElementId
-			// 	// nme = "noname"
-			// 	// if val, ok := node["name"]; ok && val != nil {
-			// 	// 	nme = node["name"].(string)
-			// 	// }
-			// 	// target = models.Node{
-			// 	// 	ID:         node["id"].(string),
-			// 	// 	Label:      nme,
-			// 	// 	Score:      node["score"].(float64),
-			// 	// 	Properties: node,
-			// 	// }
-
-			// 	// if _, ok := exists[node["id"]]; !ok {
-			// 	// 	nodes = append(nodes, map[string]interface{}{
-			// 	// 		"data": source})
-			// 	// 	exists[node["id"]] = true
-			// 	// }
-
-			// 	// relationships = append(relationships, map[string]interface{}{
-			// 	// 	"data": models.Relationship{
-			// 	// 		ID:         rel.ElementId,
-			// 	// 		Label:      relProps["type"].(string),
-			// 	// 		Properties: relProps,
-			// 	// 		Source:     source.ID,
-			// 	// 		Target:     target.ID,
-			// 	// 	},
-			// 	// })
-
-			// 	// source = target
-
-			// 	// id, _ = uuid.NewRandom()
-			// 	m := record.Values[4].(map[string]interface{})
-			// 	rel2 := record.Values[3].(neo4j.Relationship)
-			// 	relProps2 := rel.Props
-			// 	relProps2["type"] = rel.Type
-			// 	relProps2["id"] = rel.ElementId
-			// 	nme = "noname"
-			// 	if val, ok := m["name"]; ok && val != nil {
-			// 		nme = m["name"].(string)
-			// 	}
-			// 	target1 := models.Node{
-			// 		ID:         m["id"].(string),
-			// 		Label:      nme,
-			// 		Properties: m,
-			// 	}
-			// 	if _, ok := exists[m["id"]]; !ok {
-			// 		nodes = append(nodes, map[string]interface{}{
-			// 			"data": target1})
-			// 		exists[m["id"]] = true
-			// 	}
-
-			// 	relationships = append(relationships, map[string]interface{}{
-			// 		"data": models.Relationship{
-			// 			ID:         rel2.ElementId,
-			// 			Label:      relProps2["type"].(string),
-			// 			Properties: relProps2,
-			// 			Source:     target.ID,
-			// 			Target:     target1.ID,
-			// 		},
-			// 	})
-			// }
-
-			// return nodes, relationships, records.Err()
 			return map[string]interface{}{
 				"nodes":         nodes,
 				"relationships": relationships,
@@ -579,71 +447,108 @@ func GetNetworkGraphForId(driver neo4j.DriverWithContext, id string, name string
 	return result.(map[string]interface{})["nodes"].([]map[string]interface{}), result.(map[string]interface{})["relationships"].([]map[string]interface{}), nil
 }
 
-// (driver neo4j.DriverWithContext) ([]models.Node, error) {
-// 	ctx := context.Background()
+func GetNetworkGraphForIdAndDepth(driver neo4j.DriverWithContext, id string, name string, typeN string, limit string, neighbour string, depth int) ([]map[string]models.Node, []map[string]interface{}, error) {
+	ctx := context.Background()
 
-// 	err := driver.VerifyConnectivity(ctx)
-// 	if err != nil {
-// 		panic(err)
-// 	}
+	err := driver.VerifyConnectivity(ctx)
+	if err != nil {
+		panic(err)
+	}
 
-// 	session := driver.NewSession(ctx, neo4j.SessionConfig{AccessMode: neo4j.AccessModeRead})
-// 	defer session.Close(ctx)
-// 	result, err := session.ExecuteRead(ctx,
-// 		func(tx neo4j.ManagedTransaction) (interface{}, error) {
-// 			records, err := tx.Run(ctx, "MATCH (n) RETURN n {.*, embedding: null, synonyms_str: null } AS node limit 10", nil)
-// 			if err != nil {
-// 				return nil, err
-// 			}
+	if depth <= 0 {
+		depth = 1
+	}
 
-// 			var nodes []models.Node
-// 			for records.Next(ctx) {
-// 				record := records.Record()
-// 				node := record.Values[0].(map[string]interface{})
-// 				id, _ := uuid.NewRandom()
-// 				nodes = append(nodes, models.Node{
-// 					ID:         id.String(),
-// 					Properties: node,
-// 				})
-// 			}
-// 			return nodes, records.Err()
-// 		},
-// 	)
+	session := driver.NewSession(ctx, neo4j.SessionConfig{AccessMode: neo4j.AccessModeRead})
+	defer session.Close(ctx)
+	result, err := session.ExecuteRead(ctx,
+		func(tx neo4j.ManagedTransaction) (interface{}, error) {
+			// First level Search
 
-// 	if err != nil {
-// 		return nil, err
-// 	}
+			labels := "Disease|Tissue|Biological_process|Chromosome|Gene|Transcript|Protein|Amino_acid_sequence|Peptide|Modified_protein|Drug|Functional_region|Metabolite|Protein_structure|Pathway|Biological_sample"
 
-// 	return result.([]models.Node), nil
-// }
+			if neighbour != "" {
+				labels = neighbour
+			}
+			query := "MATCH p=(node:" + typeN + ")-[r*" + strconv.Itoa(depth) + "]-(m:" + labels + ") where elementId(node)='" + id + "'"
 
-// func CreateNode(driver neo4j.DriverWithContext, label string, properties map[string]interface{}) (*models.Node, error) {
-// 	ctx := context.Background()
-// 	session := driver.NewSession(ctx, neo4j.SessionConfig{AccessMode: neo4j.AccessModeWrite})
-// 	defer session.Close(ctx)
+			if name != "" {
+				query += " and node.name='" + name + "'"
+			}
 
-// 	query := "CREATE (n:" + label + " $props) RETURN n"
-// 	result, err := session.ExecuteWrite(ctx, func(tx neo4j.ManagedTransaction) (interface{}, error) {
-// 		records, err := tx.Run(ctx, query, map[string]interface{}{"props": properties})
-// 		if err != nil {
-// 			return nil, err
-// 		}
+			query += " RETURN p limit " + limit
 
-// 		if records.Next(ctx) {
-// 			record := records.Record()
-// 			node := record.Values[0].(neo4j.Node)
-// 			return &models.Node{
-// 				ID:         node.ElementId,
-// 				Properties: node.Props,
-// 			}, nil
-// 		}
+			log.Println(query)
 
-// 		return nil, records.Err()
-// 	})
+			// query = "MATCH p=(node:Disease)-[r*2]-(m:Disease|Tissue|Biological_process|Chromosome|Gene|Transcript|Protein|Amino_acid_sequence|Peptide|Modified_protein|Drug|Functional_region|Metabolite|Protein_structure|Pathway|Biological_sample) where elementId(node)='4:4b9b25d3-4d29-42f7-a285-9ca6caddc8a1:1694884' and node.name='Parkinson disease' RETURN p limit 10"
+			records, _ := tx.Run(ctx, query, nil)
 
-// 	if err != nil {
-// 		return nil, err
-// 	}
+			// Collect All data	for the first level
+			var totalNodes []map[string]models.Node
+			var relationships []map[string]interface{}
 
-// 	return result.(*models.Node), nil
-// }
+			exists := make(map[interface{}]bool)
+			for records.Next(ctx) {
+				record := records.Record()
+				path := record.Values[0].(neo4j.Path)
+				nodes := path.Nodes
+				rels := path.Relationships
+
+				for _, node := range nodes {
+					nme := "noname"
+					if val, ok := node.Props["name"]; ok && val != nil {
+						nme = node.Props["name"].(string)
+					} else if val, ok := node.Props["id"]; ok && val != nil {
+						nme = node.Props["id"].(string)
+					}
+					id1 := "noID"
+
+					if idd, ok := node.Props["id"]; ok {
+						id1 = idd.(string)
+					} else {
+						id1 = node.ElementId
+					}
+
+					source := models.Node{
+						ID:          node.ElementId,
+						NodeId:      id1,
+						Label:       nme,
+						Properties:  node.Props,
+						DisplayName: nme,
+						NodeType:    node.Labels[0],
+					}
+
+					if _, ok := exists[node.Props["id"]]; !ok {
+						totalNodes = append(totalNodes, map[string]models.Node{"data": source})
+						exists[source.ID] = true
+					}
+				}
+
+				for _, rel := range rels {
+					relationships = append(relationships, map[string]interface{}{
+						"data": models.Relationship{
+							ID:         rel.ElementId,
+							Label:      rel.Type,
+							Source:     rel.StartElementId,
+							Target:     rel.EndElementId,
+							EdgeType:   rel.Type,
+							Properties: rel.Props,
+						},
+					})
+				}
+
+			}
+
+			return map[string]interface{}{
+				"nodes":         totalNodes,
+				"relationships": relationships,
+			}, nil
+		},
+	)
+
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return result.(map[string]interface{})["nodes"].([]map[string]models.Node), result.(map[string]interface{})["relationships"].([]map[string]interface{}), nil
+}

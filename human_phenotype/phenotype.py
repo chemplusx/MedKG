@@ -2,7 +2,7 @@ from py2neo import Graph
 import json
 
 # Connect to Neo4j
-graph = Graph("bolt://localhost:7690", auth=("neo4j", "password"))
+graph = Graph("bolt://localhost:7687", auth=("neo4j", "password"))
 
 # Load the JSON data
 with open('hp.json', 'r') as f:
