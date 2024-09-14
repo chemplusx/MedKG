@@ -223,7 +223,7 @@ func SearchNodesInGraph(driver neo4j.DriverWithContext, term string, limit strin
 	result, err := session.ExecuteRead(ctx,
 		func(tx neo4j.ManagedTransaction) (interface{}, error) {
 			labels := "Disease|Tissue|Biological_process|Chromosome|Gene|Transcript|Protein|Amino_acid_sequence|Peptide|Modified_protein|Drug|Functional_region|Metabolite|Protein_structure|Pathway|Biological_sample"
-			records, err := tx.Run(ctx, "CALL db.index.fulltext.queryNodes('allIndex', $term) YIELD node, score MATCH (node:"+labels+") RETURN elementId(node), labels(node), node {id: node.id, name: node.name, score: score } AS node LIMIT toInteger($limit)", map[string]interface{}{"term": term, "limit": limit})
+			records, err := tx.Run(ctx, "CALL db.index.fulltext.queryNodes('allIndex', $term) YIELD node, score MATCH (node:"+labels+") RETURN elementId(node), labels(node), node {id: node.id, name: node.name, description: node.description, function: node.specific_function, score: score } AS node LIMIT toInteger($limit)", map[string]interface{}{"term": term, "limit": limit})
 			if err != nil {
 				return nil, err
 			}
@@ -518,7 +518,7 @@ func GetNetworkGraphForIdAndDepth(driver neo4j.DriverWithContext, id string, nam
 						NodeType:    node.Labels[0],
 					}
 
-					if _, ok := exists[node.Props["id"]]; !ok {
+					if _, ok := exists[source.ID]; !ok {
 						totalNodes = append(totalNodes, map[string]models.Node{"data": source})
 						exists[source.ID] = true
 					}
@@ -551,4 +551,217 @@ func GetNetworkGraphForIdAndDepth(driver neo4j.DriverWithContext, id string, nam
 	}
 
 	return result.(map[string]interface{})["nodes"].([]map[string]models.Node), result.(map[string]interface{})["relationships"].([]map[string]interface{}), nil
+}
+
+func SearchForInteraction(driver neo4j.DriverWithContext, request models.InteractionSearchRequest) (map[string]interface{}, error) {
+	ctx := context.Background()
+
+	err := driver.VerifyConnectivity(ctx)
+	if err != nil {
+		panic(err)
+	}
+
+	session := driver.NewSession(ctx, neo4j.SessionConfig{AccessMode: neo4j.AccessModeRead})
+	defer session.Close(ctx)
+	result, err := session.ExecuteRead(ctx,
+		func(tx neo4j.ManagedTransaction) (interface{}, error) {
+			// labels := "Disease|Tissue|Biological_process|Chromosome|Gene|Transcript|Protein|Amino_acid_sequence|Peptide|Modified_protein|Drug|Functional_region|Metabolite|Protein_structure|Pathway|Biological_sample"
+			records, err := tx.Run(ctx, "MATCH p=(node)-[*..]-(dest:"+request.DestinationNodeType+") where elementId(node)=\""+request.SearchTerm+"\"  RETURN p LIMIT toInteger($limit)", map[string]interface{}{"term": request.SearchTerm, "limit": 25})
+			if err != nil {
+				return nil, err
+			}
+
+			var nodesMap map[string]models.Node = make(map[string]models.Node)
+			var relMap map[string]models.Relationship = make(map[string]models.Relationship)
+			var connectionmap map[string][]models.Relationship = make(map[string][]models.Relationship)
+			var visited map[string]bool = make(map[string]bool)
+			var e2ePath []string = make([]string, 0)
+
+			for records.Next(ctx) {
+				record := records.Record()
+				path := record.Values[0].(neo4j.Path)
+				nodes := path.Nodes
+				rels := path.Relationships
+
+				// Now create distinct path arrays from source node to all possible destination nodes of type request.DestinationNodeType
+				// So if there are n nodes and r relationships
+				// We need to calculate all possible paths from source (node.ElementId = request.SearchTerm) to destination(node.Node_Type = request.DestinationNodeType), this path can contain multiple nodes in between
+				// We need to return all these paths
+
+				for _, rel := range rels {
+					if _, ok := relMap[rel.ElementId]; !ok {
+						relMap[rel.ElementId] = models.Relationship{
+							ID:         rel.ElementId,
+							Label:      rel.Type,
+							Source:     rel.StartElementId,
+							Target:     rel.EndElementId,
+							EdgeType:   rel.Type,
+							Properties: rel.Props,
+						}
+					}
+
+					if _, ok := connectionmap[rel.StartElementId]; !ok {
+						connectionmap[rel.StartElementId] = []models.Relationship{}
+					}
+
+					connectionmap[rel.StartElementId] = append(connectionmap[rel.StartElementId], relMap[rel.ElementId])
+				}
+
+				for _, node := range nodes {
+					nme := "noname"
+					if val, ok := node.Props["name"]; ok && val != nil {
+						nme = node.Props["name"].(string)
+					} else if val, ok := node.Props["id"]; ok && val != nil {
+						nme = node.Props["id"].(string)
+					}
+					id1 := "noID"
+
+					if idd, ok := node.Props["id"]; ok {
+						id1 = idd.(string)
+					} else {
+						id1 = node.ElementId
+					}
+
+					source := models.Node{
+						ID:          node.ElementId,
+						NodeId:      id1,
+						Label:       nme,
+						Properties:  node.Props,
+						DisplayName: nme,
+						NodeType:    node.Labels[0],
+					}
+
+					nodesMap[source.ID] = source
+				}
+
+				if _, ok := visited[request.SearchTerm]; !ok {
+					visited[request.SearchTerm] = true
+					totalPath := "||" + request.SearchTerm + "->"
+					recurseAndBuildPath(&connectionmap, &nodesMap, request.SearchTerm, &visited, &request.DestinationNodeType, &totalPath, &e2ePath)
+				}
+
+				// for _, node := range nodes {
+				// 	if _, ok := visited[node.ElementId]; !ok {
+				// 		visited[node.ElementId] = true
+				// 		totalPath := "||" + node.ElementId + "->"
+				// 		recurseAndBuildPath(&connectionmap, &nodesMap, node.ElementId, &visited, &request.DestinationNodeType, &totalPath, &e2ePath)
+				// 	}
+				// 	// Now we need to find all possible paths from this node to the destination node
+				// 	// We can do this by traversing the connectionmap
+				// }
+
+			}
+			return map[string]interface{}{
+				"nodes": nodesMap,
+				"rels":  relMap,
+				"paths": e2ePath,
+			}, nil
+		},
+	)
+
+	if err != nil {
+		return nil, err
+	}
+	// map[string]models.Node, map[string]models.Relationship, []string
+	return result.(map[string]interface{}), nil
+}
+
+func SearchForPath(driver neo4j.DriverWithContext, request models.PathSearchRequest) ([]models.Node, error) {
+	ctx := context.Background()
+
+	err := driver.VerifyConnectivity(ctx)
+	if err != nil {
+		panic(err)
+	}
+
+	session := driver.NewSession(ctx, neo4j.SessionConfig{AccessMode: neo4j.AccessModeRead})
+	defer session.Close(ctx)
+	result, err := session.ExecuteRead(ctx,
+		func(tx neo4j.ManagedTransaction) (interface{}, error) {
+			labels := "Disease|Tissue|Biological_process|Chromosome|Gene|Transcript|Protein|Amino_acid_sequence|Peptide|Modified_protein|Drug|Functional_region|Metabolite|Protein_structure|Pathway|Biological_sample"
+			records, err := tx.Run(ctx, "MATCH p=shortestPath((source:"+labels+")-[*..5]-(target:"+labels+")) where elementId(source)=$sourceNodeID and elementId(target)=$targetNodeID RETURN p", map[string]interface{}{"sourceNodeID": request.SourceNodeID, "targetNodeID": request.TargetNodeID})
+			if err != nil {
+				return nil, err
+			}
+
+			var totalNodes []models.Node
+			var relationships []map[string]interface{}
+			for records.Next(ctx) {
+				record := records.Record()
+				path := record.Values[0].(neo4j.Path)
+				nodes := path.Nodes
+				rels := path.Relationships
+
+				for _, node := range nodes {
+					nme := "noname"
+					if val, ok := node.Props["name"]; ok && val != nil {
+						nme = node.Props["name"].(string)
+					} else if val, ok := node.Props["id"]; ok && val != nil {
+						nme = node.Props["id"].(string)
+					}
+					id1 := "noID"
+
+					if idd, ok := node.Props["id"]; ok {
+						id1 = idd.(string)
+					} else {
+						id1 = node.ElementId
+					}
+
+					source := models.Node{
+						ID:          node.ElementId,
+						NodeId:      id1,
+						Label:       nme,
+						Properties:  node.Props,
+						DisplayName: nme,
+						NodeType:    node.Labels[0],
+					}
+
+					totalNodes = append(totalNodes, source)
+				}
+
+				for _, rel := range rels {
+					relationships = append(relationships, map[string]interface{}{
+						"data": models.Relationship{
+							ID:         rel.ElementId,
+							Label:      rel.Type,
+							Source:     rel.StartElementId,
+							Target:     rel.EndElementId,
+							EdgeType:   rel.Type,
+							Properties: rel.Props,
+						},
+					})
+				}
+
+				// record := records.Record()
+				// path := record.Values[0].(neo4j.Path)
+				// nodes = append(nodes, models.Node{
+				// 	ID:         path.,
+				// 	Label:      path.Start.Labels[0],
+				// 	Properties: path.Start.Props,
+				// })
+				// for _, node := range path.Nodes {
+				// 	nodes = append(nodes, models.Node{
+				// 		ID:         node.ElementId,
+				// 		Label:      node.Labels[0],
+				// 		Properties: node.Props,
+				// 	})
+				// }
+				// nodes = append(nodes, models.Node{
+				// 	ID:         path.EndElementId,
+				// 	Label:      path.End.Labels[0],
+				// 	Properties: path.End.Props,
+				// })
+			}
+			return map[string]interface{}{
+				"nodes":         totalNodes,
+				"relationships": relationships,
+			}, nil
+		},
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return result.([]models.Node), nil
 }

@@ -5,7 +5,7 @@ $('#layout').change(function () {
 		$('#changeOrderOfCrossbar').click();
 		return true;
 	}else{
-		$('#medKGLayout_settings').hide();
+		// $('#medKGLayout_settings').hide();
 		var layout = cy.layout({
 			name: $(this).val(),
 			fit: 'viewport'

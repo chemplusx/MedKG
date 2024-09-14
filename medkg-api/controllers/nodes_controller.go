@@ -117,3 +117,71 @@ func GetNetworkGraphForIdHandler(client neo4j.DriverWithContext) gin.HandlerFunc
 		c.JSON(http.StatusOK, response)
 	}
 }
+
+func GlobalSearchHandler(client neo4j.DriverWithContext) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		// Get the post request body
+
+		var reqBody map[string]interface{}
+
+		if err := c.ShouldBindJSON(&reqBody); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
+			return
+		}
+
+		term, ok := reqBody["searchTerm"].(string)
+
+		if !ok {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
+			return
+		}
+
+		nodes, err := ni.SearchNodesInGraph(client, term, "25", "")
+		if err != nil {
+			log.Println(err)
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+		c.JSON(http.StatusOK, nodes)
+	}
+}
+
+func InteractionSearchHandler(client neo4j.DriverWithContext) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		// Get the post request body
+
+		reqBody := models.InteractionSearchRequest{}
+		if err := c.BindJSON(&reqBody); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
+			return
+		}
+
+		nodes, err := ni.SearchForInteraction(client, reqBody)
+		if err != nil {
+			log.Println(err)
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+		c.JSON(http.StatusOK, nodes)
+	}
+}
+
+func PathSearchHandler(client neo4j.DriverWithContext) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		// Get the post request body
+
+		reqBody := models.PathSearchRequest{}
+		if err := c.BindJSON(&reqBody); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
+			return
+		}
+
+		nodes, err := ni.SearchForPath(client, reqBody)
+		if err != nil {
+			log.Println(err)
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+		c.JSON(http.StatusOK, nodes)
+	}
+}

@@ -1,6 +1,6 @@
 var network_file = document.getElementById("graph_starter").getAttribute("data-attr");
-
-my_style = fetch('css/css.json', {mode: 'no-cors'}).then(function(res) { return res.json()}).then(function(style){
+// cytoscape.use(cytoscapeCola);
+my_style = fetch('css/css.json', { mode: 'no-cors' }).then(function (res) { return res.json() }).then(function (style) {
 	return style;
 });
 // cytoscape.use('cytoscape-context-menus');
@@ -10,22 +10,74 @@ var cy = window.cy = cytoscape({
 	elements: [],
 	userZoomingEnabled: false,
 	layout: {
-		name: 'cose-bilkent',// 'medKGLayout',
-  		rows: 4,
-		fit: 'viewport',
-		//separated: 1,
-		//lesslayer: 0,
-		orderOfNodeTypes: [1,2,3,5,6,4,7,8,9,10,11,12,13,14,15]
 		//orderOfNodeTypes: [3,1,2,4,5,6,7]
 	}
 });
-cy.on('cxttap', (event) => {
-	// Suppress the default context menu
-	event.preventDefault();
-  });
+
+var layout = cy.layout({
+	name: 'cola',
+		nodeSpacing: 30,
+		edgeLength: 100,
+		animate: true,
+		randomize: false,
+		maxSimulationTime: 1500,
+		fit: true,
+		padding: 30,
+		nodeRepulsion: function (node) {
+			return 2500;
+		},
+		gravity: 100,
+		infinite: true,
+		refresh: 1,
+		//separated: 1,
+		//lesslayer: 0,
+		orderOfNodeTypes: [1, 2, 3, 5, 6, 4, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+	});
+
+cy.on('mousedown', 'node', function(e){
+	if (isLayoutRunning) {
+		layout.stop();
+		isLayoutRunning = false;
+	}
+});
+
+// Example of adding a context menu item
+cy.on('cxttap', 'node', function(evt){
+	console.log('Context menu opened on node: ' + this.id());
+	// Here you can implement your context menu logic
+});
+
+// Optionally, restart layout on canvas tap
+cy.on('tap', function(e){
+	if (e.target === cy && !isLayoutRunning) {
+		layout = cy.layout({
+			name: 'cola',
+			nodeSpacing: 30,
+			edgeLength: 100,
+			animate: true,
+			randomize: false,
+			maxSimulationTime: 1500,
+			fit: false,
+			padding: 30,
+			nodeRepulsion: function(node) { 
+				return 2500; 
+			},
+			gravity: 100,
+			refresh: 1
+		});
+		layout.run();
+		isLayoutRunning = true;
+	}
+});
+
+// Run the layout
+layout.run();
+
+// Variable to track if layout is running
+var isLayoutRunning = true;
 
 
-  function formatJSON(obj) {
+function formatJSON(obj) {
 	return JSON.stringify(obj, null, 2)
 		.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
 		.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
@@ -52,7 +104,7 @@ function createDetailsCard(title, data) {
 				<span class="card-title">${title}</span>`;
 	cardHtml += beautifyObject(data);
 	cardHtml +=
-			`</div>
+		`</div>
 		</div>
 	`;
 
@@ -82,97 +134,109 @@ function beautifyObject(obj) {
 	return output;
 }
 
-function LoadGraph(id, name, file, type='empty'){
+function LoadGraph(id, name, file, type = 'empty') {
 	neighbour = $('#neighbour-type').val();
-	if (neighbour === 'Any'){
+	if (neighbour === 'Any') {
 		neighbour = null;
 	}
 	showLoading();
-	$.ajax( {
+	$.ajax({
 		url: "nodes/graph",
 		data: {
-		  id: id,
-		  name: name,
-		  type: type,
-		  neighbour: neighbour
+			id: id,
+			name: name,
+			type: type,
+			neighbour: neighbour
 		},
-		success: function( result ) {
+		success: function (result) {
 			// remove any data present in the network
 			hideLoading();
 			cy.remove(cy.elements());
 			cy.add(result)
 			var layout = cy.layout({
-				name: 'cose-bilkent', //$('#layout').val(),
-				rows: 4,
-				orderOfNodeTypes: [1,2,3,5,6,4,7,8,9,10,11,12,13,14,15],
-			  });
-			  layout.run();
-			  var contextMenus = cy.contextMenus({
-				menuItems: [
-				  {
-					id: 'remove',
-					content: 'Remove Node',
-					tooltipText: 'Remove Node',
-					selector: 'node',
-					onClickFunction: function (event) {
-					  var target = event.target || event.cyTarget;
-					  target.remove();
-					}
-				  },
-				  {
-					id: 'expand',
-					content: 'Expand',
-					tooltipText: 'Expand Neighbours',
-					selector: 'node',
-					onClickFunction: function (event) {
-					  var target = event.target || event.cyTarget;
-					  expandForNodeId(target.data()["id"], target.data()["properties"]["name"], target.data()["Node_Type"]);
-					}
-				  },
-				  {
-					id: 'show-details',
-					content: 'Show Details',
-					selector: 'node, edge',
-					onClickFunction: function (event) {
-						var target = event.target || event.cyTarget;
-						var detailsContent = document.getElementById('details-content');
-                            
-                            // Clear previous content
-                            detailsContent.innerHTML = '';
-
-                            // Add general info card
-                            var generalInfo = {
-                                'ID': target.id(),
-                                'Type': target.isNode() ? 'Node' : 'Edge'
-                            };
-                            detailsContent.innerHTML += createDetailsCard('General Information', generalInfo);
-
-                            // Add data card
-                            detailsContent.innerHTML += createDetailsCard('Element Data', target.data()["properties"]);
-
-                            // Scroll to details section
-                            document.getElementById('details-section').scrollIntoView({behavior: 'smooth'});
-					}
+				name: 'cola',
+				nodeSpacing: 30,
+				edgeLength: 100,
+				animate: true,
+				randomize: false,
+				maxSimulationTime: 1500,
+				fit: true,
+				padding: 30,
+				nodeRepulsion: function (node) {
+					return 2500;
 				},
+				gravity: 100,
+				infinite: false,
+				refresh: 1,
+				orderOfNodeTypes: [1, 2, 3, 5, 6, 4, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+			});
+			layout.run();
+			var contextMenus = cy.contextMenus({
+				menuItems: [
+					{
+						id: 'remove',
+						content: 'Remove Node',
+						tooltipText: 'Remove Node',
+						selector: 'node',
+						onClickFunction: function (event) {
+							var target = event.target || event.cyTarget;
+							target.remove();
+						}
+					},
+					{
+						id: 'expand',
+						content: 'Expand',
+						tooltipText: 'Expand Neighbours',
+						selector: 'node',
+						onClickFunction: function (event) {
+							var target = event.target || event.cyTarget;
+							expandForNodeId(target.data()["id"], target.data()["properties"]["name"], target.data()["Node_Type"]);
+						}
+					},
+					{
+						id: 'show-details',
+						content: 'Show Details',
+						selector: 'node, edge',
+						onClickFunction: function (event) {
+							var target = event.target || event.cyTarget;
+							var detailsContent = document.getElementById('details-content');
+
+							// Clear previous content
+							detailsContent.innerHTML = '';
+
+							// Add general info card
+							var generalInfo = {
+								'ID': target.id(),
+								'Type': target.isNode() ? 'Node' : 'Edge'
+							};
+							detailsContent.innerHTML += createDetailsCard('General Information', generalInfo);
+
+							// Add data card
+							detailsContent.innerHTML += createDetailsCard('Element Data', target.data()["properties"]);
+
+							// Scroll to details section
+							document.getElementById('details-section').scrollIntoView({ behavior: 'smooth' });
+						}
+					},
 				]
-			  });
-			
-				$('#search_parameters').append( '<li class="list-group-item"><b>Query Terms:</b></br>');
-				
-				
-		  
-			}
-	  } );
+			});
+
+			$('#search_parameters').append('<li class="list-group-item"><b>Query Terms:</b></br>');
+
+
+
+		}
+	});
 
 }
 
-function expandForNodeId(nodeId, name, type){
+function expandForNodeId(nodeId, name, type) {
 	neighbour = $('#neighbour-type').val();
-	if (neighbour === 'Any'){
+	if (neighbour === 'Any') {
 		neighbour = null;
 	}
 	showLoading();
-	$.ajax( {
+	$.ajax({
 		url: "nodes/graph",
 		data: {
 			id: nodeId,
@@ -180,18 +244,31 @@ function expandForNodeId(nodeId, name, type){
 			type: type,
 			neighbour: neighbour
 		},
-		success: function( result ) {
+		success: function (result) {
 			hideLoading();
 			// cy.nodes().forEach(node => node.lock());
 			cy.add(result)
 			var layout = cy.layout({
-				name: 'cose-bilkent', //$('#layout').val(),
-				rows: 4,
-				orderOfNodeTypes: [1,2,3,5,6,4,7,8,9,10,11,12,13,14,15],
-			  });
-			  layout.run();
-	  }, });
-	}
+				name: 'cola',
+				nodeSpacing: 30,
+				edgeLength: 100,
+				animate: true,
+				randomize: false,
+				maxSimulationTime: 1500,
+				fit: true,
+				padding: 30,
+				nodeRepulsion: function (node) {
+					return 2500;
+				},
+				gravity: 100,
+				infinite: false,
+				refresh: 1,
+				orderOfNodeTypes: [1, 2, 3, 5, 6, 4, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+			});
+			layout.run();
+		},
+	});
+}
 
 function showLoading() {
 	document.getElementById('loadingOverlay').style.display = 'flex';

@@ -146,7 +146,7 @@
       "selector": "node[Node_Type='Pathway']",
       "style": {
         "shape": "diamond",
-        "background-color": "#00b0f0"
+        "background-color": "#bcbd22"
       }
     },
     {
@@ -157,17 +157,31 @@
       }
     },
     {
+      "selector": "node[Node_Type='Chromosome']",
+      "style": {
+        "shape": "diamond",
+        "background-color": "#17becf"
+      }
+    },
+    {
       "selector": "node[Node_Type='Disease']",
       "style": {
         "shape": "triangle",
-        "background-color": "#c00000"
+        "background-color": "#2ca02c"
+      }
+    },
+    {
+      "selector": "node[Node_Type='Gene']",
+      "style": {
+        "shape": "triangle",
+        "background-color": "#e377c2"
       }
     },
     {
       "selector": "node[Node_Type='Protein']",
       "style": {
         "shape": "ellipse",
-        "background-color": "darkorange"
+        "background-color": "#ff7f0e"
       }
     },
     {
@@ -181,14 +195,14 @@
       "selector": "node[Node_Type='Metabolite']",
       "style": {
         "shape": "pentagon",
-        "background-color": "#7030a0"
+        "background-color": "#7f7f7f"
       }
     },
     {
       "selector": "node[Node_Type='Drug']",
       "style": {
         "shape": "hexagon",
-        "background-color": "white",
+        "background-color": "#9467bd",
         "border-width": 2,
         "border-color": "green"
       }
@@ -197,7 +211,7 @@
       "selector": "node[Node_Type='Compound']",
       "style": {
         "shape": "hexagon",
-        "background-color": "white",
+        "background-color": "#8c564b",
         "label": "data(id)",
         "border-width": 2,
         "border-color": "violet"
@@ -210,7 +224,7 @@
         "background-color": "white",
         "label": "data(id)",
         "border-width": 2,
-        "border-color": "violet"	
+        "border-color": "#d62728"	
       }
     },
     {
