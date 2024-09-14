@@ -187,5 +187,4 @@ $(function () {
 			.removeClass('highlight');
 	});
 
-
 });

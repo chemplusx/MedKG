@@ -26,8 +26,11 @@ func InitRouter(r *gin.Engine) {
 	r.StaticFile("/", "./static/redoc.html")
 	r.StaticFile("/api-docs", "./static/swagger-ui.html")
 	// r.StaticFile("/visualise", "./static/index.html")
+	// r.StaticFile("/visualise", "./static/viz.html")
 	r.StaticFile("/visualise", "./static/nono.html")
+	r.StaticFile("/visualise2", "./static/new_nono.html")
 	r.StaticFile("/search", "./static/search.html")
+	r.StaticFile("/search2", "./static/new_search.html")
 	r.Static("/static", "./static/public")
 	r.Static("/js", "./static/js")
 	r.Static("/images", "./static/images")
@@ -66,5 +69,8 @@ func InitDataEndpoint(r *gin.Engine) {
 	r.GET("/nodes/search", controllers.SearchNodesHandler(client))
 	r.GET("/nodes/graph", controllers.GetNetworkGraphForIdHandler(client))
 	r.GET("/search_in_graph", controllers.SearchNodesInGraphHandler(client))
+	r.POST("/api/global-search", controllers.GlobalSearchHandler(client))
+	r.POST("/api/interaction-search", controllers.InteractionSearchHandler(client))
+	r.POST("/api/path-search", controllers.PathSearchHandler(client))
 
 }

@@ -30,3 +30,15 @@ type GetNodesRequest struct {
 type GetEdgesRequest struct {
 	Limit int `json:"limit"`
 }
+
+type InteractionSearchRequest struct {
+	SearchTerm          string `json:"searchTerm"`
+	Depth               string `json:"depth"`
+	DestinationNodeType string `json:"destinationNodeType"`
+}
+
+type PathSearchRequest struct {
+	SourceNodeID string `json:"sourceNodeID"`
+	TargetNodeID string `json:"targetNodeID"`
+	Depth        string `json:"depth"`
+}

@@ -53,12 +53,45 @@
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    
+    <style>
+        .network-manipulation {
+            padding: 20px;
+            border-radius: 4px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .graph-options,
+        .layer-order,
+        .component-list,
+        .network-customization {
+            margin-top: 20px;
+        }
+
+        #canvas_bg {
+            position: sticky;
+            top: 0;
+        }
+
+        .btn-group {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .btn-group .btn {
+            flex: 1;
+            margin: 0 5px;
+        }
+
+        .dropdown-content {
+            width: 100% !important;
+        }
+    </style>
     <script src="https://unpkg.com/cytoscape/dist/cytoscape.min.js"></script>
     <script src="https://unpkg.com/cytoscape-context-menus/cytoscape-context-menus.js"></script>
     <script src="https://unpkg.com/layout-base/layout-base.js"></script>
     <script src="https://unpkg.com/cose-base/cose-base.js"></script>
-    <script src="https://unpkg.com/webcola/WebCola/cola.min.js"></script>
-    <script src="https://unpkg.com/cytoscape-cola/cytoscape-cola.js"></script>
     <!-- <script src="js/cytoscape.min.js"></script> -->
     <script src="js/cytoscape-cose-bilkent.js"></script>
     <script src="js/cytoscape-medKGLayout.js"></script>
@@ -66,11 +99,29 @@
 
 
     <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
 
         .container {
             flex: 1;
-            width: 100%;
-            max-width: -webkit-fill-available;
+        }
+
+        body {
+            display: flex;
+            min-height: 100vh;
+            flex-direction: column;
+            background-color: #fafafa;
+        }
+
+        main {
+            flex: 1 0 auto;
+        }
+
+        nav {
+            background-color: #3f51b5;
         }
 
         .sidenav {
@@ -109,6 +160,13 @@
         .btn-large:hover,
         .btn-small:hover {
             background-color: #5c6bc0;
+        }
+
+        footer {
+            background-color: #3f51b5;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
         }
 
         .header-title {
@@ -179,6 +237,18 @@
             z-index: 1000;
         }
 
+        nav .brand-logo {
+            display: flex;
+            align-items: center;
+            padding: 6px;
+            padding-left: 4%;
+        }
+
+        nav .brand-logo img {
+            height: 5rem;
+            margin-right: 10px;
+        }
+
         nav .nav-options {
             margin-right: 3%;
         }
@@ -243,141 +313,206 @@
         .section-7 {
             margin-top: 3px !important;
         }
+
+        .links line {
+            stroke: #999;
+            stroke-opacity: 0.6;
+        }
+
+        .nodes circle {
+            stroke: #fff;
+            stroke-width: 1.5px;
+        }
+
+        .node text {
+            pointer-events: none;
+            font: 10px sans-serif;
+        }
     </style>
-
-<style>
-    :root {
-        --primary-color: #1c4966;
-        --primary-light: #3e6b8a;
-        --primary-dark: #0d2b3e;
-        --secondary-color: #ff4081;
-        --text-color: #333;
-        --background-color: #f5f5f5;
-    }
-
-    body {
-        display: flex;
-        min-height: 100vh;
-        flex-direction: column;
-        background-color: var(--background-color);
-        color: var(--text-color);
-    }
-
-    main {
-        flex: 1 0 auto;
-    }
-
-    nav {
-        background-color: var(--primary-color);
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        height: 140px;
-    }
-
-    nav .brand-logo {
-        display: flex;
-        align-items: center;
-        padding: 0;
-        height: 100%;
-    }
-
-    nav .brand-logo .logo-container {
-        background-color: white;
-        border-radius: 0 100% 100% 0;
-        padding: 0px 35px 0px 12px;
-        height: 100%;
-        position: relative;
-        align-items: center;
-    }
-
-    nav .brand-logo img {
-        height: 140px;
-        /* margin-right: 10px; */
-    }
-
-    nav .brand-logo span {
-        color: var(--primary-color);
-        font-weight: bold;
-    }
-
-    nav ul {
-        padding-right: 2rem;
-    }
-
-    nav ul a {
-        color: white;
-        margin-top: 2rem;
-        font-size: large;
-    }
-
-    .input-field input[type=text]:focus+label,
-    .input-field input[type=number]:focus+label {
-        color: var(--primary-color) !important;
-    }
-
-    .input-field input[type=text]:focus,
-    .input-field input[type=number]:focus {
-        border-bottom: 1px solid var(--primary-color) !important;
-        box-shadow: 0 1px 0 0 var(--primary-color) !important;
-    }
-
-    .btn {
-        background-color: var(--primary-color);
-    }
-
-    .btn:hover {
-        background-color: var(--primary-light);
-    }
-
-    .collection .collection-item.avatar {
-        min-height: 0;
-    }
-
-    footer {
-        background-color: var(--primary-color);
-        color: white;
-        padding: 10px 0;
-    }
-
-    /* nav .brand-logo {
-        display: flex;
-        align-items: center;
-        padding: 0;
-        height: 100%;
-    } */
-
-    footer .logo-container {
-        height: 100%;
-        position: relative;
-        align-items: center;
-        padding: 0px 20px 1px 20px;
-    }
-
-    footer .logo-container img {
-        height: 140px;
-        /* margin-right: 10px; */
-    }
-</style>
 </head>
 
 <body>
     <header>
-        <nav>
+        <nav style="height: 6rem !important;">
             <div class="nav-wrapper">
                 <a href="#" class="brand-logo">
-                    <div class="logo-container">
-                        <img src="images/logo-1.png" alt="MedKG Logo">
-                    </div>
+                    <img src="images/logo.svg" alt="MedKG Logo">
                 </a>
-                <ul id="nav-mobile" class="right hide-on-med-and-down">
+                <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+                <ul class="right hide-on-med-and-down nav-options">
                     <li><a href="search">Search</a></li>
                     <li><a href="team">Project/Team</a></li>
                 </ul>
             </div>
         </nav>
+
+        <!-- <ul class="sidenav" id="mobile-demo">
+            <li><a href="search">Search</a></li>
+            <li><a href="team">Project/Team</a></li>
+        </ul> -->
     </header>
 
-    <div class="container">
+
+    <!-- if something went wrong... -->
+    <div id="error_msg" title="Search Error!"></div>
+
+    <div class="container-fluid">
         <div class="row" style="height: 1000px !important;">
+            <!-- <aside class="col-3">
+                <div class="network-manipulation">
+                    <div id="selected_edges" class="hide"></div>
+                    <div id="selected_nodes" class="hide"></div>
+                    <div id="makeNewSearchWithSelecteds_btn" class="hide">
+                        <button class="btn waves-effect waves-light" id="makeNewSearchWithSelecteds">New search with selected nodes</button>
+                    </div>
+
+                    <h5>Node Search</h5>
+                    <div class="input-field">
+                        <input class="form-control form-control-sm autocomplete" name="node_search" id="node_search" placeholder="Type the name of the node" />
+                        <input type="hidden" name="node_search" id="network_f_name" value="1725318346" />
+                    </div>
+
+                    <h5>Neighbour Type</h5>
+                    <div class="input-field">
+                        <select id="neighbour-type">
+                            <option value="Any">Any</option>
+                            <option value="Drug">Drug</option>
+                            <option value="Protein">Protein</option>
+                            <option value="Disease">Disease</option>
+                            <option value="Metabolite">Metabolite</option>
+                            <option value="Phenotype">Phenotype</option>
+                            <option value="Peptide">Peptide</option>
+                            <option value="Gene">Gene</option>
+                            <option value="Pathway">Pathway</option>
+                            <option value="Chromosome">Chromosome</option>
+                        </select>
+                        <label>Layout selection</label>
+                    </div>
+
+                    <div class="graph-options">
+                        <h5>Graph Options</h5>
+                        <div class="input-field">
+                            <select id="layout">
+                                <option value="medKGLayout">medKG Layout</option>
+                                <option value="medKGCircles">medKG Circles</option>
+                                <option value="circle">Circle</option>
+                                <option value="grid">Grid</option>
+                                <option value="cose">Cose</option>
+                                <option value="concentric">Concentric</option>
+                            </select>
+                            <label>Layout selection</label>
+                        </div>
+                    </div>
+
+                    <div id="medKGLayout_settings" class="layer-order">
+                        <h5>Order of layers:</h5>
+                        <ul id="orderingComponents_more" class="collection">
+                            <li class="collection-item">
+                                <img src="images/proteins.png" width="25" alt="core protein">
+                                <span>Core genes/proteins</span>
+                            </li>
+                            <li class="collection-item">
+                                <img src="images/drugs.png" width="25" alt="drugs">
+                                <span>Drugs</span>
+                            </li>
+                            <li class="collection-item">
+                                <img src="images/diseases.png" width="25" alt="disease">
+                                <span>Diseases</span>
+                            </li>
+                            <li class="collection-item">
+                                <img src="images/compounds.png" width="25" alt="compounds">
+                                <span>Compounds</span>
+                            </li>
+                            <li class="collection-item">
+                                <img src="images/gene_core.png" width="25" alt="genes">
+                                <span>Genes</span>
+                            </li>
+                            <li class="collection-item">
+                                <img src="images/gene_neigh.png" width="25" alt="metabolites">
+                                <span>Metabolites</span>
+                            </li>
+                            <li class="collection-item">
+                                <img src="images/phenotypes.png" width="25" alt="phenotypes">
+                                <span>Phenotypes</span>
+                            </li>
+                        </ul>
+
+                        <div class="row">
+                            <div class="col s12">
+                                <button class="btn waves-effect waves-light" id="changeOrderOfmedKG">Apply</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="component-list">
+                        <a class="waves-effect waves-light btn" id="add_remove_toggle">Add/Remove Components</a>
+                        <div id="component_list_container" class="hide">
+                            <ul class="collection">
+                                <li class="collection-item removeNodes">Diseases (EFO)</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <a class="waves-effect waves-light btn" id="network_customization">Customize Network Style</a>
+        
+                    <div id="network_customization_panel" class="network-customization">
+                        <h5>Customize Network Style</h5>
+                        
+                        <div class="select-wrapper">
+                            <select id="style_nodeGroup">
+                                <option value="all">Choose Node Type (Default All)</option>
+                                    <option value="Protein">Core genes/proteins</option>
+                                    <option value="Disease">Diseases</option>
+                                    <option value="Phenotype">Phenotypes</option>
+                                    <option value="Pathway">Pathways (Reactome)</option>
+                                    <option value="Drug">Drugs</option>
+                                    <option value="Compound">Compounds</option>
+                            </select>
+                        </div>
+
+                        <ul class="collection">
+                            <li class="collection-item">
+                                <div class="btn-group">
+                                    <a class="customizeStyle btn waves-effect waves-light" id="nodeSize_down">-</a>
+                                    <a class="customizeStyle btn disabled" id="nodeSize_res">Node Size</a>
+                                    <a class="customizeStyle btn waves-effect waves-light" id="nodeSize_up">+</a>
+                                </div>
+                            </li>
+                            <li class="collection-item">
+                                <div class="btn-group">
+                                    <a class="customizeStyle btn waves-effect waves-light" id="fontSize_down">-</a>
+                                    <a class="customizeStyle btn disabled" id="fontSize_res">Font Size</a>
+                                    <a class="customizeStyle btn waves-effect waves-light" id="fontSize_up">+</a>
+                                </div>
+                            </li>
+                            <li class="collection-item">
+                                <a class="dropdown-trigger btn" href="#" data-target="labelPositionDropdown">Label Position</a>
+                                <ul id="labelPositionDropdown" class="dropdown-content">
+                                    <li><a href="#!" class="customizeStyle" id="left">Left</a></li>
+                                    <li><a href="#!" class="customizeStyle" id="right">Right</a></li>
+                                    <li><a href="#!" class="customizeStyle" id="top">Top</a></li>
+                                    <li><a href="#!" class="customizeStyle" id="bottom">Bottom</a></li>
+                                    <li><a href="#!" class="customizeStyle" id="center">Center</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                        <div class="row">
+                            <div class="col s12 m6">
+                                <a class="waves-effect waves-light btn" id="edgelabel_on_off_btn">Edge Label Text On/Off</a>
+                            </div>
+                            <div class="col s12 m6">
+                                <a class="waves-effect waves-light btn" id="legend_on_off_btn">Node & Edge Legend On/Off</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="new-network">
+                        <a href="search" target="_blank" class="btn waves-effect waves-light">New Knowledge Graph</a>
+                    </div>
+                </div>
+            </aside> -->
+
             <aside class="col s12 m3">
                 <div class="network-manipulation card-panel z-depth-2">
                     <!-- Selected Items -->
@@ -422,7 +557,8 @@
                         <h5 class="cyan-text text-darken-2">Graph Options</h5>
                         <div class="input-field">
                             <select id="layout" class="browser-default">
-                                <option value="cola">Cola</option>
+                                <option value="medKGLayout">medKG Layout</option>
+                                <option value="medKGCircles">medKG Circles</option>
                                 <option value="circle">Circle</option>
                                 <option value="grid">Grid</option>
                                 <option value="cose">Cose</option>
@@ -551,15 +687,14 @@
             <div class="overlay" id="loadingOverlay">
                 <div class="spinner"></div>
             </div>
-            <div class="col-9" id="network">
-                
-                <div id="canvas_bg" class="col s2">
-                    <div class="zoom-controls">
-                        <button id="zoom-in">Zoom In</button>
-                        <button id="zoom-out">Zoom Out</button>
-                    </div>
-                    <!-- <img src="images/KG_Legend.png" class="responsive-img" id="canvas_bg_item" alt="KG Legend"> -->
+            <div class="col-9" id="network-1">
+                <div class="graph-controls">
+                    <button onclick="zoomIn()">Zoom In</button>
+                    <button onclick="zoomOut()">Zoom Out</button>
+                    <button onclick="resetZoom()">Reset Zoom</button>
+                    <button onclick="fitGraphToSvg()">Fit Graph</button>
                 </div>
+                <svg width="100%" height="900"></svg>
             </div>
         </div>
         <div id="details-section" class="card-panel">
@@ -567,34 +702,10 @@
             <div id="details-content"></div>
         </div>
     </div>
-    <footer class="page-footer">
+    <footer>
         <div class="container">
-            <div class="row">
-                <div class="logo-container">
-                    <img src="images/logo-1.png" alt="MedKG Logo">
-                </div>
-                <div class="col l6 s12">
-                    <h5 class="white-text" style="width: inherit;text-align: justify;">MedKG</h5>
-                    <p class="grey-text text-lighten-4" style="width: inherit;text-align: justify;">
-                        National Institute of Pharmaceutical 
-                        Education and Research, 
-                        S.A.S. Nagar (Mohali) 
-                    </p>
-                </div>
-                
-                <div class="col l4 offset-l2 s12">
-                    <h5 class="white-text">Links</h5>
-                    <ul>
-                        <li><a class="grey-text text-lighten-3" href="#!">About Us</a></li>
-                        <li><a class="grey-text text-lighten-3" href="#!">Contact</a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        <div class="footer-copyright">
-            <div class="container">
-                © 2024 ChemPlusX. All rights reserved.
-            </div>
+            <p>MedKG is part of ChemPlusX.</p>
+            <p>&copy; 2024 ChemPlusX. All rights reserved.</p>
         </div>
     </footer>
     
@@ -603,7 +714,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            cytoscape.use(cytoscapeCola);
             var elems = document.querySelectorAll('select');
             M.FormSelect.init(elems);
             var dropdowns = document.querySelectorAll('.dropdown-trigger');
@@ -642,12 +752,22 @@
         });
     </script>
 
-    <script src="js/graph_events.js"></script>
-    <script id="graph_starter" data-attr="data/1725318346" src="js/draw_network.js"></script>
+<script src="js/draw_d3_network.js"></script>
+    <!-- <script src="js/graph_events.js"></script> -->
+    <!-- <script id="graph_starter" data-attr="data/1725318346" src="js/draw_network.js"></script> -->
     <script src="js/search_in_graph.js"></script>
     <script src="js/add_drop.js"></script>
-    <script src="js/network_customization.js"></script>
+    <!-- <script src="js/network_customization.js"></script> -->
     <script src="js/page_ready.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Existing Materialize initialization...
+
+            // Initialize D3.js graph
+            initD3Graph();
+        });
+    </script>
 
     <!-- <script>
         function fetchAndRenderGraph() {

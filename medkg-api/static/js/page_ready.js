@@ -10,5 +10,7 @@ $( function() {
             const name = urlParams.get('name');
             const type = urlParams.get('type');
 
+            // LoadGraphValues(id, name, 'data/'+$('#network_f_name').val(), type);
             LoadGraph(id, name, 'data/'+$('#network_f_name').val(), type);
+
 });
