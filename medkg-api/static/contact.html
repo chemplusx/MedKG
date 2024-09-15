@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - MedKG</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        /* Existing styles from the original page */
+        :root {
+            --primary-color: #1c4966;
+            --primary-light: #3e6b8a;
+            --primary-dark: #0d2b3e;
+            --secondary-color: #ff4081;
+            --text-color: #333;
+            --background-color: #f5f5f5;
+        }
+
+        body {
+            display: flex;
+            min-height: 100vh;
+            flex-direction: column;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+
+        main {
+            flex: 1 0 auto;
+        }
+
+        nav {
+            background-color: var(--primary-color);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            height: 140px;
+        }
+
+        nav .brand-logo {
+            display: flex;
+            align-items: center;
+            padding: 0;
+            height: 100%;
+        }
+
+        nav .brand-logo .logo-container {
+            background-color: white;
+            border-radius: 0 100% 100% 0;
+            padding: 0px 35px 0px 12px;
+            height: 100%;
+            position: relative;
+            align-items: center;
+        }
+
+        nav .brand-logo img {
+            height: 140px;
+        }
+
+        nav .brand-logo span {
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        nav ul {
+            padding-right: 2rem;
+        }
+
+        nav ul a {
+            color: white;
+            margin-top: 2rem;
+            font-size: large;
+        }
+
+        footer {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px 0;
+        }
+
+        footer .container {
+            max-width: -webkit-fill-available;
+            width: 100%;
+            margin: 1px;
+        }
+
+        footer .logo-container {
+            height: 100%;
+            position: relative;
+            align-items: center;
+            padding: 0px 20px 0px 20px !important;
+        }
+
+        footer .logo-container img {
+            height: 140px;
+        }
+
+        /* New styles for the Contact page */
+        .contact-container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+
+        .contact-form .input-field input:focus,
+        .contact-form .input-field textarea:focus {
+            border-bottom: 1px solid var(--primary-color);
+            box-shadow: 0 1px 0 0 var(--primary-color);
+        }
+
+        .contact-form .input-field input:focus+label,
+        .contact-form .input-field textarea:focus+label {
+            color: var(--primary-color);
+        }
+
+        .contact-info {
+            background-color: var(--primary-light);
+            color: white;
+            padding: 2rem;
+            border-radius: 8px;
+        }
+
+        .contact-info i {
+            margin-right: 10px;
+        }
+
+        #map {
+            height: 300px;
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+
+        .chat-bot {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .chat-bot:hover {
+            background-color: var(--primary-light);
+        }
+
+        .chat-bot i {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <nav>
+            <div class="nav-wrapper">
+                <a href="#" class="brand-logo">
+                    <div class="logo-container">
+                        <img src="images/logo-1.png" alt="MedKG Logo">
+                    </div>
+                </a>
+                <ul id="nav-mobile" class="right hide-on-med-and-down">
+                    <li><a href="search">Search</a></li>
+                    <li><a href="search">Documentation</a></li>
+                    <li><a href="api-docs">API Docs</a></li>
+                    <li><a href="swagger">Swagger Docs</a></li>
+                    <li><a href="https://github.com/chemplusx/MedKG" target="_blank">Github</a></li>
+                    <li><a href="about-us">Project/Team</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container">
+        <h2 class="center-align">Contact Us</h2>
+        <div class="row contact-container">
+            <div class="col s12 m6">
+                <h4>Get in Touch</h4>
+                <form class="contact-form">
+                    <div class="input-field">
+                        <input id="name" type="text" required>
+                        <label for="name">Name</label>
+                    </div>
+                    <div class="input-field">
+                        <input id="email" type="email" required>
+                        <label for="email">Email</label>
+                    </div>
+                    <div class="input-field">
+                        <textarea id="message" class="materialize-textarea" required></textarea>
+                        <label for="message">Message</label>
+                    </div>
+                    <button class="btn waves-effect waves-light" type="submit">Send
+                        <i class="material-icons right">send</i>
+                    </button>
+                </form>
+            </div>
+            <div class="col s12 m6">
+                <div class="contact-info">
+                    <h4>Contact Information</h4>
+                    <p><i class="material-icons">location_on</i> National Institute of Pharmaceutical Education and
+                        Research, S.A.S. Nagar (Mohali), Punjab - 160062</p>
+                    <p><i class="material-icons">phone</i> +91(172)-2292000 Extn: 2016</p>
+                    <p><i class="material-icons">email</i> prabhagarg@niper.ac.in</p>
+                </div>
+                <div id="map" style="position: relative; overflow: hidden;">
+                    <div
+                        style="height: 100%; width: 100%; position: absolute; top: 0px; left: 0px; background-color: rgb(229, 227, 223);">
+                        <div id="map" class="mapouter">
+                            <div class="gmap_canvas"
+                                style="/* margin-left: 100px; *//* margin-top:20px; */height: -webkit-fill-available;margin-top: -1rem;">
+                                <iframe class="gmap_iframe" frameborder="0" scrolling="no" marginheight="0"
+                                    marginwidth="0"
+                                    src="https://maps.google.com/maps?width=600&amp;height=400&amp;hl=en&amp;q=NIPER,Mohali&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"
+                                    style="
+                        width: -webkit-fill-available;
+                        height: -webkit-fill-available;
+                    "></iframe>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="page-footer">
+        <div class="container">
+            <div class="row">
+                <div class="logo-container col">
+                    <img src="images/logo-1.png" alt="MedKG Logo">
+                </div>
+                <div class="col l5 s12">
+                    <h5 class="white-text" style="width: inherit;text-align: justify;"><strong>MedKG</strong></h5>
+                    <p class="grey-text text-lighten-4" style="width: inherit;text-align: justify;">
+                        <b>Department of Pharmacoinformatics</b>
+                    </p>
+                    <p class="grey-text text-lighten-4" style="width: inherit;text-align: justify;">
+                        National Institute of Pharmaceutical
+                        Education and Research,
+                        S.A.S. Nagar (Mohali)
+                    </p>
+                </div>
+
+                <div class="col offset-l2">
+                    <h5 class="white-text">Links</h5>
+                    <ul>
+                        <li><a class="grey-text text-lighten-3" href="about-us">About Us</a></li>
+                        <li><a class="grey-text text-lighten-3" href="contact">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="footer-copyright">
+            <div class="container">
+                © 2024 ChemPlusX. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <div class="chat-bot">
+        <i class="material-icons">chat</i>
+        <span>Chat with us</span>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script>
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const chatBot = document.querySelector('.chat-bot');
+            chatBot.addEventListener('click', function () {
+                alert('Chat functionality coming soon!');
+            });
+        });
+    </script>
+</body>
+
+</html>
