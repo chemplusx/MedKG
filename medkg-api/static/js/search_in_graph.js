@@ -126,3 +126,12 @@ function getImageName(item) {
 if (window.location.pathname === '/visualise') {
   loadEverything();
 }
+
+function showLoading() {
+	document.getElementById('loadingOverlay').style.display = 'flex';
+}
+
+// Function to hide the loading overlay
+function hideLoading() {
+	document.getElementById('loadingOverlay').style.display = 'none';
+}

@@ -373,7 +373,9 @@
                 </div>
             </div>
         </div>
-
+        <div class="overlay" id="loadingOverlay">
+            <div class="spinner"></div>
+        </div>
         <div id="searchResults" style="display: none;">
             <h5 class="center-align">Search Results</h5>
             <div id="resultsList"></div>
@@ -467,6 +469,7 @@
             }
 
             // Simulated API call - replace with actual API endpoint
+            showLoading();
             fetch(`api/${searchType}-search`, {
                 method: 'POST',
                 headers: {
@@ -478,10 +481,14 @@
             })
                 .then(response => response.json())
                 .then(data => displayResults(data, searchType))
-                .catch(error => console.error('Error:', error));
+                .catch(function(error){
+                    console.error('Error:', error);
+                    hideLoading();
+                });
         }
 
         function displayResults(results, searchType) {
+            hideLoading();
             const resultsList = document.getElementById('resultsList');
             const noResults = document.getElementById('noResults');
             resultsList.innerHTML = '';
@@ -668,7 +675,7 @@
             // Function to fetch autocomplete suggestions from API
             async function fetchAutocompleteSuggestions(query, aci) {
                 try {
-                    const response = await fetch(`/search_in_graph?limit=10&term=${encodeURIComponent(query)}`);
+                    const response = await fetch(`search_in_graph?limit=10&term=${encodeURIComponent(query)}`);
                     if (!response.ok) {
                         throw new Error('Network response was not ok');
                     }
