@@ -134,8 +134,9 @@ function beautifyObject(obj) {
 	return output;
 }
 
-function LoadGraph(id, name, file, type = 'empty') {
-	neighbour = $('#neighbour-type').val();
+function LoadGraph(id, name, file, type = 'empty', neighbour = '') {
+	neighbour = neighbour ==='' ? $('#neighbour-type').val() !== 'Any' ? $('#neighbour-type').val() : null : neighbour;
+	// neighbour = $('#neighbour-type').val();
 	if (neighbour === 'Any') {
 		neighbour = null;
 	}
@@ -225,13 +226,17 @@ function LoadGraph(id, name, file, type = 'empty') {
 
 
 
+		},
+		error: function (result) {
+			hideLoading();
+			alert('Failed to load the graph');
 		}
 	});
 
 }
 
-function expandForNodeId(nodeId, name, type) {
-	neighbour = $('#neighbour-type').val();
+function expandForNodeId(nodeId, name, type, neighbour = '') {
+	neighbour = neighbour ==='' ? $('#neighbour-type').val() !== 'Any' ? $('#neighbour-type').val() : null : neighbour;
 	if (neighbour === 'Any') {
 		neighbour = null;
 	}
