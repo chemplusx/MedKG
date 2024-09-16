@@ -565,49 +565,24 @@ func SearchForInteraction(driver neo4j.DriverWithContext, request models.Interac
 	defer session.Close(ctx)
 	result, err := session.ExecuteRead(ctx,
 		func(tx neo4j.ManagedTransaction) (interface{}, error) {
-			// labels := "Disease|Tissue|Biological_process|Chromosome|Gene|Transcript|Protein|Amino_acid_sequence|Peptide|Modified_protein|Drug|Functional_region|Metabolite|Protein_structure|Pathway|Biological_sample"
-			records, err := tx.Run(ctx, "MATCH p=(node)-[*..]-(dest:"+request.DestinationNodeType+") where elementId(node)=\""+request.SearchTerm+"\"  RETURN p LIMIT toInteger($limit)", map[string]interface{}{"term": request.SearchTerm, "limit": 25})
+			query := "MATCH (start) WHERE elementId(start) = \"" + request.SearchTerm + "\" CALL { WITH start MATCH (end:" + request.DestinationNodeType + ") WHERE end <> start MATCH path = shortestPath((start)-[*.." + request.Depth + "]-(end)) RETURN path, length(path) AS path_length LIMIT 10 } RETURN path, path_length LIMIT 10"
+			records, err := tx.Run(ctx, query, map[string]interface{}{"max_length": 5, "start_id": request.SearchTerm, "end_type": request.DestinationNodeType})
 			if err != nil {
 				return nil, err
 			}
-
-			var nodesMap map[string]models.Node = make(map[string]models.Node)
-			var relMap map[string]models.Relationship = make(map[string]models.Relationship)
-			var connectionmap map[string][]models.Relationship = make(map[string][]models.Relationship)
-			var visited map[string]bool = make(map[string]bool)
-			var e2ePath []string = make([]string, 0)
-
+			paths := make([]map[string]interface{}, 0)
 			for records.Next(ctx) {
 				record := records.Record()
 				path := record.Values[0].(neo4j.Path)
+				pathLength := record.Values[1].(int64)
 				nodes := path.Nodes
-				rels := path.Relationships
-
-				// Now create distinct path arrays from source node to all possible destination nodes of type request.DestinationNodeType
-				// So if there are n nodes and r relationships
-				// We need to calculate all possible paths from source (node.ElementId = request.SearchTerm) to destination(node.Node_Type = request.DestinationNodeType), this path can contain multiple nodes in between
-				// We need to return all these paths
-
-				for _, rel := range rels {
-					if _, ok := relMap[rel.ElementId]; !ok {
-						relMap[rel.ElementId] = models.Relationship{
-							ID:         rel.ElementId,
-							Label:      rel.Type,
-							Source:     rel.StartElementId,
-							Target:     rel.EndElementId,
-							EdgeType:   rel.Type,
-							Properties: rel.Props,
-						}
-					}
-
-					if _, ok := connectionmap[rel.StartElementId]; !ok {
-						connectionmap[rel.StartElementId] = []models.Relationship{}
-					}
-
-					connectionmap[rel.StartElementId] = append(connectionmap[rel.StartElementId], relMap[rel.ElementId])
+				var pathData map[string]interface{} = map[string]interface{}{
+					"length":        pathLength,
+					"nodes":         []models.Node{},
+					"relationships": []models.Relationship{},
 				}
 
-				for _, node := range nodes {
+				for i, node := range nodes {
 					nme := "noname"
 					if val, ok := node.Props["name"]; ok && val != nil {
 						nme = node.Props["name"].(string)
@@ -631,30 +606,25 @@ func SearchForInteraction(driver neo4j.DriverWithContext, request models.Interac
 						NodeType:    node.Labels[0],
 					}
 
-					nodesMap[source.ID] = source
+					pathData["nodes"] = append(pathData["nodes"].([]models.Node), source)
+
+					if i < len(path.Relationships) {
+						rel := path.Relationships[i]
+						pathData["relationships"] = append(pathData["relationships"].([]models.Relationship), models.Relationship{
+							ID:         rel.ElementId,
+							Label:      rel.Type,
+							Source:     rel.StartElementId,
+							Target:     rel.EndElementId,
+							EdgeType:   rel.Type,
+							Properties: rel.Props,
+						})
+					}
 				}
-
-				if _, ok := visited[request.SearchTerm]; !ok {
-					visited[request.SearchTerm] = true
-					totalPath := "||" + request.SearchTerm + "->"
-					recurseAndBuildPath(&connectionmap, &nodesMap, request.SearchTerm, &visited, &request.DestinationNodeType, &totalPath, &e2ePath)
-				}
-
-				// for _, node := range nodes {
-				// 	if _, ok := visited[node.ElementId]; !ok {
-				// 		visited[node.ElementId] = true
-				// 		totalPath := "||" + node.ElementId + "->"
-				// 		recurseAndBuildPath(&connectionmap, &nodesMap, node.ElementId, &visited, &request.DestinationNodeType, &totalPath, &e2ePath)
-				// 	}
-				// 	// Now we need to find all possible paths from this node to the destination node
-				// 	// We can do this by traversing the connectionmap
-				// }
-
+				paths = append(paths, pathData)
 			}
+
 			return map[string]interface{}{
-				"nodes": nodesMap,
-				"rels":  relMap,
-				"paths": e2ePath,
+				"paths": paths,
 			}, nil
 		},
 	)
@@ -666,7 +636,7 @@ func SearchForInteraction(driver neo4j.DriverWithContext, request models.Interac
 	return result.(map[string]interface{}), nil
 }
 
-func SearchForPath(driver neo4j.DriverWithContext, request models.PathSearchRequest) ([]models.Node, error) {
+func SearchForPath(driver neo4j.DriverWithContext, request models.PathSearchRequest) (map[string]interface{}, error) {
 	ctx := context.Background()
 
 	err := driver.VerifyConnectivity(ctx)
@@ -678,21 +648,27 @@ func SearchForPath(driver neo4j.DriverWithContext, request models.PathSearchRequ
 	defer session.Close(ctx)
 	result, err := session.ExecuteRead(ctx,
 		func(tx neo4j.ManagedTransaction) (interface{}, error) {
-			labels := "Disease|Tissue|Biological_process|Chromosome|Gene|Transcript|Protein|Amino_acid_sequence|Peptide|Modified_protein|Drug|Functional_region|Metabolite|Protein_structure|Pathway|Biological_sample"
-			records, err := tx.Run(ctx, "MATCH p=shortestPath((source:"+labels+")-[*..5]-(target:"+labels+")) where elementId(source)=$sourceNodeID and elementId(target)=$targetNodeID RETURN p", map[string]interface{}{"sourceNodeID": request.SourceNodeID, "targetNodeID": request.TargetNodeID})
+			if request.Depth == "-1" {
+				request.Depth = "10"
+			}
+			query := "MATCH (start) WHERE elementId(start) = \"" + request.SourceNodeID + "\" CALL { WITH start MATCH (end) where elementId(end)=\"" + request.TargetNodeID + "\" and end <> start MATCH path = shortestPath((start)-[*.." + request.Depth + "]-(end)) RETURN path, length(path) AS path_length LIMIT 10 } RETURN path, path_length LIMIT 10"
+			records, err := tx.Run(ctx, query, map[string]interface{}{"max_length": 5, "start_id": request.SourceNodeID})
 			if err != nil {
 				return nil, err
 			}
-
-			var totalNodes []models.Node
-			var relationships []map[string]interface{}
+			paths := make([]map[string]interface{}, 0)
 			for records.Next(ctx) {
 				record := records.Record()
 				path := record.Values[0].(neo4j.Path)
+				pathLength := record.Values[1].(int64)
 				nodes := path.Nodes
-				rels := path.Relationships
+				var pathData map[string]interface{} = map[string]interface{}{
+					"length":        pathLength,
+					"nodes":         []models.Node{},
+					"relationships": []models.Relationship{},
+				}
 
-				for _, node := range nodes {
+				for i, node := range nodes {
 					nme := "noname"
 					if val, ok := node.Props["name"]; ok && val != nil {
 						nme = node.Props["name"].(string)
@@ -716,45 +692,25 @@ func SearchForPath(driver neo4j.DriverWithContext, request models.PathSearchRequ
 						NodeType:    node.Labels[0],
 					}
 
-					totalNodes = append(totalNodes, source)
-				}
+					pathData["nodes"] = append(pathData["nodes"].([]models.Node), source)
 
-				for _, rel := range rels {
-					relationships = append(relationships, map[string]interface{}{
-						"data": models.Relationship{
+					if i < len(path.Relationships) {
+						rel := path.Relationships[i]
+						pathData["relationships"] = append(pathData["relationships"].([]models.Relationship), models.Relationship{
 							ID:         rel.ElementId,
 							Label:      rel.Type,
 							Source:     rel.StartElementId,
 							Target:     rel.EndElementId,
 							EdgeType:   rel.Type,
 							Properties: rel.Props,
-						},
-					})
+						})
+					}
 				}
-
-				// record := records.Record()
-				// path := record.Values[0].(neo4j.Path)
-				// nodes = append(nodes, models.Node{
-				// 	ID:         path.,
-				// 	Label:      path.Start.Labels[0],
-				// 	Properties: path.Start.Props,
-				// })
-				// for _, node := range path.Nodes {
-				// 	nodes = append(nodes, models.Node{
-				// 		ID:         node.ElementId,
-				// 		Label:      node.Labels[0],
-				// 		Properties: node.Props,
-				// 	})
-				// }
-				// nodes = append(nodes, models.Node{
-				// 	ID:         path.EndElementId,
-				// 	Label:      path.End.Labels[0],
-				// 	Properties: path.End.Props,
-				// })
+				paths = append(paths, pathData)
 			}
+
 			return map[string]interface{}{
-				"nodes":         totalNodes,
-				"relationships": relationships,
+				"paths": paths,
 			}, nil
 		},
 	)
@@ -763,5 +719,5 @@ func SearchForPath(driver neo4j.DriverWithContext, request models.PathSearchRequ
 		return nil, err
 	}
 
-	return result.([]models.Node), nil
+	return result.(map[string]interface{}), nil
 }
