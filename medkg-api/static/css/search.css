@@ -1,0 +1,101 @@
+.result-card {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+.card-content {
+    padding: 20px;
+}
+.card-title {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #333;
+}
+.card-info {
+    font-size: 0.9em;
+    color: #666;
+    margin-bottom: 15px;
+}
+.path-visualization {
+    display: flex;
+    align-items: center;
+    overflow-x: auto;
+    padding: 20px 0;
+}
+.path-node {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 10px;
+    opacity: 0;
+    transform: scale(0.5);
+    transition: all 0.5s ease-out;
+}
+.node-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-weight: bold;
+    transition: transform 0.3s ease;
+}
+.path-node:hover .node-icon {
+    transform: scale(1.1);
+}
+.node-label {
+    margin-top: 5px;
+    font-weight: bold;
+    text-align: center;
+}
+.node-id {
+    font-size: 0.8em;
+    color: #666;
+}
+.path-relationship {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.relationship-line {
+    width: 100px;
+    height: 2px;
+    background-color: #bdc3c7;
+    position: relative;
+}
+.relationship-line::after {
+    content: '→';
+    position: absolute;
+    right: -4px;
+    top: -14px;
+    color: #bdc3c7;
+    font-size: 1.2em;
+}
+.relationship-label {
+    margin-top: 5px;
+    font-size: 0.8em;
+    color: #7f8c8d;
+}
+.card-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 15px;
+}
+.card-actions a {
+    text-decoration: none;
+    color: #3498db;
+    margin-left: 15px;
+    display: flex;
+    align-items: center;
+}
+.card-actions a:hover {
+    color: #2980b9;
+}
+.card-actions i {
+    margin-right: 5px;
+}

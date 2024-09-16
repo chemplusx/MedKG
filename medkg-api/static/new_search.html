@@ -355,15 +355,15 @@
             <div id="path-search" style="display: none;">
                 <h5>Path Search</h5>
                 <div class="input-field">
-                    <input id="startNode" type="text">
-                    <label for="startNode">Start Node</label>
+                    <input class="autocomplete" name="pathStartNode" id="pathStartNode">
+                    <input type="hidden" name="pathStartNode" id="pathStartNode_f_name" value="">
                 </div>
                 <div class="input-field">
-                    <input id="endNode" type="text">
-                    <label for="endNode">End Node</label>
+                    <input class="autocomplete" name="pathEndNode" id="pathEndNode">
+                    <input type="hidden" name="pathEndNode" id="pathEndNode_f_name" value="">
                 </div>
                 <div class="input-field">
-                    <input id="maxHops" type="number" min="1">
+                    <input id="maxHops" type="number" min="-1">
                     <label for="maxHops">Max Hops</label>
                 </div>
                 <div class="center-align">
@@ -425,6 +425,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script src="js/search_in_graph.js"></script>
+    <link rel="stylesheet" href="css/search.css">
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             M.AutoInit();
@@ -459,8 +460,8 @@
                     depth = document.getElementById('searchDepth').value;
                     break;
                 case 'path':
-                    startNode = document.getElementById('startNode').value;
-                    endNode = document.getElementById('endNode').value;
+                    startNode = document.getElementById('pathStartNode_f_name').value;
+                    endNode = document.getElementById('pathEndNode_f_name').value;
                     maxHops = document.getElementById('maxHops').value;
                     break;
             }
@@ -492,33 +493,120 @@
                 noResults.style.display = 'none';
                 resultsList.style.display = 'block';
 
-                results.forEach(result => {
-                    const card = document.createElement('div');
-                    card.className = 'result-card';
-                    card.innerHTML = `
-                        <div class="card-content">
-                            <span class="card-title">${result.display_name || result.name || result.label} (${result.properties.id || 'N/A'}) </span>
-                            <div class="card-info">
-                                <span class="card-type">${result.type}</span>
-                                <span class="card-id">ID: ${result.id}</span>
+                if (searchType === 'interaction' || searchType === 'path') {
+                    const resultsList = document.getElementById('resultsList');
+                    results.paths.forEach((result, index) => {
+                        const card = createPathVisualization(result, index);
+                        resultsList.appendChild(card);
+                    });
+
+                    // Animate nodes
+                    setTimeout(() => {
+                        const nodes = document.querySelectorAll('.path-node');
+                        nodes.forEach((node, index) => {
+                            setTimeout(() => {
+                                node.style.opacity = 1;
+                                node.style.transform = 'scale(1)';
+                            }, index * 100);
+                        });
+                    }, 100);
+                    
+                }else{
+                    results.forEach(result => {
+                        const card = document.createElement('div');
+                        card.className = 'result-card';
+                        card.innerHTML = `
+                            <div class="card-content">
+                                <span class="card-title">${result.display_name || result.name || result.label} (${result.properties.id || 'N/A'}) </span>
+                                <div class="card-info">
+                                    <span class="card-type">${result.type}</span>
+                                    <span class="card-id">ID: ${result.id}</span>
+                                </div>
+                                <p class="card-description">${result.properties.description || result.properties.function || 'No description available.'}</p>
+                                <div class="card-actions">
+                                    <a href="visualise?id=${result.id}&name=${result.label}&type=${result.type}" onclick="visualize('${result.id}')">
+                                        <i class="material-icons">visibility</i>Visualize
+                                    </a>
+                                    <a href="#!" onclick="showDetails('${result.id}')">
+                                        <i class="material-icons">info</i>Details
+                                    </a>
+                                </div>
                             </div>
-                            <p class="card-description">${result.properties.description || result.properties.function || 'No description available.'}</p>
-                            <div class="card-actions">
-                                <a href="visualise?id=${result.id}&name=${result.label}&type=${result.type}" onclick="visualize('${result.id}')">
-                                    <i class="material-icons">visibility</i>Visualize
-                                </a>
-                                <a href="#!" onclick="showDetails('${result.id}')">
-                                    <i class="material-icons">info</i>Details
-                                </a>
-                            </div>
-                        </div>
-                    `;
-                    resultsList.appendChild(card);
-                });
+                        `;
+                        resultsList.appendChild(card);
+                    });
+                }
             }
 
             document.getElementById('searchResults').style.display = 'block';
         }
+
+        const nodeTypeColors = {
+            'Drug': '#FF6B6B',
+            'Protein': '#4ECDC4',
+            'Disease': '#45B7D1',
+            'Peptide': '#FFA07A',
+            'Transcript': '#98D8C8',
+            'Gene': '#F7DC6F',
+            'Pathway': '#C39BD3',
+            'Metabolite': '#7DCEA0'
+        };
+
+        function getNodeColor(nodeType) {
+            return nodeTypeColors[nodeType] || '#A9A9A9'; // Default color if type not found
+        }
+
+        function createPathVisualization(result, index) {
+            const card = document.createElement('div');
+            card.className = 'result-card';
+            const startNode = result.nodes[0];
+            const endNode = result.nodes[result.nodes.length - 1];
+            
+            let pathVisualization = '<div class="path-visualization">';
+            result.nodes.forEach((node, nodeIndex) => {
+                const nodeColor = getNodeColor(node.Node_Type);
+                pathVisualization += `
+                <div class="path-node">
+                        <div class="node-icon" style="background-color: ${nodeColor};">${node.label[0]}</div>
+                        <div class="node-label">${node.label}</div>
+                        <div class="node-id">(${node.Node_Type})</div>
+                    </div>
+                `;
+                
+                if (nodeIndex < result.relationships.length) {
+                    const rel = result.relationships[nodeIndex];
+                    pathVisualization += `
+                        <div class="path-relationship">
+                            <div class="relationship-line"></div>
+                            <div class="relationship-label">${rel.label}</div>
+                        </div>
+                    `;
+                }
+            });
+            pathVisualization += '</div>';
+
+            card.innerHTML = `
+                <div class="card-content">
+                    <span class="card-title">Path ${index + 1} (Length: ${result.length})</span>
+                    <div class="card-info">
+                        <span class="card-type">Path</span>
+                        <span class="card-id"><strong>Start:</strong> ${startNode.label} (${startNode.Node_Type}), <strong>End:</strong> ${endNode.label} (${endNode.Node_Type})</span>
+                    </div>
+                    ${pathVisualization}
+                    <div class="card-actions">
+                        <a href="#!" onclick="visualizePath('${index}')">
+                            <i class="material-icons">visibility</i>Visualize
+                        </a>
+                        <a href="#!" onclick="showPathDetails('${index}')">
+                            <i class="material-icons">info</i>Details
+                        </a>
+                    </div>
+                </div>
+            `;
+
+            return card;
+        }
+
 
         function visualize(id) {
             // Implement visualization logic here
@@ -541,12 +629,30 @@
 
         document.addEventListener('DOMContentLoaded', function () {
             var autoCompleteElem = document.querySelector('#interactionSearchTerm');
+            var autoCompleteElem2 = document.querySelector('#pathStartNode');
+            var autoCompleteElem3 = document.querySelector('#pathEndNode');
             var autoCompleteInstance = M.Autocomplete.init(autoCompleteElem, {
                 minLength: 1,
                 onAutocomplete: function (selectedValue) {
                     console.log('Selected:', selectedValue);
                     const value = this.options.data[selectedValue].value;
                     document.querySelector('#interactionSearchTerm_f_name').value = value.id;
+                }
+            });
+            var autoCompleteInstance2 = M.Autocomplete.init(autoCompleteElem2, {
+                minLength: 1,
+                onAutocomplete: function (selectedValue) {
+                    console.log('Selected:', selectedValue);
+                    const value = this.options.data[selectedValue].value;
+                    document.querySelector('#pathStartNode_f_name').value = value.id;
+                }
+            });
+            var autoCompleteInstance3 = M.Autocomplete.init(autoCompleteElem3, {
+                minLength: 1,
+                onAutocomplete: function (selectedValue) {
+                    console.log('Selected:', selectedValue);
+                    const value = this.options.data[selectedValue].value;
+                    document.querySelector('#pathEndNode_f_name').value = value.id;
                 }
             });
 
@@ -560,7 +666,7 @@
             }
 
             // Function to fetch autocomplete suggestions from API
-            async function fetchAutocompleteSuggestions(query) {
+            async function fetchAutocompleteSuggestions(query, aci) {
                 try {
                     const response = await fetch(`/search_in_graph?limit=10&term=${encodeURIComponent(query)}`);
                     if (!response.ok) {
@@ -579,8 +685,8 @@
                     });
 
                     // Update the autocomplete data
-                    autoCompleteInstance.updateData(autocompleteData);
-                    autoCompleteInstance.open();
+                    aci.updateData(autocompleteData);
+                    aci.open();
 
                     // Add images to the dropdown
                     setTimeout(() => {
@@ -611,7 +717,19 @@
             autoCompleteElem.addEventListener('input', function (e) {
                 const query = e.target.value;
                 if (query.length >= 1) {
-                    debouncedFetch(query);
+                    debouncedFetch(query, autoCompleteInstance);
+                }
+            });
+            autoCompleteElem2.addEventListener('input', function (e) {
+                const query = e.target.value;
+                if (query.length >= 1) {
+                    debouncedFetch(query, autoCompleteInstance2);
+                }
+            });
+            autoCompleteElem3.addEventListener('input', function (e) {
+                const query = e.target.value;
+                if (query.length >= 1) {
+                    debouncedFetch(query, autoCompleteInstance3);
                 }
             });
         });
