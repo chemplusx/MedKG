@@ -594,7 +594,7 @@
                     </div>
                     ${pathVisualization}
                     <div class="card-actions">
-                        <a href="#!" onclick="visualizePath('${index}')">
+                        <a href="visualise?id=${startNode.id}&name=${startNode.label}&type=${startNode.Node_Type}&neighbour=${endNode.Node_Type}" onclick="visualize('${result.id}" onclick="visualizePath('${index}')">
                             <i class="material-icons">visibility</i>Visualize
                         </a>
                         <a href="#!" onclick="showPathDetails('${index}')">

@@ -2,6 +2,7 @@ package neo4j
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"strconv"
 
@@ -488,6 +489,14 @@ func GetNetworkGraphForIdAndDepth(driver neo4j.DriverWithContext, id string, nam
 			var relationships []map[string]interface{}
 
 			exists := make(map[interface{}]bool)
+			if records == nil || records.Err() != nil {
+				return map[string]interface{}{
+					"nodes":         []map[string]models.Node{},
+					"relationships": []map[string]interface{}{},
+				}, fmt.Errorf("Error in query execution")
+			} else if !records.Next(ctx) {
+				return nil, nil
+			}
 			for records.Next(ctx) {
 				record := records.Record()
 				path := record.Values[0].(neo4j.Path)

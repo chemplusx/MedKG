@@ -53,8 +53,8 @@ function initD3Graph() {
     console.log("D3 Graph initialized with arrow definitions");
 }
 
-function LoadGraphValues(id, name, file, type = 'empty') {
-    const neighbour = $('#neighbour-type').val() !== 'Any' ? $('#neighbour-type').val() : null;
+function LoadGraphValues(id, name, file, type = 'empty', neighbour='') {
+    neighbour = neighbour ==='' ? $('#neighbour-type').val() !== 'Any' ? $('#neighbour-type').val() : null : neighbour;
     showLoading();
 
     $.ajax({

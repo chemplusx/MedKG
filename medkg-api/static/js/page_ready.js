@@ -9,8 +9,9 @@ $( function() {
             const id = urlParams.get('id');
             const name = urlParams.get('name');
             const type = urlParams.get('type');
+            const neighbour = urlParams.get('neighbour');
 
             // LoadGraphValues(id, name, 'data/'+$('#network_f_name').val(), type);
-            LoadGraph(id, name, 'data/'+$('#network_f_name').val(), type);
+            LoadGraph(id, name, 'data/'+$('#network_f_name').val(), type, neighbour);
 
 });
