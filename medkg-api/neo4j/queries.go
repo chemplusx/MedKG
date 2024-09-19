@@ -211,7 +211,7 @@ func SearchNodes(driver neo4j.DriverWithContext, term string, limit string) ([]m
 	return result.([]models.Node), nil
 }
 
-func SearchNodesInGraph(driver neo4j.DriverWithContext, term string, limit string, fileName string) ([]models.Node, error) {
+func SearchNodesInGraph(driver neo4j.DriverWithContext, term string, limit string, fileName string) (map[string]interface{}, error) {
 	ctx := context.Background()
 
 	err := driver.VerifyConnectivity(ctx)
@@ -223,12 +223,14 @@ func SearchNodesInGraph(driver neo4j.DriverWithContext, term string, limit strin
 	defer session.Close(ctx)
 	result, err := session.ExecuteRead(ctx,
 		func(tx neo4j.ManagedTransaction) (interface{}, error) {
+
 			labels := "Disease|Tissue|Biological_process|Chromosome|Gene|Transcript|Protein|Amino_acid_sequence|Peptide|Modified_protein|Drug|Functional_region|Metabolite|Protein_structure|Pathway|Biological_sample"
 			records, err := tx.Run(ctx, "CALL db.index.fulltext.queryNodes('allIndex', $term) YIELD node, score MATCH (node:"+labels+") RETURN elementId(node), labels(node), node {id: node.id, name: node.name, description: node.description, function: node.specific_function, score: score } AS node LIMIT toInteger($limit)", map[string]interface{}{"term": term, "limit": limit})
 			if err != nil {
 				return nil, err
 			}
 
+			var nodeIdMap = make(map[string]bool)
 			var nodes []models.Node
 			for records.Next(ctx) {
 				record := records.Record()
@@ -245,6 +247,7 @@ func SearchNodesInGraph(driver neo4j.DriverWithContext, term string, limit strin
 				// if val, ok := node["id"]; ok && val != nil {
 				// 	id = node["id"].(string)
 				// }
+				nodeIdMap[id] = true
 				nodes = append(nodes, models.Node{
 					ID:         id,
 					Label:      nme,
@@ -253,7 +256,43 @@ func SearchNodesInGraph(driver neo4j.DriverWithContext, term string, limit strin
 					Properties: node,
 				})
 			}
-			return nodes, records.Err()
+
+			labelsPartial := "Disease|Tissue|Biological_process|Chromosome|Gene|Transcript|Protein|Amino_acid_sequence|Peptide|Modified_protein|Drug|Functional_region|Metabolite|Protein_structure|Pathway|Biological_sample"
+			recordsPartial, err := tx.Run(ctx, "CALL db.index.fulltext.queryNodes('all_index_fulltext', $term) YIELD node, score MATCH (node:"+labelsPartial+") RETURN elementId(node), labels(node), node {id: node.id, name: node.name, description: node.description, function: node.specific_function, score: score } AS node LIMIT toInteger($limit)", map[string]interface{}{"term": term, "limit": limit})
+			if err != nil {
+				return nil, err
+			}
+
+			var nodesPartial []models.Node
+			for recordsPartial.Next(ctx) {
+				record := recordsPartial.Record()
+				id := record.Values[0].(string)
+				types := record.Values[1].([]interface{})
+				node := record.Values[2].(map[string]interface{})
+				nme := "noname"
+				if val, ok := node["name"]; ok && val != nil {
+					nme = node["name"].(string)
+				}
+
+				// id := uuid.NewString()
+
+				// if val, ok := node["id"]; ok && val != nil {
+				// 	id = node["id"].(string)
+				// }
+				if _, ok := nodeIdMap[id]; !ok {
+					nodesPartial = append(nodesPartial, models.Node{
+						ID:         id,
+						Label:      nme,
+						Type:       types[0].(string),
+						Score:      node["score"].(float64),
+						Properties: node,
+					})
+				}
+			}
+			return map[string]interface{}{
+				"exactMatches":   nodes,
+				"partialMatches": nodesPartial,
+			}, records.Err()
 		},
 	)
 
@@ -261,7 +300,7 @@ func SearchNodesInGraph(driver neo4j.DriverWithContext, term string, limit strin
 		return nil, err
 	}
 
-	return result.([]models.Node), nil
+	return result.(map[string]interface{}), nil
 }
 
 func GetNetworkGraphForId(driver neo4j.DriverWithContext, id string, name string, typeN string, limit string, neighbour string) ([]map[string]interface{}, []map[string]interface{}, error) {
