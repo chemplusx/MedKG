@@ -39,7 +39,7 @@
         nav {
             background-color: var(--primary-color);
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            height: 140px;
+            height: 150px;
         }
 
         nav .brand-logo {
@@ -51,8 +51,8 @@
 
         nav .brand-logo .logo-container {
             background-color: white;
-            border-radius: 0 100% 100% 0;
-            padding: 0px 35px 0px 12px;
+            border-radius: 0 50% 50% 0;
+            padding: 3px 0px 0px 0px;
             height: 100%;
             position: relative;
             align-items: center;
@@ -273,7 +273,7 @@
             <div class="nav-wrapper">
                 <a href="#" class="brand-logo">
                     <div class="logo-container">
-                        <img src="images/logo-1.png" alt="MedKG Logo">
+                        <img src="images/logo-3.png" alt="MedKG Logo">
                     </div>
                 </a>
                 <ul id="nav-mobile" class="right hide-on-med-and-down">
@@ -309,7 +309,7 @@
                 <h5>Global Search</h5>
                 <div class="input-field">
                     <input id="normalSearchTerm" type="text">
-                    <label for="normalSearchTerm">Enter search term</label>
+                    <label for="normalSearchTerm">Enter search term (Eg. Drug, Disease, Protein etc)</label>
                 </div>
                 <div class="center-align">
                     <button id="normalSearchBtn" class="btn waves-effect waves-light">Search
@@ -325,7 +325,7 @@
                         placeholder="Type the name of the node" />
                     <input type="hidden" name="node_search" id="network_f_name" value="1725318346" /> -->
                     <input class="autocomplete" name="interactionSearchTerm" id="interactionSearchTerm"
-                        placeholder="Type the name of the node">
+                        placeholder="Enter node name (Eg. Drug, Disease, Protein etc)">
                     <input type="hidden" name="interactionSearchTerm" id="interactionSearchTerm_f_name" value="" />
                     <!-- <label for="interactionSearchTerm">Enter search term</label> -->
                 </div>
@@ -355,16 +355,18 @@
             <div id="path-search" style="display: none;">
                 <h5>Path Search</h5>
                 <div class="input-field">
-                    <input class="autocomplete" name="pathStartNode" id="pathStartNode">
+                    <input class="autocomplete" name="pathStartNode" id="pathStartNode"
+                        placeholder="Enter Start node name (Eg. Drug, Disease, Protein etc)">
                     <input type="hidden" name="pathStartNode" id="pathStartNode_f_name" value="">
                 </div>
                 <div class="input-field">
-                    <input class="autocomplete" name="pathEndNode" id="pathEndNode">
+                    <input class="autocomplete" name="pathEndNode" id="pathEndNode"
+                        placeholder="Enter End node name (Eg. Drug, Disease, Protein etc)">
                     <input type="hidden" name="pathEndNode" id="pathEndNode_f_name" value="">
                 </div>
                 <div class="input-field">
                     <input id="maxHops" type="number" min="-1">
-                    <label for="maxHops">Max Hops</label>
+                    <label for="maxHops">Search Depth</label>
                 </div>
                 <div class="center-align">
                     <button id="pathSearchBtn" class="btn waves-effect waves-light">Find Path
@@ -373,7 +375,9 @@
                 </div>
             </div>
         </div>
-
+        <div class="overlay" id="loadingOverlay">
+            <div class="spinner"></div>
+        </div>
         <div id="searchResults" style="display: none;">
             <h5 class="center-align">Search Results</h5>
             <div id="resultsList"></div>
@@ -393,7 +397,7 @@
         <div class="container">
             <div class="row">
                 <div class="logo-container col">
-                    <img src="images/logo-1.png" alt="MedKG Logo">
+                    <img src="images/logo-3.png" alt="MedKG Logo">
                 </div>
                 <div class="col l5 s12">
                     <h5 class="white-text" style="width: inherit;text-align: justify;"><strong>MedKG</strong></h5>
@@ -447,12 +451,15 @@
             });
         });
 
+        let currentSearchTerm = '';
+
         function performSearch(searchType) {
             let searchTerm, destinationNodeType, depth, startNode, endNode, maxHops;
 
             switch (searchType) {
                 case 'global':
                     searchTerm = document.getElementById('normalSearchTerm').value;
+                    currentSearchTerm = searchTerm;
                     break;
                 case 'interaction':
                     searchTerm = document.querySelector('#interactionSearchTerm_f_name').value;
@@ -467,6 +474,7 @@
             }
 
             // Simulated API call - replace with actual API endpoint
+            showLoading();
             fetch(`api/${searchType}-search`, {
                 method: 'POST',
                 headers: {
@@ -478,29 +486,172 @@
             })
                 .then(response => response.json())
                 .then(data => displayResults(data, searchType))
-                .catch(error => console.error('Error:', error));
+                .catch(function (error) {
+                    console.error('Error:', error);
+                    hideLoading();
+                });
         }
 
+
+
+        function createModal() {
+            const modal = document.createElement('div');
+            modal.id = 'nodeDetailsModal';
+            modal.className = 'modal';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <h4>Node Details</h4>
+                    <pre id="nodeDetailsPre"></pre>
+                </div>
+                <div class="modal-footer">
+                    <a href="#!" class="modal-close waves-effect waves-green btn-flat">Close</a>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            createModal();
+            var modalElem = document.querySelector('#nodeDetailsModal');
+            M.Modal.init(modalElem);
+        });
+
+        function showDetails(nodeId) {
+            const nodeDetails = nodeDetailsCache[nodeId];
+            if (!nodeDetails) {
+                console.error('Node details not found');
+                return;
+            }
+
+            const modal = M.Modal.getInstance(document.getElementById('nodeDetailsModal'));
+            const pre = document.getElementById('nodeDetailsPre');
+            for (const key in nodeDetails.properties) {
+                if (key in ['molecular_embedding', 'embedding', 'id']) {
+                    nodeDetails.properties[key] = 'Hidden';
+                }
+                if (nodeDetails.properties[key] === null || nodeDetails.properties[key] === '') {
+                    // Delete the key
+                    delete nodeDetails.properties[key];
+                }
+            }
+
+            for (const key in nodeDetails) {
+                if (key in ['molecular_embedding', 'embedding', 'id']) {
+                    nodeDetails[key] = 'Hidden';
+                }
+                if (nodeDetails[key] === null || nodeDetails[key] === '') {
+                    // Delete the key
+                    delete nodeDetails[key];
+                }
+            }
+            const prettifiedJson = JSON.stringify(nodeDetails, null, 2);
+            pre.innerHTML = highlightSearchTerm(prettifiedJson, currentSearchTerm);
+            modal.open();
+        }
+
+        // Function to highlight the search term
+        function highlightSearchTerm(text, searchTerm) {
+            if (!searchTerm) return text;
+            const regex = new RegExp(searchTerm, 'gi');
+            return text.replace(regex, match => `<mark>${match}</mark>`);
+        }
+
+        // function displayResults(results, searchType) {
+        //     hideLoading();
+        //     const resultsList = document.getElementById('resultsList');
+        //     const noResults = document.getElementById('noResults');
+        //     resultsList.innerHTML = '';
+
+        //     if (results.length === 0) {
+        //         noResults.style.display = 'block';
+        //         resultsList.style.display = 'none';
+        //     } else {
+        //         noResults.style.display = 'none';
+        //         resultsList.style.display = 'block';
+
+        //         if (searchType === 'interaction' || searchType === 'path') {
+        //             const resultsList = document.getElementById('resultsList');
+        //             results.paths.forEach((result, index) => {
+        //                 const card = createPathVisualization(result, index);
+        //                 resultsList.appendChild(card);
+        //             });
+
+        //             // Animate nodes
+        //             setTimeout(() => {
+        //                 const nodes = document.querySelectorAll('.path-node');
+        //                 nodes.forEach((node, index) => {
+        //                     setTimeout(() => {
+        //                         node.style.opacity = 1;
+        //                         node.style.transform = 'scale(1)';
+        //                     }, index * 100);
+        //                 });
+        //             }, 100);
+
+        //         } else {
+        //             results.forEach(result => {
+        //                 const card = document.createElement('div');
+        //                 card.className = 'result-card';
+        //                 card.innerHTML = `
+        //                     <div class="card-content">
+        //                         <span class="card-title">${result.display_name || result.name || result.label} (${result.properties.id || 'N/A'}) </span>
+        //                         <div class="card-info">
+        //                             <span class="card-type">${result.type}</span>
+        //                             <span class="card-id">ID: ${result.id}</span>
+        //                         </div>
+        //                         <p class="card-description">${result.properties.description || result.properties.function || 'No description available.'}</p>
+        //                         <div class="card-actions">
+        //                             <a href="visualise?id=${result.id}&name=${result.label}&type=${result.type}" onclick="visualize('${result.id}')">
+        //                                 <i class="material-icons">visibility</i>Visualize
+        //                             </a>
+        //                             <a href="#!" onclick="showDetails('${result.id}')">
+        //                                 <i class="material-icons">info</i>Details
+        //                             </a>
+        //                         </div>
+        //                     </div>
+        //                 `;
+        //                 resultsList.appendChild(card);
+        //             });
+        //         }
+        //     }
+
+        //     document.getElementById('searchResults').style.display = 'block';
+        // }
+
         function displayResults(results, searchType) {
+            hideLoading();
+            const searchResults = document.getElementById('searchResults');
             const resultsList = document.getElementById('resultsList');
             const noResults = document.getElementById('noResults');
             resultsList.innerHTML = '';
 
-            if (results.length === 0) {
-                noResults.style.display = 'block';
-                resultsList.style.display = 'none';
-            } else {
-                noResults.style.display = 'none';
-                resultsList.style.display = 'block';
+            if (searchType === 'global') {
+                const exactMatches = results.exactMatches || [];
+                const partialMatches = results.partialMatches || [];
 
-                if (searchType === 'interaction' || searchType === 'path') {
-                    const resultsList = document.getElementById('resultsList');
+                if (exactMatches.length === 0 && partialMatches.length === 0) {
+                    noResults.style.display = 'block';
+                    resultsList.style.display = 'none';
+                } else {
+                    noResults.style.display = 'none';
+                    resultsList.style.display = 'block';
+
+                    // Create sections for exact and partial matches
+                    const exactMatchesSection = createMatchesSection('Exact Matches', exactMatches);
+                    const partialMatchesSection = createMatchesSection('Partial Matches', partialMatches);
+
+                    resultsList.appendChild(exactMatchesSection);
+                    resultsList.appendChild(partialMatchesSection);
+                }
+            } else if (searchType === 'interaction' || searchType === 'path') {
+                // Existing code for interaction and path search results
+                if (results.paths && results.paths.length > 0) {
+                    noResults.style.display = 'none';
+                    resultsList.style.display = 'block';
                     results.paths.forEach((result, index) => {
                         const card = createPathVisualization(result, index);
                         resultsList.appendChild(card);
                     });
-
-                    // Animate nodes
+                    // Animate nodes (existing code)
                     setTimeout(() => {
                         const nodes = document.querySelectorAll('.path-node');
                         nodes.forEach((node, index) => {
@@ -510,36 +661,100 @@
                             }, index * 100);
                         });
                     }, 100);
-                    
-                }else{
-                    results.forEach(result => {
-                        const card = document.createElement('div');
-                        card.className = 'result-card';
-                        card.innerHTML = `
-                            <div class="card-content">
-                                <span class="card-title">${result.display_name || result.name || result.label} (${result.properties.id || 'N/A'}) </span>
-                                <div class="card-info">
-                                    <span class="card-type">${result.type}</span>
-                                    <span class="card-id">ID: ${result.id}</span>
-                                </div>
-                                <p class="card-description">${result.properties.description || result.properties.function || 'No description available.'}</p>
-                                <div class="card-actions">
-                                    <a href="visualise?id=${result.id}&name=${result.label}&type=${result.type}" onclick="visualize('${result.id}')">
-                                        <i class="material-icons">visibility</i>Visualize
-                                    </a>
-                                    <a href="#!" onclick="showDetails('${result.id}')">
-                                        <i class="material-icons">info</i>Details
-                                    </a>
-                                </div>
-                            </div>
-                        `;
-                        resultsList.appendChild(card);
-                    });
+                } else {
+                    noResults.style.display = 'block';
+                    resultsList.style.display = 'none';
                 }
             }
 
-            document.getElementById('searchResults').style.display = 'block';
+            searchResults.style.display = 'block';
         }
+
+
+        // Helper function to create a section for matches
+        function createMatchesSection(title, matches) {
+            const section = document.createElement('div');
+            section.className = 'matches-section';
+            section.innerHTML = `<h6>${title} (${matches.length})</h6>`;
+
+            if (matches.length > 0) {
+                matches.forEach(result => {
+                    const card = createResultCard(result);
+                    section.appendChild(card);
+                });
+            } else {
+                section.innerHTML += '<p>No matches found</p>';
+            }
+
+            return section;
+        }
+
+        let nodeDetailsCache = {};
+
+        // Update the createResultCard function
+        function createResultCard(result) {
+            const card = document.createElement('div');
+            card.className = 'result-card';
+            const highlightedTitle = highlightSearchTerm(result.display_name || result.label || result.properties.name || 'N/A', currentSearchTerm);
+            const highlightedDescription = highlightSearchTerm(result.properties.description || result.properties.function || 'No description available.', currentSearchTerm);
+
+            // Store the full node details in the cache
+            nodeDetailsCache[result.id] = result;
+
+            card.innerHTML = `
+                <div class="card-content">
+                    <span class="card-title">${highlightedTitle} (${result.properties.id || 'N/A'})</span>
+                    <div class="card-info">
+                        <span class="card-type">${result.type}</span>
+                        <span class="card-id">ID: ${result.id}</span>
+                    </div>
+                    <p class="card-description">${highlightedDescription}</p>
+                    <div class="card-actions">
+                        <a href="visualise?id=${result.id}&name=${result.label || result.properties.name}&type=${result.type}" onclick="visualize('${result.id}')">
+                            <i class="material-icons">visibility</i>Visualize
+                        </a>
+                        <a href="#!" class="show-details" data-node-id="${result.id}">
+                            <i class="material-icons">info</i>Details
+                        </a>
+                    </div>
+                </div>
+            `;
+
+            // Add click event listener for the "Details" button
+            card.querySelector('.show-details').addEventListener('click', function (e) {
+                e.preventDefault();
+                const nodeId = this.getAttribute('data-node-id');
+                showDetails(nodeId);
+            });
+
+            return card;
+        }
+
+        const style = document.createElement('style');
+        style.textContent = `
+            .matches-section {
+                margin-bottom: 2rem;
+            }
+            .matches-section h6 {
+                color: var(--primary-color);
+                border-bottom: 2px solid var(--primary-light);
+                padding-bottom: 10px;
+                margin-bottom: 20px;
+            }
+            mark {
+                background-color: yellow;
+                padding: 0.2em 0;
+            }
+            #nodeDetailsModal {
+                width: 90%;
+                max-height: 90%;
+            }
+            #nodeDetailsPre {
+                white-space: pre-wrap;
+                word-wrap: break-word;
+            }
+        `;
+        document.head.appendChild(style);
 
         const nodeTypeColors = {
             'Drug': '#FF6B6B',
@@ -561,7 +776,7 @@
             card.className = 'result-card';
             const startNode = result.nodes[0];
             const endNode = result.nodes[result.nodes.length - 1];
-            
+
             let pathVisualization = '<div class="path-visualization">';
             result.nodes.forEach((node, nodeIndex) => {
                 const nodeColor = getNodeColor(node.Node_Type);
@@ -572,7 +787,7 @@
                         <div class="node-id">(${node.Node_Type})</div>
                     </div>
                 `;
-                
+
                 if (nodeIndex < result.relationships.length) {
                     const rel = result.relationships[nodeIndex];
                     pathVisualization += `
@@ -613,10 +828,10 @@
             console.log(`Visualizing node with ID: ${id}`);
         }
 
-        function showDetails(id) {
-            // Implement details view logic here
-            console.log(`Showing details for node with ID: ${id}`);
-        }
+        // function showDetails(id) {
+        //     // Implement details view logic here
+        //     console.log(`Showing details for node with ID: ${id}`);
+        // }
 
         // Add event listeners for pagination
         document.getElementById('prevPage').addEventListener('click', () => {
@@ -668,7 +883,7 @@
             // Function to fetch autocomplete suggestions from API
             async function fetchAutocompleteSuggestions(query, aci) {
                 try {
-                    const response = await fetch(`/search_in_graph?limit=10&term=${encodeURIComponent(query)}`);
+                    const response = await fetch(`search_in_graph?limit=10&term=${encodeURIComponent(query)}`);
                     if (!response.ok) {
                         throw new Error('Network response was not ok');
                     }
@@ -676,7 +891,14 @@
 
                     // Transform the data into the format Materialize expects
                     const autocompleteData = {};
-                    data.forEach(item => {
+                    data.exactMatches.forEach(item => {
+                        const key = item.label + ":" + item.properties.id + " (" + item.type + ")";
+                        autocompleteData[key] = {
+                            value: item,
+                            imageSrc: "images/" + getImageName(item) // Assuming `item.icon` contains the image URL
+                        };
+                    });
+                    data.partialMatches.forEach(item => {
                         const key = item.label + ":" + item.properties.id + " (" + item.type + ")";
                         autocompleteData[key] = {
                             value: item,
