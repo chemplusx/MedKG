@@ -4,12 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact Us - MedKG</title>
+    <title>MedKG Documentation</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="css/custom.css">
     <style>
-        /* Existing styles from the original page */
         :root {
             --primary-color: #1c4966;
             --primary-light: #3e6b8a;
@@ -72,6 +70,37 @@
             font-size: large;
         }
 
+        .documentation-section {
+            margin-top: 2rem;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+        }
+
+        .documentation-section h4 {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-light);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
         footer {
             background-color: var(--primary-color);
             color: white;
@@ -93,65 +122,6 @@
 
         footer .logo-container img {
             height: 140px;
-        }
-
-        /* New styles for the Contact page */
-        .contact-container {
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            padding: 2rem;
-            margin-top: 2rem;
-        }
-
-        .contact-form .input-field input:focus,
-        .contact-form .input-field textarea:focus {
-            border-bottom: 1px solid var(--primary-color);
-            box-shadow: 0 1px 0 0 var(--primary-color);
-        }
-
-        .contact-form .input-field input:focus+label,
-        .contact-form .input-field textarea:focus+label {
-            color: var(--primary-color);
-        }
-
-        .contact-info {
-            background-color: var(--primary-light);
-            color: white;
-            padding: 2rem;
-            border-radius: 8px;
-        }
-
-        .contact-info i {
-            margin-right: 10px;
-        }
-
-        #map {
-            height: 300px;
-            border-radius: 8px;
-            margin-top: 1rem;
-        }
-
-        .chat-bot {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background-color: var(--primary-color);
-            color: white;
-            padding: 10px 20px;
-            border-radius: 50px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            transition: all 0.3s ease;
-        }
-
-        .chat-bot:hover {
-            background-color: var(--primary-light);
-        }
-
-        .chat-bot i {
-            margin-right: 10px;
         }
     </style>
 </head>
@@ -178,55 +148,41 @@
     </header>
 
     <main class="container">
-        <h2 class="center-align">Contact Us</h2>
-        <div class="row contact-container">
-            <div class="col s12 m6">
-                <h4>Get in Touch</h4>
-                <form class="contact-form">
-                    <div class="input-field">
-                        <input id="name" type="text" required>
-                        <label for="name">Name</label>
-                    </div>
-                    <div class="input-field">
-                        <input id="email" type="email" required>
-                        <label for="email">Email</label>
-                    </div>
-                    <div class="input-field">
-                        <textarea id="message" class="materialize-textarea" required></textarea>
-                        <label for="message">Message</label>
-                    </div>
-                    <button class="btn waves-effect waves-light" type="submit">Send
-                        <i class="material-icons right">send</i>
-                    </button>
-                </form>
-            </div>
-            <div class="col s12 m6">
-                <div class="contact-info">
-                    <h4>Contact Information</h4>
-                    <p><i class="material-icons">location_on</i> National Institute of Pharmaceutical Education and
-                        Research, S.A.S. Nagar (Mohali), Punjab - 160062</p>
-                    <p><i class="material-icons">phone</i> +91(172)-2292000 Extn: 2016</p>
-                    <p><i class="material-icons">email</i> prabhagarg@niper.ac.in</p>
-                </div>
-                <div id="map" style="position: relative; overflow: hidden;">
-                    <div
-                        style="height: 100%; width: 100%; position: absolute; top: 0px; left: 0px; background-color: rgb(229, 227, 223);">
-                        <div id="map" class="mapouter">
-                            <div class="gmap_canvas"
-                                style="/* margin-left: 100px; *//* margin-top:20px; */height: -webkit-fill-available;margin-top: -1rem;">
-                                <iframe class="gmap_iframe" frameborder="0" scrolling="no" marginheight="0"
-                                    marginwidth="0"
-                                    src="https://maps.google.com/maps?width=600&amp;height=400&amp;hl=en&amp;q=NIPER,Mohali&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"
-                                    style="
-                        width: -webkit-fill-available;
-                        height: -webkit-fill-available;
-                    "></iframe>
+        <div class="documentation-section">
+            <h4>MedKG Documentation</h4>
+            <p>Welcome to the MedKG documentation. Here you'll find video tutorials on how to use various features of our platform.</p>
+        </div>
 
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <div class="documentation-section">
+            <h4>Global Search</h4>
+            <div class="video-container">
+                <iframe src="https://embed.app.guidde.com/playbooks/4XovC6evt22RGMEVTRkzXk" title="MedKG : Global Search" frameborder="0" referrerpolicy="unsafe-url" allowfullscreen="true" allow="clipboard-write" sandbox="allow-popups allow-popups-to-escape-sandbox allow-scripts allow-forms allow-same-origin allow-presentation"></iframe>
             </div>
+            <p>Learn how to use the Global Search feature to find information across the entire MedKG database.</p>
+        </div>
+
+        <div class="documentation-section">
+            <h4>Interaction Search</h4>
+            <div class="video-container">
+                <iframe src="https://embed.app.guidde.com/playbooks/uPSYgqvf5zqieXMag8xDkL" title="MedKG : Interaction Search" frameborder="0" referrerpolicy="unsafe-url" allowfullscreen="true" allow="clipboard-write" sandbox="allow-popups allow-popups-to-escape-sandbox allow-scripts allow-forms allow-same-origin allow-presentation"></iframe>
+            </div>
+            <p>Discover how to use the Interaction Search to find relationships between different entities in the MedKG database.</p>
+        </div>
+
+        <div class="documentation-section">
+            <h4>Path Search</h4>
+            <div class="video-container">
+                <iframe src="https://embed.app.guidde.com/playbooks/EXAMPLE_PATH_SEARCH_ID" title="MedKG : Path Search" frameborder="0" referrerpolicy="unsafe-url" allowfullscreen="true" allow="clipboard-write" sandbox="allow-popups allow-popups-to-escape-sandbox allow-scripts allow-forms allow-same-origin allow-presentation"></iframe>
+            </div>
+            <p>Learn how to use the Path Search feature to find connections between different nodes in the MedKG knowledge graph.</p>
+        </div>
+
+        <div class="documentation-section">
+            <h4>Graph Visualisation</h4>
+            <div class="video-container">
+                <iframe src="https://embed.app.guidde.com/playbooks/viYiqKwDhkeGdc1TwPUYHe" title="MedKG : Graph Visualisation" frameborder="0" referrerpolicy="unsafe-url" allowfullscreen="true" allow="clipboard-write" sandbox="allow-popups allow-popups-to-escape-sandbox allow-scripts allow-forms allow-same-origin allow-presentation"></iframe>
+            </div>
+            <p>Learn how to visualise graph and interact with the graph from data of different nodes in the MedKG knowledge graph.</p>
         </div>
     </main>
 
@@ -247,7 +203,6 @@
                         S.A.S. Nagar (Mohali)
                     </p>
                 </div>
-
                 <div class="col offset-l2">
                     <h5 class="white-text">Links</h5>
                     <ul>
@@ -264,21 +219,7 @@
         </div>
     </footer>
 
-    <div class="chat-bot">
-        <i class="material-icons">chat</i>
-        <span>Chat with us</span>
-    </div>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-    <script>
-
-        document.addEventListener('DOMContentLoaded', function () {
-            const chatBot = document.querySelector('.chat-bot');
-            chatBot.addEventListener('click', function () {
-                alert('Chat functionality coming soon!');
-            });
-        });
-    </script>
 </body>
 
 </html>
