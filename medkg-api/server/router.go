@@ -34,6 +34,7 @@ func InitRouter(r *gin.Engine) {
 	r.StaticFile("/search", "./static/new_search.html")
 	r.StaticFile("/contact", "./static/contact.html")
 	r.StaticFile("/about-us", "./static/about-us.html")
+	r.StaticFile("/documentation", "./static/documentation.html")
 	r.Static("/static", "./static/public")
 	r.Static("/js", "./static/js")
 	r.Static("/images", "./static/images")
