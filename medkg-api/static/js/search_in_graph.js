@@ -2,43 +2,81 @@ function split(val) {
   return val.split('|');
 }
 
-$("#node_search").on("keydown", function (event) {
-  if (event.keyCode === $.ui.keyCode.TAB &&
-    $(this).autocomplete("instance").menu.active) {
-    event.preventDefault();
+document.addEventListener('DOMContentLoaded', function() {
+  // Debounce function
+  function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+      const later = () => {
+        clearTimeout(timeout);
+        func(...args);
+      };
+      clearTimeout(timeout);
+      timeout = setTimeout(later, wait);
+    };
   }
-}).autocomplete({
-  minLength: 1,
-  source: function (request, response) {
-    $.ajax({
-      url: "search_in_graph",
-      dataType: "json",
-      data: {
-        term: request.term,
-        limit: 10,
-        file: $('#network_f_name').val(),
-      },
-      success: function (data) {
-        //console.log( data );
-        response(data);
+
+  // Function to fetch autocomplete results
+  function fetchAutocompleteResults(query, callback) {
+    // Replace this with your actual API call
+    fetch(`search_in_graph?limit=10&term=${encodeURIComponent(query)}`)
+      .then(response => response.json())
+      .then(data => callback(data))
+      .catch(error => console.error('Error fetching autocomplete results:', error));
+  }
+
+  // Debounced version of fetchAutocompleteResults
+  const debouncedFetch = debounce(fetchAutocompleteResults, 300);
+
+  // Function to initialize autocomplete
+  function initAutocomplete() {
+    const elem = document.querySelector('#node_search');
+    if (!elem) {
+      console.error('Autocomplete element not found');
+      return;
+    }
+
+    const options = {
+      data: {},
+      minLength: 1,
+      onAutocomplete: function(result) {
+        console.log('Selected:', result);
+      }
+    };
+
+    let autoCompleteInstance;
+
+    try {
+      autoCompleteInstance = M.Autocomplete.init(elem, options);
+    } catch (error) {
+      console.error('Error initializing Autocomplete:', error);
+      return;
+    }
+
+    // Add event listener for input changes
+    elem.addEventListener('input', function() {
+      const query = this.value;
+      if (query.length >= options.minLength) {
+        debouncedFetch(query, function(results) {
+          // Update autocomplete data
+          if (autoCompleteInstance && typeof autoCompleteInstance.updateData === 'function') {
+            autoCompleteInstance.updateData(results);
+            autoCompleteInstance.open();
+          } else {
+            console.error('Autocomplete instance not properly initialized');
+          }
+        });
       }
     });
-  },
-  focus: function () {
-    // prevent value inserted on focus
-    return false;
-  },
-  select: function (event, ui) {
-    var terms = split(this.value);
-    terms.pop();
-    this.value = terms.join('');
-    //console.log(ui.item.value);
-    LoadGraph(ui.item.id, ui.item.label, 'data/' + $('#network_f_name').val(), ui.item.type, '');
-    // apply_high(ui.item.id, ui.item.label, 'data/'+$('#network_f_name').val(), ui.item.type);
-    return false;
+  }
+
+  // Initialize autocomplete when the DOM is fully loaded
+  if (document.readyState === 'complete') {
+    initAutocomplete();
+  } else {
+    window.addEventListener('load', initAutocomplete);
   }
 });
-
 
 function loadEverything() {
   document.addEventListener('DOMContentLoaded', function () {
@@ -48,7 +86,7 @@ function loadEverything() {
       onAutocomplete: function (selectedValue) {
         console.log('Selected:', selectedValue);
         const value = this.options.data[selectedValue].value;
-        LoadGraph(value.id, value.label, 'data/' + $('#network_f_name').val(), value.type, '');
+        LoadGraph(value.id, value.label, 'data/' + $('#node_search_f_name').val(), value.type, '');
       }
     });
 
@@ -128,10 +166,43 @@ if (window.location.pathname === '/visualise') {
 }
 
 function showLoading() {
-	document.getElementById('loadingOverlay').style.display = 'flex';
+  document.getElementById('loadingOverlay').style.display = 'flex';
 }
 
 // Function to hide the loading overlay
 function hideLoading() {
-	document.getElementById('loadingOverlay').style.display = 'none';
+  document.getElementById('loadingOverlay').style.display = 'none';
+}
+
+function showError(message) {
+	M.toast({
+		html: message,
+		classes: 'red',
+		displayLength: 5000,
+		inDuration: 300,
+		outDuration: 375,
+		activationPercent: 0.1
+	});
+}
+
+function showWarning(message) {
+  M.toast({
+    html: message,
+    classes: 'orange',
+    displayLength: 5000,
+    inDuration: 300,
+    outDuration: 375,
+    activationPercent: 0.1
+  });
+}
+
+function showNotification(message) {
+	M.toast({
+		html: message,
+		classes: 'green',
+		displayLength: 5000,
+		inDuration: 300,
+		outDuration: 375,
+		activationPercent: 0.1
+	});
 }

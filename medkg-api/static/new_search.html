@@ -278,7 +278,7 @@
                 </a>
                 <ul id="nav-mobile" class="right hide-on-med-and-down">
                     <li><a href="search">Search</a></li>
-                    <li><a href="documentation">Documentation</a></li>
+                    <li><a href="documentation">Tutorials</a></li>
                     <li><a href="api-docs">API Docs</a></li>
                     <li><a href="swagger">Swagger Docs</a></li>
                     <li><a href="https://github.com/chemplusx/MedKG" target="_blank">Github</a></li>
@@ -489,6 +489,7 @@
                 .catch(function (error) {
                     console.error('Error:', error);
                     hideLoading();
+                    showError('An error occurred. Please try again later.', error);
                 });
         }
 
@@ -629,9 +630,11 @@
                 const partialMatches = results.partialMatches || [];
 
                 if (exactMatches.length === 0 && partialMatches.length === 0) {
+                    showWarning('No results found');
                     noResults.style.display = 'block';
                     resultsList.style.display = 'none';
                 } else {
+                    showNotification('Search results displayed successfully');
                     noResults.style.display = 'none';
                     resultsList.style.display = 'block';
 
@@ -645,6 +648,7 @@
             } else if (searchType === 'interaction' || searchType === 'path') {
                 // Existing code for interaction and path search results
                 if (results.paths && results.paths.length > 0) {
+                    showNotification('Search results displayed successfully');
                     noResults.style.display = 'none';
                     resultsList.style.display = 'block';
                     results.paths.forEach((result, index) => {
@@ -662,6 +666,7 @@
                         });
                     }, 100);
                 } else {
+                    showWarning('No results found');
                     noResults.style.display = 'block';
                     resultsList.style.display = 'none';
                 }

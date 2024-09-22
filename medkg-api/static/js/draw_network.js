@@ -16,25 +16,25 @@ var cy = window.cy = cytoscape({
 
 var layout = cy.layout({
 	name: 'cola',
-		nodeSpacing: 30,
-		edgeLength: 100,
-		animate: true,
-		randomize: false,
-		maxSimulationTime: 1500,
-		fit: true,
-		padding: 30,
-		nodeRepulsion: function (node) {
-			return 2500;
-		},
-		gravity: 100,
-		infinite: true,
-		refresh: 1,
-		//separated: 1,
-		//lesslayer: 0,
-		orderOfNodeTypes: [1, 2, 3, 5, 6, 4, 7, 8, 9, 10, 11, 12, 13, 14, 15]
-	});
+	nodeSpacing: 30,
+	edgeLength: 100,
+	animate: true,
+	randomize: false,
+	maxSimulationTime: 1500,
+	fit: true,
+	padding: 30,
+	nodeRepulsion: function (node) {
+		return 2500;
+	},
+	gravity: 100,
+	infinite: true,
+	refresh: 1,
+	//separated: 1,
+	//lesslayer: 0,
+	orderOfNodeTypes: [1, 2, 3, 5, 6, 4, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+});
 
-cy.on('mousedown', 'node', function(e){
+cy.on('mousedown', 'node', function (e) {
 	if (isLayoutRunning) {
 		layout.stop();
 		isLayoutRunning = false;
@@ -42,13 +42,13 @@ cy.on('mousedown', 'node', function(e){
 });
 
 // Example of adding a context menu item
-cy.on('cxttap', 'node', function(evt){
+cy.on('cxttap', 'node', function (evt) {
 	console.log('Context menu opened on node: ' + this.id());
 	// Here you can implement your context menu logic
 });
 
 // Optionally, restart layout on canvas tap
-cy.on('tap', function(e){
+cy.on('tap', function (e) {
 	if (e.target === cy && !isLayoutRunning) {
 		layout = cy.layout({
 			name: 'cola',
@@ -59,8 +59,8 @@ cy.on('tap', function(e){
 			maxSimulationTime: 1500,
 			fit: false,
 			padding: 30,
-			nodeRepulsion: function(node) { 
-				return 2500; 
+			nodeRepulsion: function (node) {
+				return 2500;
 			},
 			gravity: 100,
 			refresh: 1
@@ -135,7 +135,7 @@ function beautifyObject(obj) {
 }
 
 function LoadGraph(id, name, file, type = 'empty', neighbour = '') {
-	neighbour = neighbour ==='' ? $('#neighbour-type').val() !== 'Any' ? $('#neighbour-type').val() : null : neighbour;
+	neighbour = neighbour === '' ? $('#neighbour-type').val() !== 'Any' ? $('#neighbour-type').val() : null : neighbour;
 	// neighbour = $('#neighbour-type').val();
 	if (neighbour === 'Any') {
 		neighbour = null;
@@ -192,7 +192,89 @@ function LoadGraph(id, name, file, type = 'empty', neighbour = '') {
 						onClickFunction: function (event) {
 							var target = event.target || event.cyTarget;
 							expandForNodeId(target.data()["id"], target.data()["properties"]["name"], target.data()["Node_Type"]);
-						}
+						},
+						submenu: [
+							{
+								id: 'remove-type-1',
+								content: 'Any Neighbour',
+								onClickFunction: function (event) {
+									var target = event.target || event.cyTarget;
+									expandForNodeId(target.data()["id"], target.data()["properties"]["name"], target.data()["Node_Type"]);
+								}
+							},
+							{
+								id: 'remove-type-2',
+								content: 'Drug',
+								onClickFunction: function (event) {
+									var target = event.target || event.cyTarget;
+									expandForNodeId(target.data()["id"], target.data()["properties"]["name"], target.data()["Node_Type"], 'Drug');
+								}
+							},
+							{
+								id: 'remove-all',
+								content: 'Protein',
+								onClickFunction: function (event) {
+									var target = event.target || event.cyTarget;
+									expandForNodeId(target.data()["id"], target.data()["properties"]["name"], target.data()["Node_Type"], 'Protein');
+								}
+							},
+							{
+								id: 'remove-all',
+								content: 'Disease',
+								onClickFunction: function (event) {
+									var target = event.target || event.cyTarget;
+									expandForNodeId(target.data()["id"], target.data()["properties"]["name"], target.data()["Node_Type"], 'Disease');
+								}
+							},
+							{
+								id: 'remove-all',
+								content: 'Metabolite',
+								onClickFunction: function (event) {
+									var target = event.target || event.cyTarget;
+									expandForNodeId(target.data()["id"], target.data()["properties"]["name"], target.data()["Node_Type"], 'Metabolite');
+								}
+							},
+							{
+								id: 'remove-all',
+								content: 'Phenotype',
+								onClickFunction: function (event) {
+									var target = event.target || event.cyTarget;
+									expandForNodeId(target.data()["id"], target.data()["properties"]["name"], target.data()["Node_Type"], 'Phenotype');
+								}
+							},
+							{
+								id: 'remove-all',
+								content: 'Gene',
+								onClickFunction: function (event) {
+									var target = event.target || event.cyTarget;
+									expandForNodeId(target.data()["id"], target.data()["properties"]["name"], target.data()["Node_Type"], 'Gene');
+								}
+							},
+							{
+								id: 'remove-all',
+								content: 'Pathway',
+								onClickFunction: function (event) {
+									var target = event.target || event.cyTarget;
+									expandForNodeId(target.data()["id"], target.data()["properties"]["name"], target.data()["Node_Type"], 'Pathway');
+								}
+							},
+							{
+								id: 'remove-all',
+								content: 'Chromosome',
+								onClickFunction: function (event) {
+									var target = event.target || event.cyTarget;
+									expandForNodeId(target.data()["id"], target.data()["properties"]["name"], target.data()["Node_Type"], 'Chromosome');
+								}
+							},
+							{
+								id: 'remove-all',
+								content: 'Publication',
+								onClickFunction: function (event) {
+									var target = event.target || event.cyTarget;
+									expandForNodeId(target.data()["id"], target.data()["properties"]["name"], target.data()["Node_Type"], 'Publication');
+								}
+							}
+						]
 					},
 					{
 						id: 'show-details',
@@ -236,7 +318,8 @@ function LoadGraph(id, name, file, type = 'empty', neighbour = '') {
 }
 
 function expandForNodeId(nodeId, name, type, neighbour = '') {
-	neighbour = neighbour ==='' ? $('#neighbour-type').val() !== 'Any' ? $('#neighbour-type').val() : null : neighbour;
+	// neighbour = neighbour === '' ? $('#neighbour-type').val() !== 'Any' ? $('#neighbour-type').val() : null : neighbour;
+	neighbour = neighbour === '' ? 'Any' : neighbour;
 	if (neighbour === 'Any') {
 		neighbour = null;
 	}
@@ -251,26 +334,46 @@ function expandForNodeId(nodeId, name, type, neighbour = '') {
 		},
 		success: function (result) {
 			hideLoading();
+
+			if ((result.edges == null || result.edges.length === 0) && (result.nodes == null || result.nodes.length === 0)) {
+				showError("No new data was added to the graph.");
+				return;
+			}
+			showNotification("Successfully expanded the graph.");
 			// cy.nodes().forEach(node => node.lock());
-			cy.add(result)
-			var layout = cy.layout({
-				name: 'cola',
-				nodeSpacing: 30,
-				edgeLength: 100,
-				animate: true,
-				randomize: false,
-				maxSimulationTime: 1500,
-				fit: true,
-				padding: 30,
-				nodeRepulsion: function (node) {
-					return 2500;
-				},
-				gravity: 100,
-				infinite: false,
-				refresh: 1,
-				orderOfNodeTypes: [1, 2, 3, 5, 6, 4, 7, 8, 9, 10, 11, 12, 13, 14, 15],
-			});
-			layout.run();
+			var initialNodeCount = cy.nodes().length;
+			var initialEdgeCount = cy.edges().length;
+
+			// Add the new data
+			cy.add(result);
+
+			// Check the new number of nodes and edges
+			var newNodeCount = cy.nodes().length;
+			var newEdgeCount = cy.edges().length;
+			// cy.add(result)
+			if (newNodeCount === initialNodeCount && newEdgeCount === initialEdgeCount) {
+				// No new elements were added
+				showError("No new data was added to the graph.");
+			} else {
+				var layout = cy.layout({
+					name: 'cola',
+					nodeSpacing: 30,
+					edgeLength: 100,
+					animate: true,
+					randomize: false,
+					maxSimulationTime: 1500,
+					fit: true,
+					padding: 30,
+					nodeRepulsion: function (node) {
+						return 2500;
+					},
+					gravity: 100,
+					infinite: false,
+					refresh: 1,
+					orderOfNodeTypes: [1, 2, 3, 5, 6, 4, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+				});
+				layout.run();
+			}
 		},
 	});
 }
@@ -284,3 +387,24 @@ function hideLoading() {
 	document.getElementById('loadingOverlay').style.display = 'none';
 }
 
+function showError(message) {
+	M.toast({
+		html: message,
+		classes: 'red',
+		displayLength: 5000,
+		inDuration: 300,
+		outDuration: 375,
+		activationPercent: 0.1
+	});
+}
+
+function showNotification(message) {
+	M.toast({
+		html: message,
+		classes: 'green',
+		displayLength: 5000,
+		inDuration: 300,
+		outDuration: 375,
+		activationPercent: 0.1
+	});
+}

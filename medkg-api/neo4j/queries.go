@@ -534,7 +534,10 @@ func GetNetworkGraphForIdAndDepth(driver neo4j.DriverWithContext, id string, nam
 					"relationships": []map[string]interface{}{},
 				}, fmt.Errorf("Error in query execution")
 			} else if !records.Next(ctx) {
-				return nil, nil
+				return map[string]interface{}{
+					"nodes":         totalNodes,
+					"relationships": relationships,
+				}, nil
 			}
 			for records.Next(ctx) {
 				record := records.Record()
