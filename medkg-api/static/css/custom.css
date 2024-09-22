@@ -148,6 +148,7 @@ input {
     cursor: pointer;
     transition: background-color 0.3s ease, color 0.3s ease;
     font-size: 14px; /* Refined font size */
+    width: 100%;
 }
 
 .cy-context-menus-cxt-menuitem:hover {
@@ -166,6 +167,7 @@ input {
 .cy-context-menus-cxt-menuitem {
   border: none;
     outline: none;
+    width: 100%;
 }
 
 .cy-context-menus-cxt-menuitem::before {
@@ -375,17 +377,17 @@ footer {
 } */
 
 #network_customization_panel {
-    position: absolute;
-    top: auto;
-    margin-top: -22rem;
-    left: 100%; /* Places the panel to the right of the button */
-    width: 300px; /* Adjust width as needed */
-    padding: 15px;
-    background-color: white;
-    border: 1px solid #ccc;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    display: none; /* Initially hidden, toggle visibility with JS */
-    z-index: 1000; /* Ensure the panel is above the network */
+  position: absolute;
+  top: auto;
+  margin-top: -10.5rem;
+  left: 25rem;
+  width: 300px;
+  padding: 15px;
+  background-color: white;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  display: none;
+  z-index: 1000;
 }
 
 #network_customization {

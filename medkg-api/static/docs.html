@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedKG Documentation</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #1c4966;
+            --primary-light: #3e6b8a;
+            --primary-dark: #0d2b3e;
+            --secondary-color: #ff4081;
+            --text-color: #333;
+            --background-color: #f5f5f5;
+        }
+
+        body {
+            display: flex;
+            min-height: 100vh;
+            flex-direction: column;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+
+        main {
+            flex: 1 0 auto;
+        }
+
+        nav {
+            background-color: var(--primary-color);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            height: 150px;
+        }
+
+        nav .brand-logo {
+            display: flex;
+            align-items: center;
+            padding: 0;
+            height: 100%;
+        }
+
+        nav .brand-logo .logo-container {
+            background-color: white;
+            border-radius: 0 50% 50% 0;
+            padding: 3px 0px 0px 0px;
+            height: 100%;
+            position: relative;
+            align-items: center;
+        }
+
+        nav .brand-logo img {
+            height: 140px;
+        }
+
+        nav .brand-logo span {
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        nav ul {
+            padding-right: 2rem;
+        }
+
+        nav ul a {
+            color: white;
+            margin-top: 2rem;
+            font-size: large;
+        }
+
+        .documentation-section {
+            margin-top: 2rem;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+        }
+
+        .documentation-section h3 {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-light);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .documentation-section h4 {
+            color: var(--primary-dark);
+            margin-top: 1.5rem;
+        }
+
+        footer {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px 0;
+        }
+
+        footer .container {
+            max-width: -webkit-fill-available;
+            width: 100%;
+            margin: 1px;
+        }
+
+        footer .logo-container {
+            height: 100%;
+            position: relative;
+            align-items: center;
+            padding: 0px 20px 0px 20px !important;
+        }
+
+        footer .logo-container img {
+            height: 140px;
+        }
+
+        .table-of-contents {
+            background-color: var(--primary-light);
+            color: white;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+
+        .table-of-contents ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .table-of-contents ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .table-of-contents ul li a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .feature-box {
+            background-color: #f0f0f0;
+            border-left: 4px solid var(--primary-color);
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-box h5 {
+            color: var(--primary-color);
+            margin-top: 0;
+        }
+
+        .tutorial-image {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+        }
+
+        .tip-box {
+            background-color: #e1f5fe;
+            border-left: 4px solid #03a9f4;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .tip-box h6 {
+            color: #0288d1;
+            margin-top: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <nav>
+            <div class="nav-wrapper">
+                <a href="#" class="brand-logo">
+                    <div class="logo-container">
+                        <img src="images/logo-3.png" alt="MedKG Logo">
+                    </div>
+                </a>
+                <ul id="nav-mobile" class="right hide-on-med-and-down">
+                    <li><a href="search">Search</a></li>
+                    <li><a href="documentation">Tutorials</a></li>
+                    <li><a href="api-docs">API Docs</a></li>
+                    <li><a href="swagger">Swagger Docs</a></li>
+                    <li><a href="https://github.com/chemplusx/MedKG" target="_blank">Github</a></li>
+                    <li><a href="about-us">Project/Team</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container">
+        <div class="documentation-section">
+            <h3>MedKG Documentation</h3>
+            <p>Welcome to the comprehensive MedKG documentation. This guide will walk you through the various features and functionalities of MedKG, helping you navigate and extract valuable information from our medical knowledge graph.</p>
+            
+            <div class="table-of-contents">
+                <h5>Quick Navigation</h5>
+                <ul>
+                    <li><a href="#introduction">Introduction to MedKG</a></li>
+                    <li><a href="#searching">Searching in MedKG</a></li>
+                    <li><a href="#visualizing">Visualising Data in MedKG</a></li>
+                    <li><a href="#advanced-features">Advanced Features</a></li>
+                    <li><a href="#api-usage">API Usage</a></li>
+                    <li><a href="#troubleshooting">Troubleshooting</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="introduction" class="documentation-section">
+            <h3>Introduction to MedKG</h3>
+            <p>MedKG is a comprehensive medical knowledge graph that integrates information from various biomedical sources. It provides a powerful platform for researchers, healthcare professionals, and data scientists to explore and analyze complex medical relationships.</p>
+            
+            <div class="feature-box">
+                <h5>Key Features of MedKG</h5>
+                <ul>
+                    <li>Integrated data from multiple biomedical databases</li>
+                    <li>Advanced search capabilities</li>
+                    <li>Interactive data visualization</li>
+                    <li>API access for custom integrations</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="searching" class="documentation-section">
+            <h3>Searching in MedKG</h3>
+            <p>MedKG offers powerful search capabilities to help you find and explore medical information efficiently.</p>
+
+            <h4>Global Search</h4>
+            <p>Global Search allows you to search the entire MedKG database, providing a comprehensive view of available information related to your query.</p>
+            
+            <div class="feature-box">
+                <h5>Global Search Features</h5>
+                <ul>
+                    <li>Search across the entire database</li>
+                    <li>Results displayed in two sections: Exact Matches and Partial Matches</li>
+                    <li>Option to view further node details</li>
+                </ul>
+            </div>
+
+            <h4>Interaction Search</h4>
+            <p>Interaction Search helps you find paths from a given node to a specific node type, allowing you to explore relationships within the knowledge graph.</p>
+            
+            <div class="feature-box">
+                <h5>Interaction Search Features</h5>
+                <ul>
+                    <li>Search for paths from one node to nodes of a specific type</li>
+                    <li>Control the search depth using the "Search Depth" parameter</li>
+                    <li>Visualize complex relationships in the medical knowledge graph</li>
+                </ul>
+            </div>
+
+            <h4>Path Search</h4>
+            <p>Path Search allows you to find the shortest paths between two different nodes in the MedKG, helping you understand the connections between various medical entities.</p>
+            
+            <div class="feature-box">
+                <h5>Path Search Features</h5>
+                <ul>
+                    <li>Search for shortest paths between two specific nodes</li>
+                    <li>Visualize direct and indirect relationships</li>
+                    <li>Understand complex interactions in the medical domain</li>
+                </ul>
+            </div>
+
+            <div class="tip-box">
+                <h6>Pro Tip</h6>
+                <p>Combine different search types to gain a comprehensive understanding of medical relationships. For example, use Global Search to identify entities of interest, then use Path Search to explore connections between them.</p>
+            </div>
+        </div>
+
+        <div id="visualizing" class="documentation-section">
+            <h3>Visualising Data in MedKG</h3>
+            <p>MedKG provides powerful visualization tools to help you understand and analyze complex medical relationships.</p>
+
+            <h4>Graph Visualization</h4>
+            <p>The Graph Visualization feature allows you to visually explore the relationships between different nodes in the MedKG.</p>
+            
+            <div class="feature-box">
+                <h5>Graph Visualization Features</h5>
+                <ul>
+                    <li>Interactive node and edge exploration</li>
+                    <li>Customizable graph layouts</li>
+                    <li>Filtering options to focus on specific node types or relationships</li>
+                    <li>Ability to expand and collapse node clusters</li>
+                </ul>
+            </div>
+
+            <img src="/api/placeholder/800/400" alt="Graph Visualization Interface" class="tutorial-image">
+
+            <h4>Statistical Visualizations</h4>
+            <p>MedKG also offers various statistical visualizations to help you understand trends and patterns in the medical data.</p>
+
+            <div class="feature-box">
+                <h5>Statistical Visualization Types</h5>
+                <ul>
+                    <li>Bar charts for comparing entity frequencies</li>
+                    <li>Network diagrams for visualizing complex interactions</li>
+                    <li>Heat maps for identifying correlation patterns</li>
+                    <li>Time series plots for temporal data analysis</li>
+                </ul>
+            </div>
+
+            <div class="tip-box">
+                <h6>Pro Tip</h6>
+                <p>Use the combination of graph and statistical visualizations to gain both qualitative and quantitative insights into medical relationships and trends.</p>
+            </div>
+        </div>
+
+        <div id="advanced-features" class="documentation-section">
+            <h3>Advanced Features</h3>
+            <p>This section will cover advanced features of MedKG, including custom queries, data export options, and integration with other tools.</p>
+            <!-- Add content for advanced features here -->
+        </div>
+
+        <div id="api-usage" class="documentation-section">
+            <h3>API Usage</h3>
+            <p>Learn how to integrate MedKG into your own applications and workflows using our API.</p>
+            <!-- Add content for API usage here -->
+        </div>
+
+        <div id="troubleshooting" class="documentation-section">
+            <h3>Troubleshooting</h3>
+            <p>Find solutions to common issues and learn how to get support for MedKG.</p>
+            <!-- Add troubleshooting content here -->
+        </div>
+    </main>
+
+    <footer class="page-footer">
+        <div class="container">
+            <div class="row">
+                <div class="logo-container col">
+                    <img src="images/logo-3.png" alt="MedKG Logo">
+                </div>
+                <div class="col l5 s12">
+                    <h5 class="white-text" style="width: inherit;text-align: justify;"><strong>MedKG</strong></h5>
+                    <p class="grey-text text-lighten-4" style="width: inherit;text-align: justify;">
+                        <b>Department of Pharmacoinformatics</b>
+                    </p>
+                    <p class="grey-text text-lighten-4" style="width: inherit;text-align: justify;">
+                        National Institute of Pharmaceutical
+                        Education and Research,
+                        S.A.S. Nagar (Mohali)
+                    </p>
+                </div>
+                <div class="col offset-l2">
+                    <h5 class="white-text">Links</h5>
+                    <ul>
+                        <li><a class="grey-text text-lighten-3" href="about-us">About Us</a></li>
+                        <li><a class="grey-text text-lighten-3" href="contact">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="footer-copyright">
+            <div class="container">
+                © 2024 ChemPlusX. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</body>
+
+</html>

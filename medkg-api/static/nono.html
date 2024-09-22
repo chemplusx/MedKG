@@ -356,6 +356,161 @@
             /* margin-right: 10px; */
         }
     </style>
+
+    <style>
+        .side-panel {
+            background-color: #ffffff;
+            border-radius: 8px;
+            padding: 20px;
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        .panel-section {
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            color: #1c4966;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #1c4966;
+            padding-bottom: 5px;
+        }
+
+        .search-box {
+            position: relative;
+            margin-bottom: 15px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 10px;
+            padding-right: 40px;
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .search-box input:focus {
+            border-color: #1c4966;
+            box-shadow: 0 0 0 2px rgba(28, 73, 102, 0.2);
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #1c4966;
+        }
+
+        .filter-section,
+        .layout-options {
+            margin-bottom: 15px;
+        }
+
+        .layer-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 0 0 15px 0;
+        }
+
+        .layer-list li {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        .layer-list li img {
+            margin-right: 10px;
+        }
+
+        .customization-options .btn {
+            flex: 1;
+            margin: 0 5px;
+            padding: 0 10px;
+            height: 36px;
+            line-height: 36px;
+            font-size: 0.8rem;
+        }
+
+        .style-controls {
+            margin-top: 15px;
+        }
+
+        .control-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .btn-group {
+            display: flex;
+        }
+
+        .btn-group .btn-small {
+            padding: 0 10px;
+            height: 24px;
+            line-height: 24px;
+        }
+
+        .toggle-controls {
+            margin-top: 15px;
+        }
+
+        .toggle-controls label {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .full-width {
+            width: 100%;
+        }
+
+        select.browser-default {
+            background-color: #f5f5f5;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            height: 36px;
+        }
+
+        /* Custom scrollbar */
+        .side-panel::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .side-panel::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .side-panel::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
+        }
+
+        .side-panel::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        .collapsible-body {
+            display: none;
+            border-bottom: 1px solid #ddd;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+            padding: 0.5rem;
+        }
+
+        
+
+        .customization-options {
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
 </head>
 
 <body>
@@ -369,7 +524,7 @@
                 </a>
                 <ul id="nav-mobile" class="right hide-on-med-and-down">
                     <li><a href="search">Search</a></li>
-                    <li><a href="documentation">Documentation</a></li>
+                    <li><a href="documentation">Tutorials</a></li>
                     <li><a href="api-docs">API Docs</a></li>
                     <li><a href="swagger">Swagger Docs</a></li>
                     <li><a href="https://github.com/chemplusx/MedKG" target="_blank">Github</a></li>
@@ -380,31 +535,25 @@
     </header>
 
     <div class="container">
+        <!-- <div id="error-message" class="error-message">
+            <span id="error-text"></span>
+            <button id="close-error">×</button>
+          </div> -->
         <div class="row" style="height: 1000px !important;">
-            <aside class="col s12 m3">
-                <div class="network-manipulation card-panel z-depth-2">
-                    <!-- Selected Items -->
-                    <div id="selected_edges" class="hide"></div>
-                    <div id="selected_nodes" class="hide"></div>
-                    <div id="makeNewSearchWithSelecteds_btn" class="hide">
-                        <button class="btn waves-effect waves-light" id="makeNewSearchWithSelecteds">New search with
-                            selected nodes</button>
-                    </div>
+            <aside class="sidebar" id="sidebar">
+                <div class="sidebar-content">
+                    <div class="panel-section">
+                        <h5 class="section-title">Network Explorer</h5>
 
-                    <!-- Node Search -->
-                    <div class="section-1">
-                        <h5 class="cyan-text text-darken-2">Node Search</h5>
-                        <div class="input-field">
-                            <input class="autocomplete" name="node_search" id="node_search"
-                                placeholder="Type the name of the node" />
-                            <input type="hidden" name="node_search" id="network_f_name" value="1725318346" />
+                        <div class="search-box">
+                            <input type="text" name="node_search" id="node_search" class="autocomplete"
+                                placeholder="Search nodes...">
+                            <input type="hidden" name="node_search" id="node_search_f_name" value="" />
+                            <i class="material-icons search-icon">search</i>
                         </div>
-                    </div>
 
-                    <!-- Neighbour Type Selection -->
-                    <div class="section-2">
-                        <h5 class="cyan-text text-darken-2">Neighbour Type</h5>
-                        <div class="input-field">
+                        <div class="filter-section">
+                            <label for="neighbour-type">Filter by Type</label>
                             <select id="neighbour-type" class="browser-default">
                                 <option value="Any">Any</option>
                                 <option value="Drug">Drug</option>
@@ -420,133 +569,110 @@
                         </div>
                     </div>
 
-                    <!-- Graph Options -->
-                    <div class="section-3">
-                        <h5 class="cyan-text text-darken-2">Graph Options</h5>
-                        <div class="input-field">
-                            <select id="layout" class="browser-default">
-                                <option value="cola">Cola</option>
-                                <option value="circle">Circle</option>
-                                <option value="grid">Grid</option>
-                                <option value="cose">Cose</option>
-                                <option value="concentric">Concentric</option>
-                            </select>
-                        </div>
-                    </div>
+                    <ul class="collapsible">
+                        <li>
+                            <div class="collapsible-header"><i class="material-icons">visibility</i>Visualization</div>
+                            <div class="collapsible-body">
+                                <div class="layout-options">
+                                    <label for="layout">Layout</label>
+                                    <select id="layout" class="browser-default">
+                                        <option value="cola">Cola</option>
+                                        <option value="circle">Circle</option>
+                                        <option value="grid">Grid</option>
+                                        <option value="cose">Cose</option>
+                                        <option value="concentric">Concentric</option>
+                                    </select>
+                                </div>
 
-                    <!-- Order of Layers -->
-                    <div id="medKGLayout_settings" class="section-4">
-                        <h5 class="cyan-text text-darken-2">Order of Layers</h5>
-
-                        <ul id="orderingComponents_more" class="collection">
-                            <li class="collection-item">
-                                <img src="images/proteins.png" width="25" alt="core protein">
-                                <span>Core genes/proteins</span>
-                            </li>
-                            <li class="collection-item">
-                                <img src="images/drugs.png" width="25" alt="drugs">
-                                <span>Drugs</span>
-                            </li>
-                            <li class="collection-item">
-                                <img src="images/diseases.png" width="25" alt="disease">
-                                <span>Diseases</span>
-                            </li>
-                            <li class="collection-item">
-                                <img src="images/compound.png" width="25" alt="compounds">
-                                <span>Compounds</span>
-                            </li>
-                            <li class="collection-item">
-                                <img src="images/gene_core.png" width="25" alt="genes">
-                                <span>Genes</span>
-                            </li>
-                            <li class="collection-item">
-                                <img src="images/gene_neigh.png" width="25" alt="metabolites">
-                                <span>Metabolites</span>
-                            </li>
-                            <li class="collection-item">
-                                <img src="images/phenotypes.png" width="25" alt="phenotypes">
-                                <span>Phenotypes</span>
-                            </li>
-                        </ul>
-
-                        <div class="center-align">
-                            <button class="btn waves-effect waves-light" id="changeOrderOfmedKG">Apply</button>
-                        </div>
-                    </div>
-
-                    <!-- Add/Remove Components -->
-                    <div class="section-5 center-align">
-                        <a class="waves-effect waves-light btn" id="add_remove_toggle">Add/Remove Components</a>
-                        <div id="component_list_container" class="hide">
-                            <ul class="collection">
-                                <li class="collection-item removeNodes">Diseases (EFO)</li>
-                                <!-- Add more list items -->
-                            </ul>
-                        </div>
-                    </div>
-
-                    <!-- Customize Network Style -->
-                    <div class="section-6 center-align">
-                        <a class="waves-effect waves-light btn" id="network_customization">Customize Network Style</a>
-                        <div id="network_customization_panel" class="network-customization">
-                            <h5>Customize Network Style</h5>
-
-                            <div class="select-wrapper">
-                                <select id="style_nodeGroup">
-                                    <option value="all">Choose Node Type (Default All)</option>
-                                    <option value="Protein">Core genes/proteins</option>
-                                    <option value="Disease">Diseases</option>
-                                    <option value="Phenotype">Phenotypes</option>
-                                    <option value="Pathway">Pathways (Reactome)</option>
-                                    <option value="Drug">Drugs</option>
-                                    <option value="Compound">Compounds</option>
-                                </select>
-                            </div>
-
-                            <ul class="collection">
-                                <li class="collection-item">
-                                    <div class="btn-group">
-                                        <a class="customizeStyle btn waves-effect waves-light" id="nodeSize_down">-</a>
-                                        <a class="customizeStyle btn disabled" id="nodeSize_res">Node Size</a>
-                                        <a class="customizeStyle btn waves-effect waves-light" id="nodeSize_up">+</a>
-                                    </div>
-                                </li>
-                                <li class="collection-item">
-                                    <div class="btn-group">
-                                        <a class="customizeStyle btn waves-effect waves-light" id="fontSize_down">-</a>
-                                        <a class="customizeStyle btn disabled" id="fontSize_res">Font Size</a>
-                                        <a class="customizeStyle btn waves-effect waves-light" id="fontSize_up">+</a>
-                                    </div>
-                                </li>
-                                <li class="collection-item">
-                                    <a class="dropdown-trigger btn" href="#" data-target="labelPositionDropdown">Label
-                                        Position</a>
-                                    <ul id="labelPositionDropdown" class="dropdown-content">
-                                        <li><a href="#!" class="customizeStyle" id="left">Left</a></li>
-                                        <li><a href="#!" class="customizeStyle" id="right">Right</a></li>
-                                        <li><a href="#!" class="customizeStyle" id="top">Top</a></li>
-                                        <li><a href="#!" class="customizeStyle" id="bottom">Bottom</a></li>
-                                        <li><a href="#!" class="customizeStyle" id="center">Center</a></li>
+                                <!-- <div class="layer-order">
+                                    <h6>Layer Order</h6>
+                                    <ul id="orderingComponents_more" class="layer-list">
+                                        <li><img src="images/proteins.png" width="20" alt="core protein"> Core
+                                            genes/proteins</li>
+                                        <li><img src="images/drugs.png" width="20" alt="drugs"> Drugs</li>
+                                        <li><img src="images/diseases.png" width="20" alt="disease"> Diseases</li>
+                                        <li><img src="images/compound.png" width="20" alt="compounds"> Compounds</li>
+                                        <li><img src="images/gene_core.png" width="20" alt="genes"> Genes</li>
+                                        <li><img src="images/gene_neigh.png" width="20" alt="metabolites"> Metabolites
+                                        </li>
+                                        <li><img src="images/phenotypes.png" width="20" alt="phenotypes"> Phenotypes
+                                        </li>
                                     </ul>
-                                </li>
-                            </ul>
-
-                            <div class="row">
-                                <div class="col s12 m6">
-                                    <a class="waves-effect waves-light btn" id="edgelabel_on_off_btn">Edge Label Text
-                                        On/Off</a>
+                                    <button id="changeOrderOfmedKG" class="btn waves-effect waves-light">Apply
+                                        Order</button>
+                                </div> -->
+                            </div>
+                        </li>
+                        <li>
+                            <div class="collapsible-header"><i class="material-icons">brush</i>Customization</div>
+                            <div class="collapsible-body">
+                                <div class="customization-options">
+                                    <button id="add_remove_toggle" class="btn waves-effect waves-light">Add/Remove
+                                        Components</button>
+                                    <button id="network_customization" class="btn waves-effect waves-light">Customize
+                                        Style</button>
                                 </div>
-                                <div class="col s12 m6">
-                                    <a class="waves-effect waves-light btn" id="legend_on_off_btn">Node & Edge Legend
-                                        On/Off</a>
+
+                                <div id="network_customization_panel" style="display: none;">
+                                    <select id="style_nodeGroup" class="browser-default">
+                                        <option value="all">Choose Node Type</option>
+                                        <option value="Protein">Core genes/proteins</option>
+                                        <option value="Disease">Diseases</option>
+                                        <option value="Phenotype">Phenotypes</option>
+                                        <option value="Pathway">Pathways (Reactome)</option>
+                                        <option value="Drug">Drugs</option>
+                                        <option value="Compound">Compounds</option>
+                                    </select>
+
+                                    <div class="style-controls">
+                                        <div class="control-group">
+                                            <label>Node Size</label>
+                                            <div class="btn-group">
+                                                <button class="customizeStyle btn-small waves-effect waves-light"
+                                                    id="nodeSize_down">-</button>
+                                                <button class="customizeStyle btn-small waves-effect waves-light"
+                                                    id="nodeSize_up">+</button>
+                                            </div>
+                                        </div>
+                                        <div class="control-group">
+                                            <label>Font Size</label>
+                                            <div class="btn-group">
+                                                <button class="customizeStyle btn-small waves-effect waves-light"
+                                                    id="fontSize_down">-</button>
+                                                <button class="customizeStyle btn-small waves-effect waves-light"
+                                                    id="fontSize_up">+</button>
+                                            </div>
+                                        </div>
+                                        <div class="control-group">
+                                            <label>Label Position</label>
+                                            <select id="labelPosition" class="browser-default">
+                                                <option class="customizeStyle" value="left">Left</option>
+                                                <option class="customizeStyle" value="right">Right</option>
+                                                <option class="customizeStyle" value="top">Top</option>
+                                                <option class="customizeStyle" value="bottom">Bottom</option>
+                                                <option class="customizeStyle" value="center">Center</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="toggle-controls">
+                                        <label>
+                                            <input type="checkbox" id="edgelabel_on_off_btn" />
+                                            <span>Edge Labels</span>
+                                        </label>
+                                        <label>
+                                            <input type="checkbox" id="legend_on_off_btn" />
+                                            <span>Node & Edge Legend</span>
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
+                        </li>
+                    </ul>
 
-                    <!-- Create New Knowledge Graph -->
-                    <div class="section-7 center-align">
-                        <a href="search" target="_blank" class="btn waves-effect waves-light">New Knowledge Graph</a>
+                    <div class="panel-section">
+                        <a href="search" target="_blank" class="btn waves-effect waves-light full-width">New Knowledge
+                            Graph</a>
                     </div>
                 </div>
             </aside>
@@ -644,6 +770,79 @@
             var collapsibleElems = document.querySelectorAll('.collapsible');
             M.Collapsible.init(collapsibleElems);
 
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Initialize Materialize components
+            M.AutoInit();
+
+            // Sidebar toggle functionality
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const sidebar = document.getElementById('sidebar');
+            const network = document.getElementById('network');
+
+            sidebarToggle.addEventListener('click', function () {
+                sidebar.classList.toggle('open');
+                this.classList.toggle('open');
+                network.classList.toggle('sidebar-open');
+
+                // Change icon based on sidebar state
+                const icon = this.querySelector('i');
+                if (sidebar.classList.contains('open')) {
+                    icon.textContent = 'close';
+                } else {
+                    icon.textContent = 'menu';
+                }
+            });
+
+            // Network customization panel toggle
+            const networkCustomizationBtn = document.getElementById('network_customization');
+            const networkCustomizationPanel = document.getElementById('network_customization_panel');
+
+            networkCustomizationBtn.addEventListener('click', function () {
+                networkCustomizationPanel.style.display = networkCustomizationPanel.style.display === 'none' ? 'block' : 'none';
+            });
+
+            // Initialize collapsible elements
+            var elems = document.querySelectorAll('.collapsible');
+            var instances = M.Collapsible.init(elems);
+
+            // Initialize select elements
+            var selects = document.querySelectorAll('select');
+            var selectInstances = M.FormSelect.init(selects);
+
+            // Add event listeners for customization buttons
+            document.querySelectorAll('.customizeStyle').forEach(function (elem) {
+                elem.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    console.log('Customize style:', this.id);
+                    // Add your customization logic here
+                });
+            });
+
+            // Toggle controls event listeners
+            document.getElementById('edgelabel_on_off_btn').addEventListener('change', function () {
+                console.log('Toggle edge label:', this.checked);
+                // Add your toggle logic here
+            });
+
+            document.getElementById('legend_on_off_btn').addEventListener('change', function () {
+                console.log('Toggle legend:', this.checked);
+                // Add your toggle logic here
+            });
+
+            // Layer order change event
+            document.getElementById('changeOrderOfmedKG').addEventListener('click', function () {
+                console.log('Changing layer order');
+                // Add your layer order change logic here
+            });
+
+            // Add/Remove components toggle
+            document.getElementById('add_remove_toggle').addEventListener('click', function () {
+                console.log('Toggle add/remove components');
+                // Add your add/remove components logic here
+            });
         });
     </script>
 
