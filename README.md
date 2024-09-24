@@ -88,6 +88,7 @@ Each folder contains all necessary datafiles and ETL scripts for its respective 
 ## Configuration
 
 - Ensure you have the necessary access credentials and permissions for the Knowledge Graph database.
+   This code uses the default connection parameters for Neo4j Connection. In case your neo4j setup requires additional configuration, please update the same accordingly in the scripts
 - Each ETL script may require specific configuration. Refer to the comments within each script for details.
 - Modify the scripts as needed to match your database configuration and schema requirements.
 
