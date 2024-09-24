@@ -34,4 +34,3 @@ This is a Go-based API server following the OpenAPI specification to interact wi
 - **`neo4j/client.go`**: Establishes a connection with the Neo4j database.
 - **`neo4j/queries.go`**: Handles database queries for retrieving and creating nodes.
 
-This structure gives you a modular, organized, and scalable foundation to build your API server.
