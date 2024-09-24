@@ -1,74 +1,99 @@
 # ETL Pipeline Scripts for Knowledge Graph Database
 
-This repository contains scripts for ETL pipelines designed to extract data from multiple sources, transform it according to specific schemas, and load it into a Knowledge Graph database. Each source has its own dedicated ETL script located in its respective folder within this repository.
+This repository contains scripts for ETL (Extract, Transform, Load) pipelines designed to process data from multiple sources and populate a Knowledge Graph database. Each data source has its own dedicated ETL script located in its respective folder within this repository.
 
-## Sources
+## Table of Contents
 
-1. **Biomarkers Data**
-   - ETL script location: `biomarkers_data/**.py`
-   - Description: Extracts biomarkers data from its source, transforms it into a format suitable for the Knowledge Graph schema, and loads it into the database.
+1. [Data Sources](#data-sources)
+2. [Requirements](#requirements)
+3. [Installation](#installation)
+4. [Usage](#usage)
+5. [Configuration](#configuration)
+6. [Contributing](#contributing)
+7. [License](#license)
 
-2. **DrugBank Data**
-   - ETL script location: `drugbank_data/**.py`
-   - Description: Extracts drug data from DrugBank, performs necessary transformations, and inserts it into the Knowledge Graph database.
+## Data Sources
 
-3. **Metabolite Data**
-   - ETL script location: `metabolite_data/**.py`
-   - Description: Extracts metabolite information, processes it to align with the Knowledge Graph structure, and loads it into the database.
+The following data sources are currently supported:
 
-4. **Prime KG Data**
-   - ETL script location: `prime_kg/**.py`
-   - Description: Extracts specific data related to Prime KG, transforms it as required, and integrates it into the Knowledge Graph database.
+| Source | Script Location | Description |
+|--------|-----------------|-------------|
+| Biomarkers | `biomarkers_data/etl_biomarkers.py` | Processes biomarkers data |
+| DrugBank | `drugbank_data/etl_drugbank.py` | Handles drug data from DrugBank |
+| Metabolite | `metabolite_data/etl_metabolite.py` | Manages metabolite information |
+| Prime KG | `prime_kg/etl_prime_kg.py` | Processes Prime KG specific data |
+| TDD (Target Drug Discovery) | `tdd_data/etl_tdd.py` | Handles Target Drug Discovery data |
 
-5. **TDD (Target Drug Discovery) Data**
-   - ETL script location: `tdd_data/**.py`
-   - Description: Extracts data pertinent to Target Drug Discovery, applies transformations to fit the Knowledge Graph schema, and loads it into the database.
+Each script extracts data from its respective source, transforms it to align with the Knowledge Graph schema, and loads it into the database.
 
 ## Requirements
 
-- Python 3.x
-- Dependencies listed in each source's `requirements.txt` file.
+- Python 3.8+
+- Dependencies listed in `requirements.txt`
+
+## Installation
+
+1. Clone the repository:
+   ```
+   git clone https://github.com/chemplusx/MedKG.git
+   cd MedKG
+   ```
+
+2. Set up a virtual environment (optional but recommended):
+   ```
+   python -m venv venv
+   source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
+   ```
+
+3. Install the required dependencies:
+   ```
+   pip install -r requirements.txt
+   ```
 
 ## Usage
 
-1. **Clone the Repository:**
-   ```bash
-   git clone https://github.com/chemplusx/MedKG.git
-   cd MedKG
+1. Set up the environment variables:
+   ```
+   export MEDKG_DATA=<PATH_TO_DATA_FILES>
+   ```
+   Example:
+   ```
+   export MEDKG_DATA=/home/ubuntu/workspace/MedKG/data
+   ```
 
-2. **Install Dependencies:**
+2. Run the ETL script for the desired data source:
+   ```
+   python <source_directory>/etl_<source>.py
+   ```
+   Example:
+   ```
+   python biomarkers_data/etl_biomarkers.py
+   ```
 
-    ```bash
-        pip install -r requirements.txt
+3. Verify that the data has been successfully loaded into the Knowledge Graph database.
 
-3. **Setup Environment Variables**
+## Configuration
 
-    Setup the below environment variables as per the document structure
-
-    ```bash
-        export MEDKG_DATA=<PATH TO Data Files>
-    ```
-
-    eg. export MEDKG_DATA=/home/ubuntu/workspace/MedKG/data
-
-4. **Run ETL Scripts:**
-    
-    Each source directory (biomarkers, drugbank, metabolite, prime_kg, tdd_data) contains a Python script (etl_xxx.py) for its respective ETL pipeline.
-
-    * Navigate to the directory of the source whose data you want to process.
-    * Execute the ETL script:
-    
-    ```bash
-    python etl_xxx.py
-    
-5. **Verify Data in Knowledge Graph:**
-    After running the ETL scripts, verify that the data has been successfully loaded into the Knowledge Graph database.
-
-## Notes
-
-* Ensure that you have the necessary access credentials and permissions to interact with the Knowledge Graph database.
-* Modify each ETL script (etl_xxx.py) as per your specific database configuration and schema requirements.
-
+- Ensure you have the necessary access credentials and permissions for the Knowledge Graph database.
+- Each ETL script (`etl_<source>.py`) may require specific configuration. Refer to the comments within each script for details.
+- Modify the scripts as needed to match your database configuration and schema requirements.
 
 ## Contributing
-Feel free to fork this repository and submit pull requests to contribute improvements or additional ETL scripts.
+
+We welcome contributions to improve the ETL pipelines or add support for new data sources. To contribute:
+
+1. Fork the repository
+2. Create a new branch for your feature
+3. Commit your changes
+4. Push to your branch
+5. Create a new Pull Request
+
+Please ensure your code adheres to our coding standards and includes appropriate documentation.
+
+## License
+
+MIT License
+
+---
+
+For more information or support, please [open an issue](https://github.com/chemplusx/MedKG/issues) on our GitHub repository.
