@@ -106,7 +106,7 @@ Please ensure your code adheres to our coding standards and includes appropriate
 
 ## License
 
-[Specify your license here, e.g., MIT, Apache 2.0, etc.]
+[MIT License](https://github.com/chemplusx/MedKG/blob/master/LICENSE)
 
 ---
 
