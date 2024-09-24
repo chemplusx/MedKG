@@ -29,7 +29,6 @@ The following data sources are currently supported:
 | IntAct | `intact/` | Molecular interaction data |
 | Metabolite | `metabolite_data/` | Metabolite information |
 | OpenTargets | `opentargets/` | Open Targets Platform data |
-| Prime KG | `prime_kg/` | Prime Knowledge Graph data |
 | TDD (Target Drug Discovery) | `tdd_data/` | Target Drug Discovery data |
 | UBERON | `uberon/` | Uber-anatomy ontology data |
 
