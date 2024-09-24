@@ -3,6 +3,11 @@ import plotly.io as pio
 import plotly.offline as pyo
 import plotly.colors as colors
 import pandas as pd
+import os
+
+DATA_DIR = os.environ.get('MEDKG_DATA')
+if DATA_DIR is None:
+    DATA_DIR = os.getcwd()
 
 # Example data
 source = ["Disease", "Tissue", "Biological_process", "Molecular_function", "Cellular_component", "Modification", "Phenotype", "Experiment", "Experimental_factor", "Units", "Experimental_factor", "Experimental_factor", "Transcript", "Gene", "Protein", "Peptide", "Gene", "Transcript", "Protein", "Protein", "Protein", "Project", "Project", "User", "Project", "Biological_sample", "Biological_sample", "Analytical_sample", "Modified_protein", "Protein", "Peptide", "Modified_protein", "Protein", "Complex", "Protein", "Protein", "Protein", "Analytical_sample", "Metabolite", "Drug", "Compound", "Drug", "Known_variant", "Known_variant", "Known_variant", "Known_variant", "Clinically_relevant_variant", "Disease", "Tissue", "Protein", "Cellular_component", "Modified_protein", "Functional_region", "Functional_region", "Metabolite", "Protein", "Known_variant", "GWAS_study", "Protein", "Metabolite", "GWAS_study"]
@@ -12,7 +17,7 @@ value = [14897, 4313, 52886, 13574, 4845, 3569, 24316, 2967, 10800, 412, 2056, 2
 # Read a csv file with thre colums: source, target, value
 
 # Read the data from the csv file
-data = pd.read_csv('D:\\workspace\\MedKG\\visualize\\total-relations.csv', header=0)
+data = pd.read_csv(DATA_DIR + '\\total-relations.csv', header=0)
 
 # Extract the source, target, and value columns
 source = data['s'].tolist()[13:]
