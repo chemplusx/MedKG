@@ -1,7 +1,7 @@
 # Building MedKG
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="medkg-api/static/images/logo-3.png">
+  <source media="(prefers-color-scheme: light)" srcset="medkg-api/static/images/logo-3.png">
   <img alt="MedKG Logo" src="medkg-api/static/images/logo-3.png" width="100" height="100">
 </picture>
 
