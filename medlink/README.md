@@ -36,6 +36,34 @@ Before you begin, ensure you have met the following requirements:
 
 1. Prepare your data:
    - Place your `nodes_dd.csv` and `edges_dd.csv` files in the project directory or set the `MEDKG_DATA` environment variable to the directory containing these files.
+   
+   Data format requirements:
+   
+   a. Nodes file (`nodes_dd.csv`):
+      - Format: id, label, properties
+      - id: unique identifier for each node
+      - label: category of the node (e.g., Drug, Disease)
+      - properties: JSON string containing all relevant metadata for the node
+   
+   Example:
+   ```
+   id,label,properties
+   MESH:D000001,Drug,{"name": "Aspirin", "molecular_weight": 180.16}
+   MESH:C000001,Disease,{"name": "Headache", "icd10": "R51"}
+   ```
+   
+   b. Edges file (`edges_dd.csv`):
+      - Format: source, target, type
+      - source: id of the source node (matching an id in the nodes file)
+      - target: id of the target node (matching an id in the nodes file)
+      - type: the relationship type between the source and target nodes
+   
+   Example:
+   ```
+   source,target,type
+   MESH:D000001,MESH:C000001,treats
+   MESH:D000002,MESH:C000001,may_treat
+   ```
 
 2. Run the link prediction model:
    ```
