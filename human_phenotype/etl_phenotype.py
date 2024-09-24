@@ -1,11 +1,16 @@
 from py2neo import Graph
 import json
+import os
+
+DATA_DIR = os.environ.get('MEDKG_DATA')
+if DATA_DIR is None:
+    DATA_DIR = os.getcwd()
 
 # Connect to Neo4j
 graph = Graph("bolt://localhost:7687", auth=("neo4j", "password"))
 
 # Load the JSON data
-with open('hp.json', 'r') as f:
+with open(DATA_DIR + '\\hp.json', 'r') as f:
     data = json.load(f)
 
 data = data['graphs'][0] # Get the first graph

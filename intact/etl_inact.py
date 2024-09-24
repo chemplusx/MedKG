@@ -1,11 +1,16 @@
 import xml.etree.ElementTree as ET
 from py2neo import Graph, Node, Relationship
+import os
+
+DATA_DIR = os.environ.get('MEDKG_DATA')
+if DATA_DIR is None:
+    DATA_DIR = os.getcwd()
 
 # Connect to your Neo4j database
-# graph = Graph("bolt://localhost:7687", auth=("neo4j", "password"))
+graph = Graph("bolt://localhost:7687", auth=("neo4j", "password"))
 
 # Parse the XML
-tree = ET.parse('D:\\workspace\\MedKG\\data\\1312256.xml')
+tree = ET.parse(DATA_DIR+'\\1312256.xml')
 root = tree.getroot()
 
 # Define namespace
@@ -28,7 +33,7 @@ for entry in root.findall(f'.//{namespace}entry'):
 
     # Create a node for the source in Neo4j
     source_node = Node("Source", label=short_label, primaryRef=primary_ref)
-    # graph.create(source_node)
+    graph.create(source_node)
 
     # Extract experiments
     for experiment in experiment_list.findall(f'{namespace}experimentDescription'):
@@ -94,7 +99,7 @@ for entry in root.findall(f'.//{namespace}entry'):
 
         # Create an interactor node in Neo4j
         interactor_node = Node("Interactor", id=interactor_id, name=interactor_name, fullName=full_name, sequence=sequence)
-        # graph.create(interactor_node)
+        graph.create(interactor_node)
 
     # Extract interactions
     for interaction in interaction_list.findall(f'{namespace}interaction'):
@@ -103,7 +108,7 @@ for entry in root.findall(f'.//{namespace}entry'):
 
         # Create an interaction node in Neo4j
         interaction_node = Node("Interaction", id=interaction_id, label=interaction_label)
-        # graph.create(interaction_node)
+        graph.create(interaction_node)
 
         # Link participants (interactors) to the interaction
         for participant in interaction.findall(f'{namespace}participantList/{namespace}participant'):
@@ -112,5 +117,5 @@ for entry in root.findall(f'.//{namespace}entry'):
 
             # Create relationship between interaction and interactor
             rel = Relationship(interaction_node, "PARTICIPATES_IN", interactor_node)
-            # graph.create(rel)
+            graph.create(rel)
 

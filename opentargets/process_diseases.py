@@ -19,11 +19,15 @@ import json
 import os
 from py2neo import Graph, Node, NodeMatcher
 
+DATA_DIR = os.environ.get('MEDKG_DATA')
+if DATA_DIR is None:
+    DATA_DIR = os.getcwd()
+
 # Connect to Neo4j
 graph = Graph("bolt://localhost:7687", auth=("neo4j", "password"))
 
 # Path to the file containing the JSON data
-directory_path = 'F:\json\diseases'
+directory_path = DATA_DIR + '\\diseases'
 
 # Create a NodeMatcher object for querying the database
 matcher = NodeMatcher(graph)

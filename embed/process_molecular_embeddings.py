@@ -1,23 +1,18 @@
 from neo4j import GraphDatabase
 from rdkit import Chem
 
-# Assuming you have this function defined
-from rdkit import Chem
 from rdkit.Chem import AllChem
 from rdkit.Chem import Descriptors
-from mol2vec.features import mol2alt_sentence, mol2sentence, MolSentence, DfVec, sentences2vec
+from mol2vec.features import mol2alt_sentence, MolSentence, DfVec, sentences2vec
 
-import numpy as np
-import pandas as pd
-import sys, os
+import  os
 
-from rdkit import Chem
-from rdkit.Chem import PandasTools
-# from rdkit.Chem.Draw import IPythonConsole
-
-from mol2vec.features import mol2alt_sentence, mol2sentence, MolSentence, DfVec, sentences2vec
 from gensim.models import word2vec
 
+
+DATA_DIR = os.environ.get('MEDKG_DATA')
+if DATA_DIR is None:
+    DATA_DIR = os.getcwd()
 
 def formula_to_mol(formula):
     # Parse the formula
@@ -59,7 +54,7 @@ def formula_to_mol(formula):
         print("Failed to generate 3D conformation. Returning 2D structure.")
     return mol
 
-model = word2vec.Word2Vec.load('D:\\workspace\\MedKG\\data\\model_300dim.pkl')
+model = word2vec.Word2Vec.load(DATA_DIR + '\\model_300dim.pkl')
 
 def getMolecularEmbeddings(chemicalFormula):
     # Use the function

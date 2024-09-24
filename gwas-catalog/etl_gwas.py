@@ -1,5 +1,10 @@
 import obonet
 from neo4j import GraphDatabase
+import os
+
+DATA_DIR = os.environ.get('MEDKG_DATA')
+if DATA_DIR is None:
+    DATA_DIR = os.getcwd()
 
 # Neo4j connection details
 URI = "bolt://localhost:7687"
@@ -18,7 +23,7 @@ def create_ontology_nodes(tx, graph):
         
         # Create node with "Term" label and properties
         tx.run("""
-            CREATE (t:Symptom{id:$id})
+            CREATE (t:GWAS{id:$id})  # Change the label to "Entity Type"
             SET t = $properties
         """, id=node_id, properties=properties)
 
@@ -28,8 +33,8 @@ def create_relationships(tx, graph):
         is_a_relationships = data.get("is_a", [])
         for parent in is_a_relationships:
             tx.run("""
-                MATCH (child:Symptom {id: $child_id})
-                MATCH (parent:Symptom {id: $parent_id})
+                MATCH (child:GWAS {id: $child_id})
+                MATCH (parent:GWAS {id: $parent_id})
                 MERGE (child)-[:IS_A]->(parent)
             """, child_id=node_id, parent_id=parent)
 
@@ -51,4 +56,4 @@ def import_obo_to_neo4j(file_path):
     print("Import completed successfully!")
 
 # Usage
-import_obo_to_neo4j("D:\\workspace\\MedKG\\data\\symp.obo.txt")
+import_obo_to_neo4j(DATA_DIR + "\\gwas-kb.owl")

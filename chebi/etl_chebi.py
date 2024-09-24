@@ -1,14 +1,18 @@
 # Install necessary packages
 # !pip install mysql-connector-python neo4j
 
+#CHEBI data is stored in MySQL database. We will transfer this data to Neo4j for better visualization and querying.
+# Make sure to update the database connection details before running the script.
+
 import mysql.connector
 from neo4j import GraphDatabase
 from py2neo import Graph, Node, NodeMatcher
+import os
 
 # MySQL connection details
 mysql_config = {
-    'user': 'root',
-    'password': 'root@123',
+    'user': '***',
+    'password': '***',
     'host': 'localhost',
     'database': 'chebi'
 }

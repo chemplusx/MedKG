@@ -2,6 +2,12 @@ import requests
 from rdflib import Graph, URIRef, Literal
 from rdflib.namespace import RDF, RDFS, OWL
 from neo4j import GraphDatabase
+import os
+
+DATA_DIR = os.environ.get('MEDKG_DATA')
+if DATA_DIR is None:
+    DATA_DIR = os.getcwd()
+
 
 def download_owl(url, file_path):
     response = requests.get(url)
@@ -18,7 +24,6 @@ def parse_owl(file_path):
 class Neo4jConnection:
     def __init__(self, uri, user, password):
         self.driver = GraphDatabase.driver(uri, auth=(user, password))
-        self.mapVal = {}
 
     def close(self):
         self.driver.close()
@@ -33,17 +38,15 @@ class Neo4jConnection:
             # Insert all entities (classes, properties, individuals)
             entities=[]
             for s, p, o in graph.triples((None, RDF.type, None)):
-                if isinstance(o, (URIRef, Literal)) and o in [OWL.Class, OWL.ObjectProperty, OWL.DatatypeProperty, OWL.AnnotationProperty, OWL.NamedIndividual]:
-                    if "FOODON_" in str(s):
-                        entity = {
-                            "uri": str(s),
-                            "label": str(graph.value(s, RDFS.label)) if graph.value(s, RDFS.label) else None,
-                            "type": str(o).split("#")[-1] if isinstance(o, URIRef) else str(o),
-                            "definition": str(graph.value(s, URIRef("http://purl.obolibrary.org/obo/IAO_0000115"))) if graph.value(s, URIRef("http://purl.obolibrary.org/obo/IAO_0000115")) else None
-                        }
-                        entities.append(entity)
-                    else:
-                        self.mapVal
+                if isinstance(o, (URIRef, Literal)) and o in [OWL.Class]:
+                    entity = {
+                        "uri": str(s),
+                        "label": str(graph.value(s, RDFS.label)) if graph.value(s, RDFS.label) else None,
+                        "type": str(o).split("#")[-1] if isinstance(o, URIRef) else str(o),
+                        
+                        "definition": str(graph.value(s, URIRef("http://purl.obolibrary.org/obo/IAO_0000115"))) if graph.value(s, URIRef("http://purl.obolibrary.org/obo/IAO_0000115")) else None
+                    }
+                    entities.append(entity)
 
 
             print("""
@@ -96,7 +99,7 @@ class Neo4jConnection:
 
 if __name__ == "__main__":
     owl_url = "https://raw.githubusercontent.com/FoodOntology/foodon/master/foodon.owl"
-    owl_file = "D:\\workspace\\MedKG\\data\\foodon.xml"
+    owl_file = DATA_DIR + "\\foodon.xml"
     neo4j_uri = "bolt://localhost:7687"  # Update with your Neo4j URI
     neo4j_user = "neo4j"  # Update with your Neo4j username
     neo4j_password = "password"  # Update with your Neo4j password
