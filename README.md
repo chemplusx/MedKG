@@ -2,13 +2,13 @@
 
 <picture>
   <source media="(prefers-color-scheme: light)" srcset="medkg-api/static/images/logo-3.png">
-  <img alt="MedKG Logo" src="medkg-api/static/images/logo-3.png" width="100" height="100">
+  <img alt="MedKG Logo" src="medkg-api/static/images/logo-3.png" width="100" height="100"  style="background: white; padding: 10px; border-radius: 10px;">
 </picture>
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="medkg-api/static/images/logo-3.png">
   <source media="(prefers-color-scheme: light)" srcset="medkg-api/static/images/logo-3.png">
-  <img alt="MedKG Logo" src="medkg-api/static/images/logo-3.png" width="100" height="100">
+  <img alt="MedKG Logo" src="medkg-api/static/images/logo-3.png" width="100" height="100"  style="background: white; padding: 10px; border-radius: 10px;">
 </picture>
 
 This repository contains scripts for ETL (Extract, Transform, Load) pipelines designed to process data from multiple sources and build the MedKG Knowledge Graph database. Each data source has its own dedicated folder containing ETL scripts and related files.
