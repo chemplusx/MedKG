@@ -77,17 +77,10 @@ Once the server is running, access the web interface by navigating to `http://lo
 
 The MedKG App Server provides a RESTful API for programmatic access to the knowledge graph. Refer to the Swagger documentation (`/swagger`) for detailed endpoint information and example requests.
 
-## Contributing
-
-Contributions to the MedKG App Server are welcome! Please refer to our [Contributing Guidelines](CONTRIBUTING.md) for more information on how to get started.
-
-## License
-
-[Specify your license here]
 
 ## Support
 
-If you encounter any issues or have questions, please file an issue on the GitHub repository or contact our support team at [your-support-email@example.com].
+If you encounter any issues or have questions, please file an issue on the GitHub repository or contact our support team at [na].
 
 ## Acknowledgements
 
