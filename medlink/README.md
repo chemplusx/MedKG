@@ -48,8 +48,8 @@ Before you begin, ensure you have met the following requirements:
    Example:
    ```
    id,label,properties
-   MESH:D000001,Drug,{"name": "Aspirin", "molecular_weight": 180.16}
-   MESH:C000001,Disease,{"name": "Headache", "icd10": "R51"}
+   000001,Drug,{"name": "Aspirin", "molecular_weight": 180.16}
+   000003,Disease,{"name": "Headache", "icd10": "R51"}
    ```
    
    b. Edges file (`edges_dd.csv`):
@@ -61,8 +61,8 @@ Before you begin, ensure you have met the following requirements:
    Example:
    ```
    source,target,type
-   MESH:D000001,MESH:C000001,treats
-   MESH:D000002,MESH:C000001,may_treat
+   000001,000002,treats
+   000002,000003,may_treat
    ```
 
 2. Run the link prediction model:
