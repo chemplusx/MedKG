@@ -1,6 +1,7 @@
-# ETL Pipeline Scripts for Knowledge Graph Database
+# Building MedKG
+medkg-api\static\images\logo-3.png
 
-This repository contains scripts for ETL (Extract, Transform, Load) pipelines designed to process data from multiple sources and populate a Knowledge Graph database. Each data source has its own dedicated folder containing ETL scripts and related files.
+This repository contains scripts for ETL (Extract, Transform, Load) pipelines designed to process data from multiple sources and build the MedKG Knowledge Graph database. Each data source has its own dedicated folder containing ETL scripts and related files.
 
 ## Table of Contents
 
