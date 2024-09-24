@@ -42,7 +42,7 @@ def import_obo_to_neo4j(file_path):
 
     with driver.session() as session:
         # Create ontology nodes
-        # session.execute_write(create_ontology_nodes, graph)
+        session.execute_write(create_ontology_nodes, graph)
         
         # Create relationships
         session.execute_write(create_relationships, graph)
