@@ -1,30 +1,44 @@
 # ETL Pipeline Scripts for Knowledge Graph Database
 
-This repository contains scripts for ETL (Extract, Transform, Load) pipelines designed to process data from multiple sources and populate a Knowledge Graph database. Each data source has its own dedicated ETL script located in its respective folder within this repository.
+This repository contains scripts for ETL (Extract, Transform, Load) pipelines designed to process data from multiple sources and populate a Knowledge Graph database. Each data source has its own dedicated folder containing ETL scripts and related files.
 
 ## Table of Contents
 
 1. [Data Sources](#data-sources)
-2. [Requirements](#requirements)
-3. [Installation](#installation)
-4. [Usage](#usage)
-5. [Configuration](#configuration)
-6. [Contributing](#contributing)
-7. [License](#license)
+2. [Data Structure](#data-structure)
+3. [Requirements](#requirements)
+4. [Installation](#installation)
+5. [Usage](#usage)
+6. [Configuration](#configuration)
+7. [Contributing](#contributing)
+8. [License](#license)
 
 ## Data Sources
 
 The following data sources are currently supported:
 
-| Source | Script Location | Description |
-|--------|-----------------|-------------|
-| Biomarkers | `biomarkers_data/etl_biomarkers.py` | Processes biomarkers data |
-| DrugBank | `drugbank_data/etl_drugbank.py` | Handles drug data from DrugBank |
-| Metabolite | `metabolite_data/etl_metabolite.py` | Manages metabolite information |
-| Prime KG | `prime_kg/etl_prime_kg.py` | Processes Prime KG specific data |
-| TDD (Target Drug Discovery) | `tdd_data/etl_tdd.py` | Handles Target Drug Discovery data |
+| Source | Folder | Description |
+|--------|--------|-------------|
+| Biomarkers | `biomarkers_data/` | Biomarkers data processing |
+| ChEBI | `chebi/` | Chemical Entities of Biological Interest |
+| DO | `do/` | Disease Ontology data |
+| DrugBank | `drugbank_data/` | Drug data from DrugBank |
+| FoodOn | `foodon/` | Food Ontology data |
+| GWAS Catalog | `gwas-catalog/` | Genome-Wide Association Studies data |
+| Human Phenotype | `human_phenotype/` | Human Phenotype Ontology data |
+| IntAct | `intact/` | Molecular interaction data |
+| Metabolite | `metabolite_data/` | Metabolite information |
+| OpenTargets | `opentargets/` | Open Targets Platform data |
+| Prime KG | `prime_kg/` | Prime Knowledge Graph data |
+| TDD (Target Drug Discovery) | `tdd_data/` | Target Drug Discovery data |
+| UBERON | `uberon/` | Uber-anatomy ontology data |
 
-Each script extracts data from its respective source, transforms it to align with the Knowledge Graph schema, and loads it into the database.
+Each folder contains all necessary datafiles and ETL scripts for its respective source.
+
+## Data Structure
+
+- All source data files are stored in the `data/` folder at the root of the project.
+- ETL scripts and related files for each source are contained within their respective folders as listed above.
 
 ## Requirements
 
@@ -54,7 +68,7 @@ Each script extracts data from its respective source, transforms it to align wit
 
 1. Set up the environment variables:
    ```
-   export MEDKG_DATA=<PATH_TO_DATA_FILES>
+   export MEDKG_DATA=<PATH_TO_DATA_FOLDER>
    ```
    Example:
    ```
@@ -63,7 +77,7 @@ Each script extracts data from its respective source, transforms it to align wit
 
 2. Run the ETL script for the desired data source:
    ```
-   python <source_directory>/etl_<source>.py
+   python <source_folder>/etl_<source>.py
    ```
    Example:
    ```
@@ -75,7 +89,7 @@ Each script extracts data from its respective source, transforms it to align wit
 ## Configuration
 
 - Ensure you have the necessary access credentials and permissions for the Knowledge Graph database.
-- Each ETL script (`etl_<source>.py`) may require specific configuration. Refer to the comments within each script for details.
+- Each ETL script may require specific configuration. Refer to the comments within each script for details.
 - Modify the scripts as needed to match your database configuration and schema requirements.
 
 ## Contributing
@@ -92,7 +106,7 @@ Please ensure your code adheres to our coding standards and includes appropriate
 
 ## License
 
-MIT License
+[Specify your license here, e.g., MIT, Apache 2.0, etc.]
 
 ---
 
