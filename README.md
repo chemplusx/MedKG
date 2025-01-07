@@ -1,6 +1,12 @@
-# ETL Pipeline Scripts for Knowledge Graph Database
+# Building MedKG
 
-This repository contains scripts for ETL (Extract, Transform, Load) pipelines designed to process data from multiple sources and populate a Knowledge Graph database. Each data source has its own dedicated folder containing ETL scripts and related files.
+<picture>
+<!--   <source media="(prefers-color-scheme: dark)" srcset="medkg-api/static/images/logo-3.png">
+  <source media="(prefers-color-scheme: light)" srcset="medkg-api/static/images/logo-3.png"> -->
+  <img alt="MedKG Logo" src="medkg-api/static/images/logo-3.png" width="100" height="100"  style="background: white; padding: 10px; border-radius: 10px;">
+</picture>
+
+This repository contains scripts for ETL (Extract, Transform, Load) pipelines designed to process data from multiple sources and build the MedKG Knowledge Graph database. Each data source has its own dedicated folder containing ETL scripts and related files.
 
 ## Table of Contents
 
@@ -29,7 +35,6 @@ The following data sources are currently supported:
 | IntAct | `intact/` | Molecular interaction data |
 | Metabolite | `metabolite_data/` | Metabolite information |
 | OpenTargets | `opentargets/` | Open Targets Platform data |
-| Prime KG | `prime_kg/` | Prime Knowledge Graph data |
 | TDD (Target Drug Discovery) | `tdd_data/` | Target Drug Discovery data |
 | UBERON | `uberon/` | Uber-anatomy ontology data |
 
@@ -89,6 +94,7 @@ Each folder contains all necessary datafiles and ETL scripts for its respective 
 ## Configuration
 
 - Ensure you have the necessary access credentials and permissions for the Knowledge Graph database.
+   This code uses the default connection parameters for Neo4j Connection. In case your neo4j setup requires additional configuration, please update the same accordingly in the scripts
 - Each ETL script may require specific configuration. Refer to the comments within each script for details.
 - Modify the scripts as needed to match your database configuration and schema requirements.
 
