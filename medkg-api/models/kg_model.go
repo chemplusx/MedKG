@@ -4,7 +4,7 @@ type Node struct {
 	ID          string                 `json:"id"`
 	NodeId      string                 `json:"node_id"`
 	Label       string                 `json:"label"`
-	DisplayName string                 `json:"display_name"`
+	DisplayName string                 `json:"name"`
 	NodeType    string                 `json:"Node_Type"`
 	Type        string                 `json:"type"`
 	Score       float64                `json:"score"`
@@ -17,6 +17,7 @@ type Relationship struct {
 	Properties map[string]interface{} `json:"properties"`
 	Source     interface{}            `json:"source"`
 	Target     interface{}            `json:"target"`
+	Type       string                 `json:"type"`
 	EdgeType   string                 `json:"Edge_Type"`
 }
 
@@ -41,4 +42,9 @@ type PathSearchRequest struct {
 	SourceNodeID string `json:"startNode"`
 	TargetNodeID string `json:"endNode"`
 	Depth        string `json:"maxHops"`
+}
+
+type NodeRelationsRequest struct {
+	EntityID      string   `json:"entityId"`
+	RelationTypes []string `json:"relationTypes"`
 }

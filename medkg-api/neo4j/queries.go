@@ -5,10 +5,12 @@ import (
 	"fmt"
 	"log"
 	"strconv"
+	"strings"
 
 	"chemplusx.com/medkg-api/models"
 	"github.com/google/uuid"
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
+	"github.com/neo4j/neo4j-go-driver/v5/neo4j/dbtype"
 )
 
 var blacklistedLabels = []string{"Molecular_function", "Cellular_component", "Modification", "Clinical_variable", "Phenotype", "Experiment", "Experimental_factor", "Units", "Complex", "Food", "Known_variant", "Clinically_relevant_variant", "Publication", "GWAS_study", "User", "Project", "Subject", "Analytical_sample", "Timepoint"}
@@ -487,7 +489,7 @@ func GetNetworkGraphForId(driver neo4j.DriverWithContext, id string, name string
 	return result.(map[string]interface{})["nodes"].([]map[string]interface{}), result.(map[string]interface{})["relationships"].([]map[string]interface{}), nil
 }
 
-func GetNetworkGraphForIdAndDepth(driver neo4j.DriverWithContext, id string, name string, typeN string, limit string, neighbour string, depth int) ([]map[string]models.Node, []map[string]interface{}, error) {
+func GetNetworkGraphForIdAndDepth(driver neo4j.DriverWithContext, id string, name string, typeN string, limit string, neighbour string, depth int) ([]models.Node, []interface{}, error) {
 	ctx := context.Background()
 
 	err := driver.VerifyConnectivity(ctx)
@@ -524,8 +526,8 @@ func GetNetworkGraphForIdAndDepth(driver neo4j.DriverWithContext, id string, nam
 			records, _ := tx.Run(ctx, query, nil)
 
 			// Collect All data	for the first level
-			var totalNodes []map[string]models.Node
-			var relationships []map[string]interface{}
+			var totalNodes []models.Node
+			var relationships []interface{}
 
 			exists := make(map[interface{}]bool)
 			if records == nil || records.Err() != nil {
@@ -567,24 +569,24 @@ func GetNetworkGraphForIdAndDepth(driver neo4j.DriverWithContext, id string, nam
 						Properties:  node.Props,
 						DisplayName: nme,
 						NodeType:    node.Labels[0],
+						Type:        node.Labels[0],
 					}
 
 					if _, ok := exists[source.ID]; !ok {
-						totalNodes = append(totalNodes, map[string]models.Node{"data": source})
+						totalNodes = append(totalNodes, source)
 						exists[source.ID] = true
 					}
 				}
 
 				for _, rel := range rels {
-					relationships = append(relationships, map[string]interface{}{
-						"data": models.Relationship{
-							ID:         rel.ElementId,
-							Label:      rel.Type,
-							Source:     rel.StartElementId,
-							Target:     rel.EndElementId,
-							EdgeType:   rel.Type,
-							Properties: rel.Props,
-						},
+					relationships = append(relationships, models.Relationship{
+						ID:         rel.ElementId,
+						Label:      rel.Type,
+						Source:     rel.StartElementId,
+						Target:     rel.EndElementId,
+						EdgeType:   rel.Type,
+						Properties: rel.Props,
+						Type:       rel.Type,
 					})
 				}
 
@@ -601,7 +603,7 @@ func GetNetworkGraphForIdAndDepth(driver neo4j.DriverWithContext, id string, nam
 		return nil, nil, err
 	}
 
-	return result.(map[string]interface{})["nodes"].([]map[string]models.Node), result.(map[string]interface{})["relationships"].([]map[string]interface{}), nil
+	return result.(map[string]interface{})["nodes"].([]models.Node), result.(map[string]interface{})["relationships"].([]interface{}), nil
 }
 
 func SearchForInteraction(driver neo4j.DriverWithContext, request models.InteractionSearchRequest) (map[string]interface{}, error) {
@@ -771,4 +773,92 @@ func SearchForPath(driver neo4j.DriverWithContext, request models.PathSearchRequ
 	}
 
 	return result.(map[string]interface{}), nil
+}
+
+func GetNodeDetailsForElementId(driver neo4j.DriverWithContext, elementId string) (map[string]interface{}, error) {
+	ctx := context.Background()
+
+	err := driver.VerifyConnectivity(ctx)
+	if err != nil {
+		panic(err)
+	}
+
+	session := driver.NewSession(ctx, neo4j.SessionConfig{AccessMode: neo4j.AccessModeRead})
+	defer session.Close(ctx)
+	result, err := session.ExecuteRead(ctx,
+		func(tx neo4j.ManagedTransaction) (interface{}, error) {
+			query := "MATCH (node) WHERE elementId(node) = \"" + elementId + "\" RETURN node"
+			records, err := tx.Run(ctx, query, nil)
+			if err != nil {
+				return nil, err
+			}
+			var nodeDetails map[string]interface{}
+			var node dbtype.Node
+			for records.Next(ctx) {
+				record := records.Record()
+				node = record.Values[0].(dbtype.Node)
+				nodeDetails = map[string]interface{}{
+					"Type":       node.Labels[0],
+					"Properties": node.Props,
+				}
+			}
+			delete(nodeDetails["Properties"].(map[string]interface{}), "embedding")
+			log.Println(nodeDetails, "-----> ", elementId, "Query: ", query)
+			return nodeDetails, nil
+		},
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return result.(map[string]interface{}), nil
+}
+
+func GetNodeRelations(driver neo4j.DriverWithContext, searchCriteria models.NodeRelationsRequest, limit string) ([]models.Relationship, error) {
+	ctx := context.Background()
+
+	err := driver.VerifyConnectivity(ctx)
+	if err != nil {
+		panic(err)
+	}
+
+	session := driver.NewSession(ctx, neo4j.SessionConfig{AccessMode: neo4j.AccessModeRead})
+	defer session.Close(ctx)
+	result, err := session.ExecuteRead(ctx,
+		func(tx neo4j.ManagedTransaction) (interface{}, error) {
+			query := "MATCH (start) WHERE elementId(start) = \"" + searchCriteria.EntityID
+			if searchCriteria.RelationTypes != nil && len(searchCriteria.RelationTypes) > 0 {
+				query += "\" CALL { WITH start MATCH (start)-[r:" + strings.Join(searchCriteria.RelationTypes, "|") + "]-(end) RETURN r, end LIMIT " + limit + " } RETURN start, r, end LIMIT " + limit
+			} else {
+				query += "\" CALL { WITH start MATCH (start)-[r]-(end) RETURN r, end LIMIT " + limit + " } RETURN start, r, end LIMIT " + limit
+			}
+			records, err := tx.Run(ctx, query, nil)
+			if err != nil {
+				return nil, err
+			}
+			var relationships []models.Relationship
+			for records.Next(ctx) {
+				record := records.Record()
+				start := record.Values[0].(dbtype.Node)
+				rel := record.Values[1].(neo4j.Relationship)
+				end := record.Values[2].(dbtype.Node)
+				relationships = append(relationships, models.Relationship{
+					ID:         rel.ElementId,
+					Label:      rel.Type,
+					Source:     start,
+					Target:     end,
+					EdgeType:   rel.Type,
+					Properties: rel.Props,
+				})
+			}
+			return relationships, nil
+		},
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return result.([]models.Relationship), nil
 }

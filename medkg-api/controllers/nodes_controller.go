@@ -3,6 +3,7 @@ package controllers
 import (
 	"log"
 	"net/http"
+	"strings"
 
 	"chemplusx.com/medkg-api/models"
 	ni "chemplusx.com/medkg-api/neo4j"
@@ -99,20 +100,64 @@ func SearchNodesInGraphHandler(client neo4j.DriverWithContext) gin.HandlerFunc {
 
 func GetNetworkGraphForIdHandler(client neo4j.DriverWithContext) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		id := c.Query("id")
-		name := c.Query("name")
-		typeN := c.Query("type")
-		limit := c.DefaultQuery("limit", "10")
-		neighbour := c.DefaultQuery("neighbour", "")
+		// id := c.Query("id")
+		// name := c.Query("name")
+		// typeN := c.Query("type")
+		// limit := c.DefaultQuery("limit", "10")
+		// neighbour := c.DefaultQuery("neighbour", "")
+
+		var reqBody map[string]interface{}
+
+		if err := c.ShouldBindJSON(&reqBody); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request. " + err.Error()})
+			return
+		}
+
+		id, ok := reqBody["id"].(string)
+		if !ok {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request. id not found."})
+			return
+		}
+
+		name, ok := reqBody["name"].(string)
+		if !ok {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request. name not found."})
+			return
+		}
+
+		typeN, ok := reqBody["type"].(string)
+		if !ok {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request. type not found."})
+			return
+		}
+
+		neighbour, ok := reqBody["neighbour"].(string)
+		if !ok {
+			neighbour = ""
+		} else {
+			neighbour = strings.Join(strings.Split(neighbour, ","), "|")
+		}
+
+		// limit, ok := reqBody["limit"].(string)
+		// if !ok {
+		// 	c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request. limit not found."})
+		// 	return
+		// }
+
+		depth, ok := reqBody["depth"].(int)
+		if !ok {
+			depth = 3
+		}
+		log.Println("GetNetworkGraphForIdHandler id: ", id, " name: ", name, " type: ", typeN, " limit: ", 10, " neighbour: ", neighbour)
 		// nodes, relationships, err := ni.GetNetworkGraphForId(client, id, name, typeN, limit, neighbour)
-		nodes, relationships, err := ni.GetNetworkGraphForIdAndDepth(client, id, name, typeN, limit, neighbour, 2)
+		nodes, relationships, err := ni.GetNetworkGraphForIdAndDepth(client, id, name, typeN, "10", neighbour, depth)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
 		response := map[string]interface{}{
 			"nodes": nodes,
-			"edges": relationships,
+			"links": relationships,
 		}
 		c.JSON(http.StatusOK, response)
 	}
@@ -177,6 +222,38 @@ func PathSearchHandler(client neo4j.DriverWithContext) gin.HandlerFunc {
 		}
 
 		nodes, err := ni.SearchForPath(client, reqBody)
+		if err != nil {
+			log.Println(err)
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+		c.JSON(http.StatusOK, nodes)
+	}
+}
+
+func NodeDetailsForElementIdHandler(client neo4j.DriverWithContext) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		id := c.Query("id")
+		nodes, err := ni.GetNodeDetailsForElementId(client, id)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+		c.JSON(http.StatusOK, nodes)
+	}
+}
+
+func GetNodeRelationsHandler(client neo4j.DriverWithContext) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		// Get the post request body
+
+		reqBody := models.NodeRelationsRequest{}
+		if err := c.BindJSON(&reqBody); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
+			return
+		}
+
+		nodes, err := ni.GetNodeRelations(client, reqBody, "10")
 		if err != nil {
 			log.Println(err)
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
