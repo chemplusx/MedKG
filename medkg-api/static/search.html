@@ -1,0 +1,1293 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedKG Advanced Search</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --text-color: #333;
+            --background-color: #f8f9fa;
+            --card-background: #ffffff;
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        nav {
+            background-color: var(--primary-color);
+            padding: 0 20px;
+            height: 64px;
+        }
+
+
+
+        .controls-panel {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 0.5rem;
+            border-radius: 4px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .controls-panel button {
+            margin: 0.2rem;
+            background-color: var(--secondary-color);
+        }
+
+        .controls-panel button:hover {
+            background-color: var(--primary-color);
+        }
+
+        #network-container {
+            width: 100%;
+            height: 100%;
+        }
+
+        .details-panel {
+            position: absolute;
+            bottom: 0;
+            left: 300px;
+            right: 0;
+            background: var(--card-background);
+            padding: 1rem;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+
+
+
+
+
+        .search-container {
+            display: flex;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .filters-panel {
+            width: 300px;
+            background: var(--card-background);
+            padding: 20px;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .results-panel {
+            flex: 1;
+            background: var(--card-background);
+            padding: 20px;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .filter-section {
+            margin-bottom: 20px;
+        }
+
+        .filter-section h6 {
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+
+
+        .relation-filter-section {
+            position: relative;
+            max-height: 300px;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+
+        .relation-filter-section.expanded {
+            max-height: none;
+            overflow: visible;
+        }
+
+        .relation-filter-section::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 50px;
+            background: linear-gradient(to bottom, transparent, #fff);
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .relation-filter-section.expanded::after {
+            opacity: 0;
+        }
+
+        .show-more-btn {
+            width: 100%;
+            padding: 8px;
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-top: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            transition: background-color 0.2s;
+        }
+
+        .show-more-btn:hover {
+            background: #eeeeee;
+        }
+
+        .show-more-btn i {
+            transition: transform 0.3s;
+        }
+
+        .show-more-btn.expanded i {
+            transform: rotate(180deg);
+        }
+
+
+
+        .chip {
+            background-color: var(--secondary-color);
+            color: white;
+            margin: 3px;
+            font-size: 12px;
+        }
+
+        .result-card {
+            border: 1px solid #eee;
+            padding: 16px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            transition: box-shadow 0.2s ease;
+        }
+
+        .result-card:hover {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .result-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 8px 0;
+            color: var(--primary-color);
+        }
+
+        .result-description {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            line-height: 1.4;
+        }
+
+        .result-meta {
+            font-size: 0.8rem;
+            color: #888;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 8px;
+            border-top: 1px solid #eee;
+        }
+
+        .result-actions {
+            margin-top: 8px;
+        }
+
+        .result-actions a {
+            color: var(--secondary-color);
+            margin-right: 16px;
+            font-size: 0.9rem;
+            text-decoration: none;
+        }
+
+        .result-actions a:hover {
+            text-decoration: underline;
+        }
+
+        .advanced-options {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        .search-stats {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .entity-type {
+            color: white;
+            font-weight: 500;
+            padding: 4px 8px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-bottom: 8px;
+            font-size: 0.75rem;
+        }
+
+        .entity-drug {
+            background-color: #ff7675;
+        }
+
+        .entity-protein {
+            background-color: #4834d4;
+        }
+
+        .entity-disease {
+            background-color: #6c5ce7;
+        }
+
+        .entity-gene {
+            background-color: #00b894;
+        }
+
+        .entity-metabolite {
+            background-color: #e17055;
+        }
+
+        .entity-pathway {
+            background-color: #fdcb6e;
+        }
+
+        .entity-cell {
+            background-color: #00cec9;
+        }
+
+        .entity-tissue {
+            background-color: #fab1a0;
+        }
+
+        .entity-peptide {
+            background-color: #55efc4;
+        }
+
+        .entity-transcript {
+            background-color: #ffeaa7;
+        }
+
+        .collapsible-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .search-actions {
+            margin: 20px 0;
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            background-color: var(--secondary-color);
+        }
+
+        .btn:hover {
+            background-color: var(--primary-color);
+        }
+
+        .citation-info {
+            font-size: 12px;
+            color: #666;
+            margin-top: 10px;
+        }
+
+        #visualizationPanel {
+            position: fixed;
+            right: -80%;
+            top: 64px;
+            width: 80%;
+            opacity: 80%;
+            height: calc(100vh - 64px);
+            background: white;
+            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+            transition: right 0.3s ease;
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        #visualizationPanel.open {
+            right: 0;
+        }
+
+        .close-panel {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+        }
+
+        .relationship-path {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+            overflow-x: auto;
+            padding: 10px;
+        }
+
+        .node-item {
+            padding: 5px 10px;
+            border-radius: 4px;
+            margin: 0 5px;
+            white-space: nowrap;
+        }
+
+        .path-arrow {
+            color: #666;
+            margin: 0 5px;
+        }
+
+        .evidence-section {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+
+        .evidence-item {
+            font-size: 13px;
+            margin-bottom: 10px;
+        }
+
+        .pubmed-link {
+            color: var(--secondary-color);
+            text-decoration: underline;
+        }
+
+        .matches-section {
+            margin-bottom: 20px;
+        }
+
+        .exact-matches {
+            margin-bottom: 30px;
+        }
+
+        .partial-matches-toggle {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            cursor: pointer;
+            user-select: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .partial-matches-toggle:hover {
+            background-color: #eeeeee;
+        }
+
+        .partial-matches-count {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .partial-matches-content {
+            display: none;
+            padding: 15px;
+            border-left: 3px solid var(--secondary-color);
+            margin-left: 10px;
+        }
+
+        .partial-matches-content.visible {
+            display: block;
+        }
+
+        .relationships-dropdown {
+            display: none;
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            margin-top: 10px;
+            padding: 15px;
+            padding-bottom: 3.5rem;
+        }
+
+        .relationships-dropdown.active {
+            display: block;
+        }
+
+        .relationship-container {
+            position: relative;
+            padding: 20px;
+        }
+
+        .source-entity {
+            background: #ff7675;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+
+        .relationships-list {
+            margin-left: 40px;
+            border-left: 2px solid #ddd;
+            padding-left: 20px;
+        }
+
+        .relationship-item {
+            position: relative;
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .relationship-item::before {
+            content: '';
+            position: absolute;
+            left: -22px;
+            top: 50%;
+            width: 60px;
+            height: 2px;
+            background: #ddd;
+        }
+
+        .relationship-type {
+            color: #666;
+            font-size: 0.9em;
+            margin: 0 25px 0 60px;
+            min-width: 150px;
+        }
+
+        .entity-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            color: white;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .entity-badge:hover {
+            transform: scale(1.05);
+        }
+
+        .entity-modal {
+            display: none;
+            position: absolute;
+            z-index: 1000;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            max-width: 30rem;
+            max-height: 30rem;
+            overflow-y: auto;
+        }
+
+        .entity-modal.active {
+            display: block;
+        }
+
+        .modal-header {
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+        }
+
+        .modal-content {
+            margin-bottom: 15px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            border-top: 1px solid #eee;
+            padding-top: 10px;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            color: #666;
+        }
+
+        /* Entity type-specific styles */
+        .entity-drug {
+            background-color: #ff7675;
+        }
+
+        .entity-disease {
+            background-color: #6c5ce7;
+        }
+
+        .entity-protein {
+            background-color: #4834d4;
+        }
+
+        .entity-gene {
+            background-color: #00b894;
+        }
+
+        .view-network-btn {
+            background-color: var(--secondary-color);
+            margin-bottom: 15px;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            /* margin-top: 10px; */
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            float: right;
+        }
+
+        .view-network-btn:hover {
+            background-color: var(--primary-color);
+        }
+
+
+
+
+        .network-stats {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 1rem;
+            padding: 0.5rem;
+            background: #f5f5f5;
+            border-radius: 4px;
+        }
+
+        .custom-tooltip {
+            position: absolute;
+            background: white;
+            padding: 8px;
+            border-radius: 4px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            pointer-events: none;
+            display: none;
+            z-index: 1000;
+        }
+
+
+
+
+        .context-menu {
+            position: fixed;
+            background: white;
+            min-width: 200px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            border-radius: 4px;
+            padding: 5px 0;
+            z-index: 1000;
+        }
+
+        .context-menu .menu-items {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .context-menu .menu-items li {
+            padding: 8px 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .context-menu .menu-items li:hover {
+            background-color: #f5f5f5;
+        }
+
+        .context-menu .material-icons {
+            font-size: 18px;
+            color: #666;
+        }
+
+        .context-menu span {
+            font-size: 14px;
+            color: #333;
+        }
+
+        /* Node Modal Styles */
+        .modal {
+            max-width: 600px;
+            border-radius: 8px;
+        }
+
+        .modal .entity-type {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            margin: 8px 0;
+            color: white;
+            font-size: 0.9rem;
+        }
+
+        .modal-body {
+            margin: 16px 0;
+        }
+
+        .relationships-section {
+            margin-top: 24px;
+            padding-top: 16px;
+            border-top: 1px solid #eee;
+        }
+
+        /* Edge Label Styles */
+        .link-label {
+            font-family: Arial, sans-serif;
+            pointer-events: none;
+        }
+
+        /* Add to your existing CSS */
+        .modal {
+            max-height: 85vh !important;
+            /* Ensure modal isn't too tall */
+            overflow-y: auto;
+        }
+
+        .modal .modal-close:hover {
+            color: var(--accent-color);
+        }
+
+        .link-label {
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        /* Only show edge labels on hover */
+        .link:hover .link-label {
+            opacity: 0.7;
+        }
+
+
+        #network-container {
+    width: 100%;
+    height: calc(100vh - 200px); /* Adjust height to fit the visualization panel */
+    position: relative;
+}
+
+#network-container svg {
+    width: 100%;
+    height: 100%;
+    display: block; /* Ensure SVG takes up full space */
+}
+
+#visualizationPanel {
+    padding: 20px;
+    overflow: hidden; /* Prevent scrolling issues */
+}
+
+/* Ensure the visualization content fills the panel */
+#visualizationContent {
+    height: calc(100% - 60px); /* Account for header */
+    position: relative;
+}
+    </style>
+</head>
+
+<body>
+    <nav>
+        <div class="nav-wrapper">
+            <a href="#" class="brand-logo">MedKG</a>
+            <ul id="nav-mobile" class="right">
+                <li><a href="#" onclick="toggleAdvancedSearch()"><i class="material-icons left">tune</i>Advanced
+                        Search</a></li>
+                <li><a href="#" onclick="exportResults()"><i class="material-icons left">file_download</i>Export</a>
+                </li>
+                <li><a href="#"><i class="material-icons left">help_outline</i>Help</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="row">
+            <div class="col s12">
+                <div class="search-bar">
+                    <div class="input-field">
+                        <input type="text" id="mainSearch"
+                            placeholder="Enter search terms (e.g., drug names, proteins, diseases, or pathways)">
+                        <div class="autocomplete-toggle" style="margin-top: 10px;">
+                            <label>
+                                <input type="checkbox" id="enableAutocomplete">
+                                <span>Enable Autocomplete Suggestions</span>
+                            </label>
+                        </div>
+                        <div class="search-actions">
+                            <button class="btn waves-effect waves-light" onclick="performSearch()">
+                                Search<i class="material-icons right">search</i>
+                            </button>
+                            <button class="btn waves-effect waves-light" onclick="clearSearch()">
+                                Clear<i class="material-icons right">clear</i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="search-container">
+            <div class="filters-panel">
+                <h5>Filters</h5>
+
+                <div id="labelFilterSection" class="label-filter-section">
+                    <div>
+                        <h6>Entity Types</h6>
+                        <button class="btn-small" onclick="selectAllEntities('labels')">Select All</button>
+                        <button class="btn-small" onclick="clearAllEntities('labels')">Clear All</button>
+                    </div>
+                    <label>
+                        <input type="checkbox" class="filled-in" checked="checked" value="drug" />
+                        <span>Drugs</span>
+                    </label><br>
+                    <label>
+                        <input type="checkbox" class="filled-in" checked="checked" value="protein" />
+                        <span>Proteins</span>
+                    </label><br>
+                    <label>
+                        <input type="checkbox" class="filled-in" checked="checked" value="disease" />
+                        <span>Diseases</span>
+                    </label><br>
+                    <label>
+                        <input type="checkbox" class="filled-in" checked="checked" value="gene" />
+                        <span>Genes</span>
+                    </label>
+                </div>
+
+                <div id="relationFilterSection" class="relation-filter-section">
+                    <div>
+                        <h6>Relationship Types</h6>
+                        <button class="btn-small" onclick="selectAllEntities('relation')">Select All</button>
+                        <button class="btn-small" onclick="clearAllEntities('relation')">Clear All</button>
+                    </div>
+                    <label>
+                        <input type="checkbox" class="filled-in" checked="checked" value="treats" />
+                        <span>Treats</span>
+                    </label><br>
+                    <label>
+                        <input type="checkbox" class="filled-in" checked="checked" value="interacts" />
+                        <span>Interacts</span>
+                    </label><br>
+                    <label>
+                        <input type="checkbox" class="filled-in" checked="checked" value="expresses" />
+                        <span>Expresses</span>
+                    </label>
+                </div>
+
+                <div class="studies-filter-section">
+                    <h6>Evidence Level</h6>
+                    <label>
+                        <input type="checkbox" class="filled-in" checked="checked" value="experimental" />
+                        <span>Experimental Evidence</span>
+                    </label><br>
+                    <label>
+                        <input type="checkbox" class="filled-in" checked="checked" value="clinical" />
+                        <span>Clinical Studies</span>
+                    </label><br>
+                    <label>
+                        <input type="checkbox" class="filled-in" checked="checked" value="computational" />
+                        <span>Computational Prediction</span>
+                    </label>
+                </div>
+
+                <div class="filter-section">
+                    <h6>Publication Year</h6>
+                    <div class="input-field">
+                        <input type="number" id="yearFrom" placeholder="From">
+                    </div>
+                    <div class="input-field">
+                        <input type="number" id="yearTo" placeholder="To">
+                    </div>
+                </div>
+                <div class="search-actions">
+                    <button class="btn waves-effect waves-light" onclick="applyFilters()">
+                        Apply Filters<i class="material-icons right">filter_list</i>
+                    </button>
+                    <button class="btn waves-effect waves-light" onclick="clearFilters()">
+                        Clear Filters<i class="material-icons right">clear_all</i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="results-panel">
+                <div class="search-stats">
+                    Found <span id="resultCount">0</span> results
+                    <div class="right">
+                        Sort by:
+                        <select id="sortOrder" onchange="updateSort()">
+                            <option value="relevance">Relevance</option>
+                            <option value="recent">Most Recent</option>
+                            <option value="cited">Most Cited</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="searchResults">
+                    <!-- Results will be populated here -->
+                </div>
+
+                <div class="pagination">
+                    <button class="btn waves-effect waves-light" onclick="previousPage()" id="prevButton" disabled>
+                        Previous
+                    </button>
+                    <span id="pageInfo">Page 1 of 1</span>
+                    <button class="btn waves-effect waves-light" onclick="nextPage()" id="nextButton" disabled>
+                        Next
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- <div id="visualizationPanel">
+        <i class="material-icons close-panel" onclick="closeVisualization()">close</i>
+        <h5>Network View</h5>
+        <div id="visualizationContent"> -->
+
+            <main id="visualizationPanel" class="visualization-container">
+                <i class="material-icons close-panel" onclick="closeVisualization()">close</i>
+                <h5>Network View</h5>
+                <div class="controls-panel">
+                    <button class="btn waves-effect waves-light" onclick="graph.zoomIn()">
+                        <i class="material-icons">zoom_in</i>
+                    </button>
+                    <button class="btn waves-effect waves-light" onclick="graph.zoomOut()">
+                        <i class="material-icons">zoom_out</i>
+                    </button>
+                    <button class="btn waves-effect waves-light" onclick="graph.resetZoom()">
+                        <i class="material-icons">center_focus_strong</i>
+                    </button>
+                    <button class="btn waves-effect waves-light" onclick="graph.fitToView()">
+                        <i class="material-icons">fit_screen</i>
+                    </button>
+                </div>
+
+                <div id="network-container">
+                    <svg width="100%" height="100%"></svg>
+                </div>
+
+                <div class="custom-tooltip"></div>
+
+                <div class="details-panel">
+                    <div class="details-header">
+                        <h5>Node Details</h5>
+                        <button class="btn-flat waves-effect waves-light" onclick="hideDetails()">
+                            <i class="material-icons">close</i>
+                        </button>
+                    </div>
+                    <div id="details-content"></div>
+                </div>
+            </main>
+            <!-- <div class="network-stats">
+                <div>Nodes: <span id="nodeCount">0</span></div>
+                <div>Edges: <span id="edgeCount">0</span></div>
+                <div>Connected Components: <span id="componentCount">0</span></div>
+            </div> -->
+        <!-- </div>
+    </div> -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="js/search/result_curator.js"></script>
+    <script src="js/search/search_utils.js"></script>
+    <script src="js/search/export.js"></script>
+    <script src="js/search/pagination.js"></script>
+    <script src="js/network/network_utils.js"></script>
+
+    <script>
+        // Initialize Materialize components
+
+
+        let currentPage = 1;
+        const resultsPerPage = 10;
+        let totalResults = 0;
+
+        let fetchedResults = {
+            exactMatches: [],
+            partialMatches: []
+        };
+        document.addEventListener('DOMContentLoaded', function applyFilters() {
+            const filters = {
+                entityTypes: Array.from(document.querySelectorAll('input[type="checkbox"][value^="drug"], input[type="checkbox"][value^="protein"], input[type="checkbox"][value^="disease"], input[type="checkbox"][value^="gene"]'))
+                    .filter(cb => cb.checked)
+                    .map(cb => cb.value),
+                relationshipTypes: Array.from(document.querySelectorAll('input[type="checkbox"][value^="treats"], input[type="checkbox"][value^="interacts"], input[type="checkbox"][value^="expresses"]'))
+                    .filter(cb => cb.checked)
+                    .map(cb => cb.value),
+                evidenceLevel: Array.from(document.querySelectorAll('input[type="checkbox"][value^="experimental"], input[type="checkbox"][value^="clinical"], input[type="checkbox"][value^="computational"]'))
+                    .filter(cb => cb.checked)
+                    .map(cb => cb.value),
+                yearFrom: document.getElementById('yearFrom').value,
+                yearTo: document.getElementById('yearTo').value
+            };
+
+            // performSearch(filters);
+        });
+
+        let allFilterableLabels = [];
+
+        let allFilterableRelations = [];
+
+        GetAllRelations();
+        GetAllLabels();
+
+
+        // Add autocomplete functionality for the search input
+
+
+        // Initialize tooltips and other Materialize components
+        document.addEventListener('DOMContentLoaded', function () {
+            const tooltips = document.querySelectorAll('.tooltipped');
+            M.Tooltip.init(tooltips);
+
+            const selects = document.querySelectorAll('select');
+            M.FormSelect.init(selects);
+
+            // Set current year as default for yearTo if empty
+            const yearTo = document.getElementById('yearTo');
+            if (!yearTo.value) {
+                yearTo.value = new Date().getFullYear();
+            }
+        });
+
+        M.AutoInit();
+
+        // Initialize search with default parameters
+        updateResults([]);
+
+        function showVisualization(id) {
+            const panel = document.getElementById('visualizationPanel');
+            const content = document.getElementById('visualizationContent');
+
+            // Simulate fetching relationship data
+            const relationships = [
+                { source: 'Drug A', target: 'Protein B', type: 'inhibits' },
+                { source: 'Protein B', target: 'Disease C', type: 'associated_with' }
+            ];
+
+            content.innerHTML = `
+                <div class="relationship-path">
+                    ${relationships.map(rel => `
+                        <span class="node-item">${rel.source}</span>
+                        <span class="path-arrow">
+                            <i class="material-icons tiny">arrow_forward</i>
+                            ${rel.type}
+                        </span>
+                        <span class="node-item">${rel.target}</span>
+                    `).join('')}
+                </div>
+            `;
+
+            panel.classList.add('open');
+        }
+
+        function closeVisualization() {
+            document.getElementById('visualizationPanel').classList.remove('open');
+        }
+
+        // Advanced search modal functionality
+        function showAdvancedSearch() {
+            const modal = document.getElementById('advancedSearchModal');
+            const instance = M.Modal.init(modal);
+            instance.open();
+        }
+
+        // Citation export functionality
+        function exportCitation(id, format = 'bibtex') {
+            showLoading();
+
+            // Simulate citation export
+            setTimeout(() => {
+                const citations = {
+                    bibtex: `@article{medkg${id},
+                        title={MedKG Entry ${id}},
+                        author={Database, MedKG},
+                        year={2024},
+                        journal={MedKG Knowledge Graph}
+                    }`,
+                    ris: `TY  - JOUR\nTI  - MedKG Entry ${id}\nAU  - MedKG Database\nPY  - 2024\nJO  - MedKG Knowledge Graph\nER  -`
+                };
+
+                const citation = citations[format] || citations.bibtex;
+                const blob = new Blob([citation], { type: 'text/plain' });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `medkg_citation_${id}.${format}`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+
+                hideLoading();
+                showNotification('Citation exported successfully');
+            }, 500);
+        }
+
+        // Batch processing functionality
+        function processBatch() {
+            const fileInput = document.createElement('input');
+            fileInput.type = 'file';
+            fileInput.accept = '.csv,.txt';
+
+            fileInput.onchange = function (e) {
+                const file = e.target.files[0];
+                if (file) {
+                    showLoading();
+
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        const content = e.target.result;
+                        const items = content.split('\n').filter(line => line.trim());
+
+                        // Process each item
+                        Promise.all(items.map(item =>
+                            fetch(`/api/search?q=${encodeURIComponent(item.trim())}`)
+                                .then(response => response.json())
+                        ))
+                            .then(results => {
+                                // Handle batch results
+                                const batchResults = results.flat();
+                                updateResults(batchResults);
+                                hideLoading();
+                                showNotification(`Processed ${items.length} items`);
+                            })
+                            .catch(error => {
+                                console.error('Batch processing error:', error);
+                                hideLoading();
+                                showError('Error processing batch file');
+                            });
+                    };
+                    reader.readAsText(file);
+                }
+            };
+
+            fileInput.click();
+        }
+
+        // Download visualization as image
+        function downloadVisualization(id) {
+            const vizContainer = document.querySelector('.relationship-path');
+            if (!vizContainer) return;
+
+            showLoading();
+
+            // In a real implementation, you would use a library like html2canvas
+            // This is a simplified simulation
+            setTimeout(() => {
+                showNotification('Visualization downloaded');
+                hideLoading();
+            }, 1000);
+        }
+
+        // Add keyboard shortcuts
+        document.addEventListener('keydown', function (e) {
+            // Ctrl/Cmd + / for advanced search
+            if ((e.ctrlKey || e.metaKey) && e.key === '/') {
+                e.preventDefault();
+                showAdvancedSearch();
+            }
+
+            // Ctrl/Cmd + E for export
+            if ((e.ctrlKey || e.metaKey) && e.key === 'e') {
+                e.preventDefault();
+                exportResults();
+            }
+        });
+
+        let globalNetworkValues = [];
+        let graph;
+        function ShowNetwork(id, name, neighbour, type, depth) {
+            d3.select("#network-container svg").selectAll("*").remove();
+            M.AutoInit();
+            graph = initD3Graph();
+
+            function updateFiltersForNetwork() {
+                // Get selected entity types
+                const selectedEntityTypes = Array.from(document.querySelectorAll('#labelFilterSection input[type="checkbox"]'))
+                    .filter(cb => cb.checked)
+                    .map(cb => cb.value);
+
+                // Get selected relationship types
+                const selectedRelationTypes = Array.from(document.querySelectorAll('#relationFilterSection input[type="checkbox"]'))
+                    .filter(cb => cb.checked)
+                    .map(cb => cb.value);
+
+                // Filter nodes based on selected entity types
+                const filteredNodes = globalNetworkValues.nodes.filter(node =>
+                    selectedEntityTypes.includes(node.type)
+                );
+
+                // Get the IDs of filtered nodes for link filtering
+                const filteredNodeIds = new Set(filteredNodes.map(node => node.id));
+
+                // Filter links based on selected relationship types and filtered nodes
+                const filteredLinks = globalNetworkValues.links.filter(link => {
+                    const sourceExists = filteredNodeIds.has(link.source.id || link.source);
+                    const targetExists = filteredNodeIds.has(link.target.id || link.target);
+                    const relationshipMatch = selectedRelationTypes.includes(link.type);
+
+                    return sourceExists && targetExists && relationshipMatch;
+                });
+
+                // Update the graph with filtered data
+                graph.updateGraph({
+                    nodes: filteredNodes,
+                    links: filteredLinks
+                });
+
+                // Update network stats
+                // document.getElementById('nodeCount').textContent = filteredNodes.length;
+                // document.getElementById('edgeCount').textContent = filteredLinks.length;
+
+                // // Update connected components count
+                // const components = findConnectedComponents(filteredNodes, filteredLinks);
+                // document.getElementById('componentCount').textContent = components.length;
+            }
+
+            // function fetchNetworkData(entityId, name, neighbours, type, depth) 
+            // fetchNetworkData(id, name, neighbour, type, depth)
+            //     .then(data => {
+            //         // Update the graph with data
+            //         globalNetworkValues = data;
+            //         graph.updateGraph(data);
+
+            //         updateFiltersForNetwork();
+            //     });
+
+            fetchNetworkData(id, name, neighbour, type, depth)
+                .then(data => {
+                    if (!data || !data.nodes || !data.links) {
+                        console.error('Invalid graph data:', data);
+                        return;
+                    }
+
+                    console.log('Network data:', {
+                        nodes: data.nodes.length,
+                        links: data.links.length,
+                        sampleNode: data.nodes[0],
+                        sampleLink: data.links[0]
+                    });
+
+                    console.log('Updating graph with data:', data);
+
+                    // Ensure nodes have proper properties
+                    data.nodes = data.nodes.map(node => ({
+                        ...node,
+                        id: node.id || node.elementId,
+                        name: node.name || node.label || 'Unknown',
+                        type: node.type || node.labels?.[0] || 'Default'
+                    }));
+
+                    // Ensure links have proper references
+                    data.links = data.links.map(link => ({
+                        ...link,
+                        source: typeof link.source === 'object' ? link.source.id : link.source,
+                        target: typeof link.target === 'object' ? link.target.id : link.target,
+                        type: link.type || link.relationship || 'default'
+                    }));
+
+                    globalNetworkValues = data;
+
+                    // Update the graph
+                    graph.updateGraph(data);
+
+                    // Update network stats
+                    // document.getElementById('nodeCount').textContent = data.nodes.length;
+                    // document.getElementById('edgeCount').textContent = data.links.length;
+                })
+                .catch(error => {
+                    console.error('Error fetching network data:', error);
+                });
+        }
+
+
+    </script>
+
+    <!-- Advanced Search Modal -->
+    <div id="advancedSearchModal" class="modal">
+        <div class="modal-content">
+            <h4>Advanced Search</h4>
+            <div class="row">
+                <div class="input-field col s12">
+                    <input type="text" id="advancedSearchQuery" placeholder="Enter search query">
+                </div>
+                <div class="col s12">
+                    <h6>Search Syntax</h6>
+                    <ul>
+                        <li><code>AND</code>: Combine terms (e.g., "diabetes AND insulin")</li>
+                        <li><code>OR</code>: Alternative terms (e.g., "heart OR cardiac")</li>
+                        <li><code>NOT</code>: Exclude terms (e.g., "cancer NOT lung")</li>
+                        <li><code>"..."</code>: Exact phrase (e.g., "breast cancer")</li>
+                        <li><code>*</code>: Wildcard (e.g., "immun*" for immune, immunity, etc.)</li>
+                    </ul>
+                </div>
+                <div class="col s12">
+                    <h6>Field-Specific Search</h6>
+                    <ul>
+                        <li><code>type:</code> Search by entity type (e.g., "type:protein")</li>
+                        <li><code>id:</code> Search by identifier (e.g., "id:MESH123")</li>
+                        <li><code>year:</code> Search by year (e.g., "year:2020..2024")</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="modal-close btn-flat">Cancel</button>
+            <button class="btn" onclick="performAdvancedSearch()">Search</button>
+        </div>
+    </div>
+
+    <!-- Help Modal -->
+    <div id="helpModal" class="modal">
+        <div class="modal-content">
+            <h4>Search Help</h4>
+            <div class="section">
+                <h5>Quick Start</h5>
+                <p>Enter any term related to drugs, diseases, proteins, or genes. The search will look for exact and
+                    partial matches across all entity types.</p>
+            </div>
+            <div class="section">
+                <h5>Advanced Features</h5>
+                <ul>
+                    <li>Use filters to narrow down results by entity type, relationship type, and evidence level</li>
+                    <li>Export results in various formats (CSV, JSON, BibTeX)</li>
+                    <li>Visualize relationships between entities</li>
+                    <li>Batch process multiple searches</li>
+                </ul>
+            </div>
+            <div class="section">
+                <h5>Keyboard Shortcuts</h5>
+                <ul>
+                    <li><kbd>Ctrl</kbd>/<kbd>⌘</kbd> + <kbd>/</kbd> - Open Advanced Search</li>
+                    <li><kbd>Ctrl</kbd>/<kbd>⌘</kbd> + <kbd>E</kbd> - Export Results</li>
+                </ul>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="modal-close btn-flat">Close</button>
+        </div>
+    </div>
+</body>
+
+</html>
