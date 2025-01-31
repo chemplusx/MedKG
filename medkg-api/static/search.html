@@ -27,14 +27,25 @@
             background-color: var(--primary-color);
             padding: 0 20px;
             height: 64px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+
+        .container {
+            margin-top: 80px;
+            width: 90% !important;
+            /* navbar height (64px) + some padding */
         }
 
 
 
         .controls-panel {
             position: absolute;
-            top: 1rem;
-            right: 1rem;
+            top: 2rem;
+            right: 27%;
             z-index: 100;
             background: rgba(255, 255, 255, 0.9);
             padding: 0.5rem;
@@ -72,7 +83,7 @@
 
 
 
-        .search-container {
+        .search-results-container {
             display: flex;
             gap: 20px;
             margin: 20px 0;
@@ -299,6 +310,100 @@
             gap: 10px;
         }
 
+        .search-section {
+            padding: 2rem 0;
+            background-color: var(--background-color);
+        }
+
+        .search-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .search-bar {
+            width: 60%;
+            margin: 0 auto;
+        }
+
+        .input-field input[type="text"] {
+            transition: width 0.5s ease;
+            width: 100%;
+            text-align: center;
+        }
+
+        .input-field input[type="text"]:focus {
+            width: 120%;
+            margin-left: -10%;
+            text-align: center;
+            font-size: xx-large;
+        }
+
+        .search-actions {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .search-input-wrapper {
+            margin-bottom: 1rem;
+        }
+
+        .search-input-wrapper input {
+            height: 3rem;
+            padding: 0 1rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            font-size: 1.1rem;
+        }
+
+        .search-input-wrapper input:focus {
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.1);
+        }
+
+        .autocomplete-toggle {
+            margin: 0.5rem 0;
+            color: #666;
+        }
+
+        /* .search-actions {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin-top: 1.5rem;
+    } */
+
+        .search-actions button {
+            min-width: 120px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .search-actions button i {
+            margin: 0;
+        }
+
+        .search-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        .search-header h4 {
+            margin: 0;
+            font-weight: 500;
+        }
+
+        .search-header p {
+            color: #666;
+            margin: 0.5rem 0 0;
+        }
+
         .btn {
             background-color: var(--secondary-color);
         }
@@ -315,10 +420,10 @@
 
         #visualizationPanel {
             position: fixed;
-            right: -80%;
+            right: -90%;
             top: 64px;
-            width: 80%;
-            opacity: 80%;
+            width: 90%;
+            /* opacity: 80%; */
             height: calc(100vh - 64px);
             background: white;
             box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
@@ -328,7 +433,125 @@
         }
 
         #visualizationPanel.open {
-            right: 0;
+            right: 5%;
+        }
+
+        .visualization-container {
+            display: flex;
+            width: 100%;
+            height: calc(100vh - 64px);
+            background: white;
+        }
+
+        .network-panel {
+            flex: 0 0 75%;
+            position: relative;
+            border-right: 1px solid #eee;
+        }
+
+        .details-sidebar {
+            flex: 0 0 25%;
+            padding: 1rem;
+            overflow-y: auto;
+            background: #f8f9fa;
+        }
+
+        .details-section {
+            margin-bottom: 2rem;
+        }
+
+        .details-section h6 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            margin-right: 0.5rem;
+            border-radius: 4px;
+        }
+
+        .legend-shape {
+            width: 20px;
+            height: 20px;
+            margin-right: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .shape-circle {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #ccc;
+        }
+
+        .shape-diamond {
+            width: 16px;
+            height: 16px;
+            background: #ccc;
+            transform: rotate(45deg);
+        }
+
+        .shape-triangle {
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-bottom: 16px solid #ccc;
+        }
+
+        .shape-square {
+            width: 16px;
+            height: 16px;
+            background: #ccc;
+        }
+
+        .node-list,
+        .relationship-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .node-item,
+        .relationship-item {
+            padding: 0.5rem;
+            border-bottom: 1px solid #eee;
+            font-size: 0.9rem;
+        }
+
+        .node-type-badge {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 3px;
+            color: white;
+            font-size: 0.8rem;
+            margin-right: 0.5rem;
+        }
+
+        .network-stats {
+            background: #fff;
+            padding: 0.5rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.25rem;
         }
 
         .close-panel {
@@ -471,6 +694,39 @@
             margin: 0 25px 0 60px;
             min-width: 150px;
         }
+
+
+        .relationship-net-item {
+            position: relative;
+            margin: 10px 0;
+            /* display: flex; */
+            align-items: center;
+        }
+
+        .relationship-net-item::before {
+            content: '';
+            position: absolute;
+            left: -20px;
+            top: 16%;
+            width: 60px;
+            height: 2px;
+            background: #ddd;
+        }
+
+        .relationship-net-type {
+            color: #666;
+            font-size: 0.9em;
+            margin: 0 23px 0 50px;
+            min-width: 150px;
+            display: block;
+        }
+
+        .relationship-net-source {
+            display: block;
+        }
+
+
+
 
         .entity-badge {
             padding: 4px 8px;
@@ -682,27 +938,31 @@
 
 
         #network-container {
-    width: 100%;
-    height: calc(100vh - 200px); /* Adjust height to fit the visualization panel */
-    position: relative;
-}
+            width: 100%;
+            height: calc(100vh - 200px);
+            /* Adjust height to fit the visualization panel */
+            position: relative;
+        }
 
-#network-container svg {
-    width: 100%;
-    height: 100%;
-    display: block; /* Ensure SVG takes up full space */
-}
+        #network-container svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+            /* Ensure SVG takes up full space */
+        }
 
-#visualizationPanel {
-    padding: 20px;
-    overflow: hidden; /* Prevent scrolling issues */
-}
+        #visualizationPanel {
+            padding: 20px;
+            overflow: hidden;
+            /* Prevent scrolling issues */
+        }
 
-/* Ensure the visualization content fills the panel */
-#visualizationContent {
-    height: calc(100% - 60px); /* Account for header */
-    position: relative;
-}
+        /* Ensure the visualization content fills the panel */
+        #visualizationContent {
+            height: calc(100% - 60px);
+            /* Account for header */
+            position: relative;
+        }
     </style>
 </head>
 
@@ -740,13 +1000,17 @@
                             <button class="btn waves-effect waves-light" onclick="clearSearch()">
                                 Clear<i class="material-icons right">clear</i>
                             </button>
+                            <button class="btn waves-effect waves-light blue lighten-1" onclick="runSampleSearch()">
+                                <i class="material-icons">psychology</i>
+                                Sample Search
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="search-container">
+        <div class="search-results-container">
             <div class="filters-panel">
                 <h5>Filters</h5>
 
@@ -864,46 +1128,128 @@
         <h5>Network View</h5>
         <div id="visualizationContent"> -->
 
-            <main id="visualizationPanel" class="visualization-container">
-                <i class="material-icons close-panel" onclick="closeVisualization()">close</i>
-                <h5>Network View</h5>
-                <div class="controls-panel">
-                    <button class="btn waves-effect waves-light" onclick="graph.zoomIn()">
-                        <i class="material-icons">zoom_in</i>
-                    </button>
-                    <button class="btn waves-effect waves-light" onclick="graph.zoomOut()">
-                        <i class="material-icons">zoom_out</i>
-                    </button>
-                    <button class="btn waves-effect waves-light" onclick="graph.resetZoom()">
-                        <i class="material-icons">center_focus_strong</i>
-                    </button>
-                    <button class="btn waves-effect waves-light" onclick="graph.fitToView()">
-                        <i class="material-icons">fit_screen</i>
-                    </button>
+    <main id="visualizationPanel" class="visualization-container">
+        <i class="material-icons close-panel" onclick="closeVisualization()">close</i>
+        <h5 style="position: absolute;">Network View</h5>
+        <div class="controls-panel">
+            <button class="btn waves-effect waves-light" onclick="graph.zoomIn()">
+                <i class="material-icons">zoom_in</i>
+            </button>
+            <button class="btn waves-effect waves-light" onclick="graph.zoomOut()">
+                <i class="material-icons">zoom_out</i>
+            </button>
+            <button class="btn waves-effect waves-light" onclick="graph.resetZoom()">
+                <i class="material-icons">center_focus_strong</i>
+            </button>
+            <button class="btn waves-effect waves-light" onclick="graph.fitToView()">
+                <i class="material-icons">fit_screen</i>
+            </button>
+        </div>
+
+        <div id="network-container">
+            <svg width="100%" height="100%"></svg>
+        </div>
+
+        <div class="custom-tooltip"></div>
+        <div class="details-sidebar">
+            <div class="details-section network-stats">
+                <h6>Network Statistics</h6>
+                <div class="stat-item">
+                    <span>Nodes:</span>
+                    <span id="nodeCount">0</span>
                 </div>
-
-                <div id="network-container">
-                    <svg width="100%" height="100%"></svg>
+                <div class="stat-item">
+                    <span>Relationships:</span>
+                    <span id="edgeCount">0</span>
                 </div>
+            </div>
 
-                <div class="custom-tooltip"></div>
-
-                <div class="details-panel">
-                    <div class="details-header">
-                        <h5>Node Details</h5>
-                        <button class="btn-flat waves-effect waves-light" onclick="hideDetails()">
-                            <i class="material-icons">close</i>
-                        </button>
+            <div class="details-section">
+                <h6>Node Types</h6>
+                <div class="legend-container">
+                    <div class="legend-item">
+                        <div class="legend-shape">
+                            <div class="shape-circle"></div>
+                        </div>
+                        <div class="legend-color" style="background: #ff7675;"></div>
+                        <span>Drug</span>
                     </div>
-                    <div id="details-content"></div>
+
+                    <div class="legend-item">
+                        <div class="legend-shape">
+                            <div class="shape-triangle"></div>
+                        </div>
+                        <div class="legend-color" style="background: #6c5ce7;"></div>
+                        <span>Disease</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-shape">
+                            <div class="shape-square"></div>
+                        </div>
+                        <div class="legend-color" style="background: #00b894;"></div>
+                        <span>Gene</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-shape">
+                            <div class="shape-diamond"></div>
+                        </div>
+                        <div class="legend-color" style="background: #4834d4;"></div>
+                        <span>Protein</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-shape">
+                            <div class="shape-circle"></div>
+                        </div>
+                        <div class="legend-color" style="background: #e17055;"></div>
+                        <span>Metabolite</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-shape">
+                            <div class="shape-diamond"></div>
+                        </div>
+                        <div class="legend-color" style="background: #fdcb6e;"></div>
+                        <span>Pathway</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-shape">
+                            <div class="shape-triangle"></div>
+                        </div>
+                        <div class="legend-color" style="background: #00cec9;"></div>
+                        <span>Cell</span>
+                    </div>
                 </div>
-            </main>
-            <!-- <div class="network-stats">
+            </div>
+
+            <div class="details-section">
+                <h6>Nodes</h6>
+                <ul id="nodeList" class="node-list">
+                    <!-- Nodes will be populated here -->
+                </ul>
+            </div>
+
+            <div class="details-section">
+                <h6>Relationships</h6>
+                <ul id="relationshipList" class="relationship-list">
+                    <!-- Relationships will be populated here -->
+                </ul>
+            </div>
+        </div>
+        <div class="details-panel">
+            <div class="details-header">
+                <h5>Node Details</h5>
+                <button class="btn-flat waves-effect waves-light" onclick="hideDetails()">
+                    <i class="material-icons">close</i>
+                </button>
+            </div>
+            <div id="details-content"></div>
+        </div>
+    </main>
+    <!-- <div class="network-stats">
                 <div>Nodes: <span id="nodeCount">0</span></div>
                 <div>Edges: <span id="edgeCount">0</span></div>
                 <div>Connected Components: <span id="componentCount">0</span></div>
             </div> -->
-        <!-- </div>
+    <!-- </div>
     </div> -->
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
@@ -1215,12 +1561,97 @@
                     // Update network stats
                     // document.getElementById('nodeCount').textContent = data.nodes.length;
                     // document.getElementById('edgeCount').textContent = data.links.length;
+                    return data;
                 })
                 .catch(error => {
                     console.error('Error fetching network data:', error);
+                    const nodeList = document.getElementById('nodeList');
+                    const relationshipList = document.getElementById('relationshipList');
+                    nodeList.innerHTML = '<li class="node-item">Error loading network data</li>';
+                    relationshipList.innerHTML = '<li class="relationship-item">Error loading network data</li>';
                 });
         }
 
+        function getNodeColor(type) {
+            const colors = {
+                'Drug': '#ff7675',
+                'Protein': '#4834d4',
+                'Disease': '#6c5ce7',
+                'Gene': '#00b894',
+                'Metabolite': '#e17055',
+                'Pathway': '#fdcb6e',
+                'Default': '#95a5a6'
+            };
+            return colors[type] || colors.Default;
+        }
+
+        function updateNetworkDetails(data) {
+            // Update statistics
+            document.getElementById('nodeCount').textContent = data.nodes.length;
+            document.getElementById('edgeCount').textContent = data.links.length;
+
+            // Update node list with pagination
+            const nodeList = document.getElementById('nodeList');
+            nodeList.innerHTML = data.nodes.map(node => `
+        <li class="node-item">
+            <span class="node-type-badge" style="background: ${getNodeColor(node.type)}">
+                ${node.type}
+            </span>
+            ${node.name} - Source: ${node.data_source} ( <a href="${node.publication}" target="_blank">Link</a> )
+        </li>
+    `).join('');
+
+            // Update relationship list with pagination
+            const relationshipList = document.getElementById('relationshipList');
+            //maintain a set of unique relationships
+            const uniqueRelationships = new Set();
+            relationshipList.innerHTML = data.links.map(link => {
+                const sourceName = typeof link.source === 'object' ? link.source.name :
+                    data.nodes.find(n => n.id === link.source)?.name;
+                const targetName = typeof link.target === 'object' ? link.target.name :
+                    data.nodes.find(n => n.id === link.target)?.name;
+
+                const relationship = `${sourceName} - ${link.type} - ${targetName}`;
+                if (uniqueRelationships.has(relationship)) {
+                    return '';
+                }
+                uniqueRelationships.add(relationship);
+
+                return `
+            <li class="relationship-net-item">
+                <span class="relationship-net-type">${link.type}</span>
+                <span class="relationship-net-source">Source: ${sourceName}</span>
+                <span class="relationship-net-target">Target: ${targetName}</span>
+            </li>
+        `;
+            }).join('');
+        }
+        //     relationshipList.innerHTML = data.links.map(link => {
+        //         const sourceName = typeof link.source === 'object' ? link.source.name :
+        //             data.nodes.find(n => n.id === link.source)?.name;
+        //         const targetName = typeof link.target === 'object' ? link.target.name :
+        //             data.nodes.find(n => n.id === link.target)?.name;
+
+        //         return `
+        //     <li class="relationship-item">
+        //         <span class="relationship-type">${link.type}</span>
+
+        //     </li>
+        // `;
+        //     }).join('');
+        // }
+
+        function runSampleSearch() {
+            // Set the search input value to "Clonidine"
+            const searchInput = document.getElementById('mainSearch');
+            searchInput.value = 'Clonidine';
+
+            // Perform the search
+            performSearch();
+
+            // Optional: Scroll to results
+            document.querySelector('.results-panel')?.scrollIntoView({ behavior: 'smooth' });
+        }
 
     </script>
 

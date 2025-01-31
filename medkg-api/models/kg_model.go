@@ -9,6 +9,8 @@ type Node struct {
 	Type        string                 `json:"type"`
 	Score       float64                `json:"score"`
 	Properties  map[string]interface{} `json:"properties"`
+	DataSource  string                 `json:"data_source"`
+	Publication string                 `json:"publication"`
 }
 
 type Relationship struct {

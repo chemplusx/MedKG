@@ -561,7 +561,7 @@ func GetNetworkGraphForIdAndDepth(driver neo4j.DriverWithContext, id string, nam
 					} else {
 						id1 = node.ElementId
 					}
-
+					dataSource, publication := checkForSource(node.Props, node.Labels[0])
 					source := models.Node{
 						ID:          node.ElementId,
 						NodeId:      id1,
@@ -570,6 +570,8 @@ func GetNetworkGraphForIdAndDepth(driver neo4j.DriverWithContext, id string, nam
 						DisplayName: nme,
 						NodeType:    node.Labels[0],
 						Type:        node.Labels[0],
+						DataSource:  dataSource,
+						Publication: publication,
 					}
 
 					if _, ok := exists[source.ID]; !ok {
