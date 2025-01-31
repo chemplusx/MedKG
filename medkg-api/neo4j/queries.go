@@ -227,7 +227,7 @@ func SearchNodesInGraph(driver neo4j.DriverWithContext, term string, limit strin
 		func(tx neo4j.ManagedTransaction) (interface{}, error) {
 
 			labels := "Disease|Tissue|Biological_process|Chromosome|Gene|Transcript|Protein|Amino_acid_sequence|Peptide|Modified_protein|Drug|Functional_region|Metabolite|Protein_structure|Pathway|Biological_sample"
-			records, err := tx.Run(ctx, "CALL db.index.fulltext.queryNodes('allIndex', $term) YIELD node, score MATCH (node:"+labels+") RETURN elementId(node), labels(node), node {id: node.id, name: node.name, description: node.description, function: node.specific_function, score: score } AS node LIMIT toInteger($limit)", map[string]interface{}{"term": term, "limit": limit})
+			records, err := tx.Run(ctx, "CALL db.index.fulltext.queryNodes('allIndex', $term) YIELD node, score MATCH (node:"+labels+") RETURN elementId(node), labels(node), node {.*, embedding:null} AS node LIMIT toInteger($limit)", map[string]interface{}{"term": term, "limit": limit})
 			if err != nil {
 				return nil, err
 			}
@@ -250,17 +250,19 @@ func SearchNodesInGraph(driver neo4j.DriverWithContext, term string, limit strin
 				// 	id = node["id"].(string)
 				// }
 				nodeIdMap[id] = true
+				dataSource, publication := checkForSource(node, nme)
 				nodes = append(nodes, models.Node{
-					ID:         id,
-					Label:      nme,
-					Type:       types[0].(string),
-					Score:      node["score"].(float64),
-					Properties: node,
+					ID:          id,
+					Label:       nme,
+					Type:        types[0].(string),
+					Properties:  node,
+					DataSource:  dataSource,
+					Publication: publication,
 				})
 			}
 
 			labelsPartial := "Disease|Tissue|Biological_process|Chromosome|Gene|Transcript|Protein|Amino_acid_sequence|Peptide|Modified_protein|Drug|Functional_region|Metabolite|Protein_structure|Pathway|Biological_sample"
-			recordsPartial, err := tx.Run(ctx, "CALL db.index.fulltext.queryNodes('all_index_fulltext', $term) YIELD node, score MATCH (node:"+labelsPartial+") RETURN elementId(node), labels(node), node {id: node.id, name: node.name, description: node.description, function: node.specific_function, score: score } AS node LIMIT toInteger($limit)", map[string]interface{}{"term": term, "limit": limit})
+			recordsPartial, err := tx.Run(ctx, "CALL db.index.fulltext.queryNodes('all_index_fulltext', $term) YIELD node, score MATCH (node:"+labelsPartial+") RETURN elementId(node), labels(node), node {.*, embedding:null  } AS node LIMIT toInteger($limit)", map[string]interface{}{"term": term, "limit": limit})
 			if err != nil {
 				return nil, err
 			}
@@ -282,12 +284,14 @@ func SearchNodesInGraph(driver neo4j.DriverWithContext, term string, limit strin
 				// 	id = node["id"].(string)
 				// }
 				if _, ok := nodeIdMap[id]; !ok {
+					dataSource, publication := checkForSource(node, nme)
 					nodesPartial = append(nodesPartial, models.Node{
-						ID:         id,
-						Label:      nme,
-						Type:       types[0].(string),
-						Score:      node["score"].(float64),
-						Properties: node,
+						ID:          id,
+						Label:       nme,
+						Type:        types[0].(string),
+						Properties:  node,
+						DataSource:  dataSource,
+						Publication: publication,
 					})
 				}
 			}
@@ -512,7 +516,8 @@ func GetNetworkGraphForIdAndDepth(driver neo4j.DriverWithContext, id string, nam
 			if neighbour != "" {
 				labels = neighbour
 			}
-			query := "MATCH p=(node:" + typeN + ")-[r*" + strconv.Itoa(depth) + "]-(m:" + labels + ") where elementId(node)='" + id + "'"
+			labels = ":" + labels
+			query := "MATCH p=(node:" + typeN + ")-[r*" + strconv.Itoa(depth) + "]-(m" + labels + ") where elementId(node)='" + id + "'"
 
 			if name != "" {
 				query += " and node.name='" + name + "'"
@@ -706,7 +711,13 @@ func SearchForPath(driver neo4j.DriverWithContext, request models.PathSearchRequ
 			if request.Depth == "-1" {
 				request.Depth = "10"
 			}
-			query := "MATCH (start) WHERE elementId(start) = \"" + request.SourceNodeID + "\" CALL { WITH start MATCH (end) where elementId(end)=\"" + request.TargetNodeID + "\" and end <> start MATCH path = shortestPath((start)-[*.." + request.Depth + "]-(end)) RETURN path, length(path) AS path_length LIMIT 10 } RETURN path, path_length LIMIT 10"
+			var query string
+			if request.TargetNodeID == "" {
+				query = "MATCH (start) WHERE elementId(start) = \"" + request.SourceNodeID + "\" CALL { WITH start MATCH (end) where labels(end)[0]=\"" + request.TargetType + "\" and end <> start MATCH path = shortestPath((start)-[*.." + request.Depth + "]-(end)) RETURN path, length(path) AS path_length LIMIT 10 } RETURN path, path_length LIMIT 10"
+			} else {
+				query = "MATCH (start) WHERE elementId(start) = \"" + request.SourceNodeID + "\" CALL { WITH start MATCH (end) where elementId(end)=\"" + request.TargetNodeID + "\" and end <> start MATCH path = shortestPath((start)-[*.." + request.Depth + "]-(end)) RETURN path, length(path) AS path_length LIMIT 10 } RETURN path, path_length LIMIT 10"
+			}
+			log.Println(query)
 			records, err := tx.Run(ctx, query, map[string]interface{}{"max_length": 5, "start_id": request.SourceNodeID})
 			if err != nil {
 				return nil, err

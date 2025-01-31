@@ -217,6 +217,7 @@ func PathSearchHandler(client neo4j.DriverWithContext) gin.HandlerFunc {
 
 		reqBody := models.PathSearchRequest{}
 		if err := c.BindJSON(&reqBody); err != nil {
+			log.Println(err)
 			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
 			return
 		}
