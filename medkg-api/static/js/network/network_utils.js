@@ -21,7 +21,9 @@ const STYLES = {
             Gene: '#00b894',
             Metabolite: '#e17055',
             Pathway: '#fdcb6e',
-            Default: '#95a5a6'
+            Default: '#95a5a6',
+            Transcript: '#e84393',
+            Peptide: '#fbc531'
         }
     },
     nodes: {
@@ -224,6 +226,14 @@ function initD3Graph() {
                 return d3.symbol().type(d3.symbolTriangle).size(size)();
             case 'Gene':
                 return d3.symbol().type(d3.symbolSquare).size(size)();
+            case 'Metabolite':
+                return d3.symbol().type(d3.symbolWye).size(size)();
+            case 'Pathway':
+                return d3.symbol().type(d3.symbolStar).size(size)();
+            case 'Peptide':
+                return d3.symbol().type(d3.symbolCross).size(size)();
+            case 'Transcript':
+                return d3.symbol().type(d3.symbolCross).size(size)();
             default:
                 return d3.symbol().type(d3.symbolCircle).size(size)();
         }
@@ -313,13 +323,13 @@ function initD3Graph() {
     function handleContextMenu(event, d) {
         event.preventDefault();
         event.stopPropagation();
-    
+
         // Remove any existing context menus
         document.querySelectorAll('.context-menu').forEach(menu => menu.remove());
-    
+
         const contextMenu = document.createElement('div');
         contextMenu.className = 'context-menu';
-        
+
         // Create menu structure
         const menuItems = [
             { action: 'expand', icon: 'add_circle_outline', text: 'Expand Node' },
@@ -328,33 +338,33 @@ function initD3Graph() {
             { action: 'path', icon: 'timeline', text: 'Find Path' },
             { action: 'newGraph', icon: 'open_in_new', text: 'View in New Graph' }
         ];
-    
+
         const ul = document.createElement('ul');
         ul.className = 'menu-items';
-    
+
         menuItems.forEach(item => {
             const li = document.createElement('li');
             li.innerHTML = `
                 <i class="material-icons">${item.icon}</i>
                 <span>${item.text}</span>
             `;
-            
+
             // Add event listener directly to the element
             li.addEventListener('click', () => {
                 handleContextMenuAction(item.action, d.id);
                 contextMenu.remove(); // Close menu after action
             });
-            
+
             ul.appendChild(li);
         });
-    
+
         contextMenu.appendChild(ul);
-    
+
         // Position the menu
         contextMenu.style.left = `${event.pageX}px`;
         contextMenu.style.top = `${event.pageY}px`;
         document.body.appendChild(contextMenu);
-    
+
         // Add click outside listener
         setTimeout(() => {
             window.addEventListener('click', function closeMenu(e) {
@@ -364,14 +374,14 @@ function initD3Graph() {
                 }
             });
         }, 0);
-    
+
         // Close menu if another one is opened
         window.addEventListener('contextmenu', () => {
             contextMenu.remove();
         });
     }
 
-    
+
 
     // Example implementation of the actions
     function expandNode(nodeId) {
@@ -393,8 +403,8 @@ function initD3Graph() {
         const globalNetworkValuesCopy = globalNetworkValues;
 
         const selectedEntityTypes = Array.from(document.querySelectorAll('#labelFilterSection input[type="checkbox"]'))
-        .filter(cb => cb.checked)
-        .map(cb => cb.value);
+            .filter(cb => cb.checked)
+            .map(cb => cb.value);
 
         // Get selected relationship types
         const selectedRelationTypes = Array.from(document.querySelectorAll('#relationFilterSection input[type="checkbox"]'))
@@ -407,10 +417,12 @@ function initD3Graph() {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ id: nodeId,
+            body: JSON.stringify({
+                id: nodeId,
                 name: node.name,
                 type: node.type,
-                neighbour: selectedEntityTypes.join(","), limit:10 })
+                neighbour: selectedEntityTypes.join(","), limit: 10
+            })
         })
             .then(response => {
                 if (!response.ok) {
@@ -421,7 +433,7 @@ function initD3Graph() {
             .then(data => {
                 // now append the data to the globalNetworkValues, 
                 globalNetworkValuesCopy.nodes = globalNetworkValuesCopy.nodes.concat(data.nodes);
-                globalNetworkValuesCopy.links = globalNetworkValuesCopy.links.concat(data.links); 
+                globalNetworkValuesCopy.links = globalNetworkValuesCopy.links.concat(data.links);
 
                 // remove duplicate nodes and relationshipts
                 globalNetworkValuesCopy.nodes = globalNetworkValuesCopy.nodes.filter((node, index, self) =>
@@ -455,12 +467,13 @@ function initD3Graph() {
 
                 // Update the graph with filtered data
                 graph.updateGraph({
-                    nodes: [], links: []}); // Clear the graph first
+                    nodes: [], links: []
+                }); // Clear the graph first
                 graph.updateGraph({
                     nodes: filteredNodes,
                     links: filteredLinks
                 });
-                    //replace the globalNetworkValues with the updated one
+                //replace the globalNetworkValues with the updated one
                 globalNetworkValues = globalNetworkValuesCopy;
             })
             .catch(error => {
@@ -543,7 +556,7 @@ function initD3Graph() {
     function showPathFindingModal(sourceNodeId) {
         const sourceNode = simulation.nodes().find(n => n.id === sourceNodeId);
         if (!sourceNode) return;
-    
+
         const modalContent = `
             <div class="modal-content">
                 <h4>Find Path</h4>
@@ -577,18 +590,18 @@ function initD3Graph() {
                 </button>
             </div>
         `;
-    
+
         const modalElement = document.createElement('div');
         modalElement.className = 'modal';
         modalElement.innerHTML = modalContent;
         document.body.appendChild(modalElement);
-    
+
         const modal = M.Modal.init(modalElement, {
             onOpenEnd: () => {
                 // Initialize the select dropdown
                 const selects = modalElement.querySelectorAll('select');
                 M.FormSelect.init(selects);
-                
+
                 // Add click handler for the Find Path button
                 document.getElementById('findPathButton').addEventListener('click', () => {
                     findPath(sourceNodeId);
@@ -598,7 +611,7 @@ function initD3Graph() {
             onCloseEnd: () => modalElement.remove(),
             dismissible: true
         });
-    
+
         modal.open();
     }
 
@@ -618,18 +631,66 @@ function initD3Graph() {
     }
 
     function showNodeModal(node) {
-        const modalContent = `
+        getNodeDetails(node.id).then(nodeData => {
+            const modalContent = `
+        <style>
+            .modal-content {
+                padding: 20px;
+                background: white;
+                border-radius: 4px;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                max-width: 600px;
+                margin: 20px auto;
+            }
+
+            .modal-header {
+                margin-bottom: 15px;
+                position: relative;
+            }
+
+            .modal-close {
+                cursor: pointer;
+                position: absolute;
+                right: 0;
+                top: 0;
+            }
+
+            .modal-body {
+                margin: 15px 0;
+            }
+
+            pre {
+                background: #f8f8f8;
+                padding: 10px;
+                border-radius: 3px;
+                overflow: auto;
+            }
+
+            .modal-footer {
+                text-align: right;
+                margin-top: 15px;
+            }
+
+            button {
+                padding: 5px 15px;
+                cursor: pointer;
+            }
+        </style>
             <div class="modal-content">
                 <div class="modal-header">
                     <h4>${node.name}</h4>
-                    <i class="material-icons modal-close" style="cursor: pointer; position: absolute; right: 10px; top: 10px;">close</i>
+                    <i class="material-icons modal-close" style="cursor: pointer; position: absolute; right: 10px; top: 10px;"></i>
                 </div>
-                <div class="entity-type ${node.type.toLowerCase()}">${node.type}</div>
+                <div class="entity-type">
+                    <span style="padding:2px;" class="entity-${node.type.toLowerCase()}">
+                    ${node.type}
+                    </span>
+                </div>
                 <div class="modal-body">
-                    <p><strong>ID:</strong> ${node.id}</p>
-                    <p><strong>Type:</strong> ${node.type}</p>
-                    ${node.description ? `<p><strong>Description:</strong> ${node.description}</p>` : ''}
-                    
+                    <div id="nodeDetails">
+                        <h5>Node Details</h5>
+                        <pre id="jsonContainer">${JSON.stringify(nodeData, null, 2)}</pre>
+                    </div>
                     <div class="relationships-section">
                         <h5>Relationships</h5>
                         <div id="nodeRelationships">
@@ -637,38 +698,62 @@ function initD3Graph() {
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button class="btn-flat waves-effect waves-light modal-close">Close</button>
-                    <button class="waves-effect waves-light btn" onclick="expandNode('${node.id}')">
-                        Expand Node
-                    </button>
-                </div>
+                
             </div>
         `;
 
-        const modalElement = document.createElement('div');
-        modalElement.className = 'modal';
-        modalElement.innerHTML = modalContent;
-        document.body.appendChild(modalElement);
+            // <p><strong>ID:</strong> ${node.id}</p>
+            // <p><strong>Type:</strong> ${node.type}</p>
+            // ${node.description ? `<p><strong>Description:</strong> ${node.description}</p>` : ''}
 
-        // Initialize modal with specific options
-        const modal = M.Modal.init(modalElement, {
-            onOpenEnd: () => loadNodeRelationships(node.id),
-            onCloseEnd: () => {
-                modalElement.remove();
-                // Clean up any event listeners if needed
-            },
-            dismissible: true // Allows clicking outside to close
+            // <div class="relationships-section">
+            //     <h5>Relationships</h5>
+            //     <div id="nodeRelationships">
+            //         Loading relationships...
+            //     </div>
+            // </div>
+
+            const modalElement = document.createElement('div');
+            modalElement.className = 'modal';
+            modalElement.innerHTML = modalContent;
+            document.body.appendChild(modalElement);
+
+            // Initialize modal with specific options
+            const modal = M.Modal.init(modalElement, {
+                onOpenEnd: () => {
+                    loadNodeRelationships(node.id);
+                },
+                onCloseEnd: () => {
+                    modalElement.remove();
+                    // Clean up any event listeners if needed
+                },
+                dismissible: true // Allows clicking outside to close
+            });
+
+            modal.open();
         });
-
-        modal.open();
     }
+
+    function getNodeDetails(nodeId) {
+        // Fetch node details for the given ID
+        return fetch(`api/node-details?id=${nodeId}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to fetch node details');
+                }
+                return response.json();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+
 
     function loadNodeRelationships(nodeId) {
         // Fetch relationships for the given node
         // fetch from globalNetworkValues
         const relationships = globalNetworkValues["links"]
-            .filter(link => link.source.id === nodeId || link.target.id === nodeId)
+            .filter(link => link.target.id === nodeId)
             .map(link => {
                 const source = link.source.id === nodeId ? link.target : link.source;
                 return {
@@ -762,13 +847,14 @@ function initD3Graph() {
 function findPath(sourceNodeId) {
     const targetType = document.getElementById('targetNodeType').value;
     const maxDepth = parseInt(document.getElementById('maxDepth').value);
-    
+
     console.log('Finding path:', {
         sourceNodeId,
         targetType,
         maxDepth
     });
-    
+
+    showLoading();
     fetch('api/path-search', {
         method: 'POST',
         headers: {
@@ -781,6 +867,7 @@ function findPath(sourceNodeId) {
             endNode: ""
         })
     }).then(response => {
+        hideLoading();
         if (!response.ok) {
             throw new Error('Failed to find path');
         }
@@ -816,10 +903,10 @@ function findPath(sourceNodeId) {
         paths.forEach(path => {
             nodes.push(...path.nodes);
             links.push(...path.relationships);
-            
-            
+
+
         });
-        
+
 
         // remove duplicate nodes and relationshipts
         nodes = nodes.filter((node, index, self) =>
