@@ -128,13 +128,13 @@ function applyFilters() {
         relationshipTypes: Array.from(document.querySelectorAll('#relationFilterSection input[type="checkbox"]'))
             .filter(cb => cb.checked)
             .map(cb => cb.value),
-        evidenceLevel: Array.from(document.querySelectorAll('input[type="checkbox"][value^="experimental"], input[type="checkbox"][value^="clinical"], input[type="checkbox"][value^="computational"]'))
-            .filter(cb => cb.checked)
-            .map(cb => cb.value),
-        yearRange: {
-            from: document.getElementById('yearFrom').value,
-            to: document.getElementById('yearTo').value
-        }
+        // evidenceLevel: Array.from(document.querySelectorAll('input[type="checkbox"][value^="experimental"], input[type="checkbox"][value^="clinical"], input[type="checkbox"][value^="computational"]'))
+        //     .filter(cb => cb.checked)
+        //     .map(cb => cb.value),
+        // yearRange: {
+        //     from: document.getElementById('yearFrom').value,
+        //     to: document.getElementById('yearTo').value
+        // }
     };
 
     // Filter the results
@@ -169,27 +169,27 @@ function filterResults(results, filters) {
         }
 
         // Evidence Level filter
-        if (filters.evidenceLevel.length > 0 && result.evidence) {
-            const hasMatchingEvidence = result.evidence.some(ev =>
-                filters.evidenceLevel.includes(ev.type.toLowerCase())
-            );
-            if (!hasMatchingEvidence) {
-                return false;
-            }
-        }
+        // if (filters.evidenceLevel.length > 0 && result.evidence) {
+        //     const hasMatchingEvidence = result.evidence.some(ev =>
+        //         filters.evidenceLevel.includes(ev.type.toLowerCase())
+        //     );
+        //     if (!hasMatchingEvidence) {
+        //         return false;
+        //     }
+        // }
 
-        // Year Range filter
-        if (filters.yearRange.from || filters.yearRange.to) {
-            const year = result.year || (result.properties && result.properties.year);
-            if (year) {
-                if (filters.yearRange.from && year < parseInt(filters.yearRange.from)) {
-                    return false;
-                }
-                if (filters.yearRange.to && year > parseInt(filters.yearRange.to)) {
-                    return false;
-                }
-            }
-        }
+        // // Year Range filter
+        // if (filters.yearRange.from || filters.yearRange.to) {
+        //     const year = result.year || (result.properties && result.properties.year);
+        //     if (year) {
+        //         if (filters.yearRange.from && year < parseInt(filters.yearRange.from)) {
+        //             return false;
+        //         }
+        //         if (filters.yearRange.to && year > parseInt(filters.yearRange.to)) {
+        //             return false;
+        //         }
+        //     }
+        // }
 
         return true;
     });
@@ -294,8 +294,8 @@ function initializeFilters() {
     });
 
     // Add input event listeners to year range inputs
-    document.getElementById('yearFrom').addEventListener('change', applyFilters);
-    document.getElementById('yearTo').addEventListener('change', applyFilters);
+    // document.getElementById('yearFrom').addEventListener('change', applyFilters);
+    // document.getElementById('yearTo').addEventListener('change', applyFilters);
 
     // Initialize any Materialize components
     const selects = document.querySelectorAll('select');
@@ -551,7 +551,7 @@ function showEntityModal(entityData, event) {
     // Header
     const header = document.createElement('div');
     header.className = 'modal-header';
-    header.innerHTML = `<h4>${entityData.Props.name}</h4>`;
+    header.innerHTML = `<h4>${entityData.Props.name || entityData.Labels[0] + " : " + entityData.Props.id}</h4>`;
     
     // Content
     const content = document.createElement('div');
@@ -624,9 +624,9 @@ function exportEntity(entityData) {
 // Function to process relationships data
 function processRelationships(data) {
     return data.map(rel => ({
-        sourceEntity: rel.source.Props.name || 'Unknown Source',
+        sourceEntity: rel.source.Props.name  || rel.source.Labels[0] + " (ID: " + rel.source.Props.id + ")"  || 'Unknown Source',
         relationType: rel.label.replace(/_/g, ' ').toLowerCase(),
-        targetEntity: rel.target.Props.name || 'Unknown Target',
+        targetEntity: rel.target.Props.name || rel.target.Labels[0] + " (ID: " + rel.target.Props.id + ")" || 'Unknown Target',
         sourceType: rel.source.Labels[0],
         targetType: rel.target.Labels[0],
         sourceDetails: rel.source,
@@ -641,7 +641,8 @@ function getEntityTypeStyle(type) {
         'Disease': 'entity-disease',
         'Protein': 'entity-protein',
         'Gene': 'entity-gene',
-        'Compound': 'entity-drug' // Treating Compound same as Drug for styling
+        'Compound': 'entity-drug', // Treating Compound same as Drug for styling,
+        'Peptide': 'entity-peptide',
     };
     return typeStyles[type] || '';
 }

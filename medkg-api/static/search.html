@@ -280,6 +280,7 @@
 
         .entity-pathway {
             background-color: #fdcb6e;
+            color: #333;
         }
 
         .entity-cell {
@@ -288,14 +289,17 @@
 
         .entity-tissue {
             background-color: #fab1a0;
+            color: #333;
         }
 
         .entity-peptide {
             background-color: #55efc4;
+            color: #333;
         }
 
         .entity-transcript {
             background-color: #ffeaa7;
+            color: #333;
         }
 
         .collapsible-header {
@@ -424,7 +428,7 @@
             top: 64px;
             width: 90%;
             /* opacity: 80%; */
-            height: calc(100vh - 64px);
+            height: calc(100vh - 124px);
             background: white;
             box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
             transition: right 0.3s ease;
@@ -434,6 +438,7 @@
 
         #visualizationPanel.open {
             right: 5%;
+            margin-bottom: 80px;
         }
 
         .visualization-container {
@@ -515,6 +520,28 @@
             width: 16px;
             height: 16px;
             background: #ccc;
+        }
+
+        .shape-cross {
+            width: 16px;
+            height: 16px;
+            background: #ccc;
+            position: relative;
+            clip-path: polygon(25% 0%, 75% 0%, 75% 25%, 100% 25%, 100% 75%, 75% 75%, 75% 100%, 25% 100%, 25% 75%, 0% 75%, 0% 25%, 25% 25%);
+        }
+
+        .shape-wye {
+            width: 16px;
+            height: 16px;
+            background: #ccc;
+            clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0 38%);
+        }
+
+        .shape-star {
+            width: 16px;
+            height: 16px;
+            background: #ccc;
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
         }
 
         .node-list,
@@ -714,7 +741,7 @@
         }
 
         .relationship-net-type {
-            color: #666;
+            
             font-size: 0.9em;
             margin: 0 23px 0 50px;
             min-width: 150px;
@@ -723,7 +750,16 @@
 
         .relationship-net-source {
             display: block;
+            font-size: small;
+            color: #666;
         }
+
+        .relationship-net-target {
+            display: block;
+            font-size: small;
+            color: #666;
+        }
+
 
 
 
@@ -1019,13 +1055,186 @@
         .collapsible-list.expanded .fade-bottom {
             opacity: 0;
         }
+
+
+
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .loading-overlay.active {
+            display: flex;
+        }
+
+        .loading-content {
+            text-align: center;
+        }
+
+        .loading-spinner {
+            width: 100px;
+            height: 100px;
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .loading-spinner::before,
+        .loading-spinner::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 4px solid transparent;
+            border-top-color: #3498db;
+            animation: spin 1.5s linear infinite;
+        }
+
+        .loading-spinner::before {
+            border-top-color: #3498db;
+            animation-delay: 0s;
+        }
+
+        .loading-spinner::after {
+            width: 60px;
+            height: 60px;
+            border-top-color: #2c3e50;
+            animation-delay: 0.3s;
+        }
+
+        .loading-nodes {
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .loading-node {
+            width: 12px;
+            height: 12px;
+            background-color: #3498db;
+            border-radius: 50%;
+            margin: 0 4px;
+            animation: pulse 1s ease-in-out infinite;
+        }
+
+        .loading-node:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .loading-node:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: translate(-50%, -50%) rotate(0deg);
+            }
+
+            100% {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 0.5;
+            }
+
+            50% {
+                transform: scale(1.3);
+                opacity: 1;
+            }
+        }
+
+        .loading-text {
+            color: #2c3e50;
+            font-size: 18px;
+            margin-top: 20px;
+        }
+
+
+        .footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background-color: var(--primary-color);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            font-size: 0.9rem;
+            z-index: 1000;
+            box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+        }
+
+        .footer-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .footer-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .footer a {
+            color: #fff;
+            text-decoration: none;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+
+        .footer a:hover {
+            opacity: 1;
+        }
+
+        /* Adjust main content and visualization panel to account for footer */
+        .container {
+            margin-bottom: 80px;
+        }
+
+        #visualizationPanel {
+            bottom: 40px;
+        }
     </style>
 </head>
 
 <body>
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <div class="loading-nodes">
+                <div class="loading-node"></div>
+                <div class="loading-node"></div>
+                <div class="loading-node"></div>
+            </div>
+            <div class="loading-text">Building Network Graph...</div>
+        </div>
+    </div>
     <nav>
         <div class="nav-wrapper">
             <a href="#" class="brand-logo">MedKG</a>
+            <!-- Show info in small : Niper: Department of PharmacoInformatics-->
+            <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
             <ul id="nav-mobile" class="right">
                 <li><a href="#" onclick="toggleAdvancedSearch()"><i class="material-icons left">tune</i>Advanced
                         Search</a></li>
@@ -1130,7 +1339,7 @@
                     </label>
                 </div>
 
-                <div class="filter-section">
+                <!-- <div class="filter-section">
                     <h6>Publication Year</h6>
                     <div class="input-field">
                         <input type="number" id="yearFrom" placeholder="From">
@@ -1146,12 +1355,12 @@
                     <button class="btn waves-effect waves-light" onclick="clearFilters()">
                         Clear Filters<i class="material-icons right">clear_all</i>
                     </button>
-                </div>
+                </div> -->
             </div>
 
             <div class="results-panel">
                 <div class="search-stats">
-                    Found <span id="resultCount">0</span> results
+                    <span hidden>Found <span id="resultCount">0</span> results</span>
                     <div class="right">
                         Sort by:
                         <select id="sortOrder" onchange="updateSort()">
@@ -1166,7 +1375,7 @@
                     <!-- Results will be populated here -->
                 </div>
 
-                <div class="pagination">
+                <!-- <div class="pagination">
                     <button class="btn waves-effect waves-light" onclick="previousPage()" id="prevButton" disabled>
                         Previous
                     </button>
@@ -1174,7 +1383,7 @@
                     <button class="btn waves-effect waves-light" onclick="nextPage()" id="nextButton" disabled>
                         Next
                     </button>
-                </div>
+                </div> -->
             </div>
         </div>
     </div>
@@ -1220,6 +1429,25 @@
                 </div>
             </div>
 
+            <!-- case 'Drug':
+                return d3.symbol().type(d3.symbolCircle).size(size)();
+            case 'Protein':
+                return d3.symbol().type(d3.symbolDiamond).size(size)();
+            case 'Disease':
+                return d3.symbol().type(d3.symbolTriangle).size(size)();
+            case 'Gene':
+                return d3.symbol().type(d3.symbolSquare).size(size)();
+            case 'Metabolite':
+                return d3.symbol().type(d3.symbolWye).size(size)();
+            case 'Pathway':
+                return d3.symbol().type(d3.symbolStar).size(size)();
+            case 'Peptide':
+                return d3.symbol().type(d3.symbolCross).size(size)();
+            case 'Transcript':
+                return d3.symbol().type(d3.symbolCross).size(size)();
+            default:
+                return d3.symbol().type(d3.symbolCircle).size(size)(); -->
+
             <div class="details-section">
                 <h6>Node Types</h6>
                 <div class="legend-container">
@@ -1254,24 +1482,31 @@
                     </div>
                     <div class="legend-item">
                         <div class="legend-shape">
-                            <div class="shape-circle"></div>
-                        </div>
-                        <div class="legend-color" style="background: #e17055;"></div>
+                            <div class="shape-wye"></div>
+                        </div>  
+                        <div class="legend-color" style="background: #ff7675;"></div>
                         <span>Metabolite</span>
                     </div>
                     <div class="legend-item">
                         <div class="legend-shape">
-                            <div class="shape-diamond"></div>
+                            <div class="shape-star"></div>
                         </div>
-                        <div class="legend-color" style="background: #fdcb6e;"></div>
+                        <div class="legend-color" style="background: #6c5ce7;"></div>
                         <span>Pathway</span>
                     </div>
                     <div class="legend-item">
                         <div class="legend-shape">
-                            <div class="shape-triangle"></div>
+                            <div class="shape-cross"></div>
                         </div>
-                        <div class="legend-color" style="background: #00cec9;"></div>
-                        <span>Cell</span>
+                        <div class="legend-color" style="background: #00b894;"></div>
+                        <span>Peptide</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-shape">
+                            <div class="shape-cross"></div>
+                        </div>
+                        <div class="legend-color" style="background: #4834d4;"></div>
+                        <span>Transcript</span>
                     </div>
                 </div>
             </div>
@@ -1300,6 +1535,19 @@
             <div id="details-content"></div>
         </div>
     </main>
+
+    <footer class="footer">
+        <div class="footer-left">
+            <span>© 2024 MedKG</span>
+            <span> NIPER SAS Nagar</span>
+            <span>Department of PharmacoInformatics</span>
+            <!-- <a href="#">Documentation</a> -->
+        </div>
+        <!-- <div class="footer-right">
+            <a href="#">Terms</a>
+            <a href="#">Privacy</a>
+        </div> -->
+    </footer>
     <!-- <div class="network-stats">
                 <div>Nodes: <span id="nodeCount">0</span></div>
                 <div>Edges: <span id="edgeCount">0</span></div>
@@ -1336,15 +1584,24 @@
                 relationshipTypes: Array.from(document.querySelectorAll('input[type="checkbox"][value^="treats"], input[type="checkbox"][value^="interacts"], input[type="checkbox"][value^="expresses"]'))
                     .filter(cb => cb.checked)
                     .map(cb => cb.value),
-                evidenceLevel: Array.from(document.querySelectorAll('input[type="checkbox"][value^="experimental"], input[type="checkbox"][value^="clinical"], input[type="checkbox"][value^="computational"]'))
-                    .filter(cb => cb.checked)
-                    .map(cb => cb.value),
-                yearFrom: document.getElementById('yearFrom').value,
-                yearTo: document.getElementById('yearTo').value
+                // evidenceLevel: Array.from(document.querySelectorAll('input[type="checkbox"][value^="experimental"], input[type="checkbox"][value^="clinical"], input[type="checkbox"][value^="computational"]'))
+                //     .filter(cb => cb.checked)
+                //     .map(cb => cb.value),
+                // yearFrom: document.getElementById('yearFrom').value,
+                // yearTo: document.getElementById('yearTo').value
             };
 
             // performSearch(filters);
         });
+
+        function showLoading() {
+            document.getElementById('loadingOverlay').classList.add('active');
+        }
+
+        // Function to hide loading overlay
+        function hideLoading() {
+            document.getElementById('loadingOverlay').classList.remove('active');
+        }
 
         let allFilterableLabels = [];
 
@@ -1366,16 +1623,16 @@
             M.FormSelect.init(selects);
 
             // Set current year as default for yearTo if empty
-            const yearTo = document.getElementById('yearTo');
-            if (!yearTo.value) {
-                yearTo.value = new Date().getFullYear();
-            }
+            // const yearTo = document.getElementById('yearTo');
+            // if (!yearTo.value) {
+            //     yearTo.value = new Date().getFullYear();
+            // }
         });
 
         M.AutoInit();
 
         // Initialize search with default parameters
-        updateResults([]);
+        // updateResults([]);
 
         function showVisualization(id) {
             const panel = document.getElementById('visualizationPanel');
@@ -1636,6 +1893,8 @@
                 'Gene': '#00b894',
                 'Metabolite': '#e17055',
                 'Pathway': '#fdcb6e',
+                'Transcript': 'e84393',
+                'Peptide': '#fbc531',
                 'Default': '#95a5a6'
             };
             return colors[type] || colors.Default;
@@ -1712,11 +1971,11 @@
                 }
                 uniqueRelationships.add(relationship);
                 return `
-                    <li class="relationship-item">
-                        <span class="relationship-type">${link.type}</span>
-                        <br>
-                        ${sourceName} → ${targetName}
-                    </li>
+                    <li class="relationship-net-item">
+                    <span class="relationship-net-type">${link.type}</span>
+                    <span class="relationship-net-source">Source: ${sourceName}</span>
+                    <span class="relationship-net-target">Target: ${targetName}</span>
+                </li>
                 `;
             });
 
