@@ -73,7 +73,7 @@ function createResultCard(result) {
     const displayId = result.properties.id || result.id;
 
     // Get description from properties and truncate it
-    const description = result.properties.description || result.properties.function || 'No description available';
+    const description = result.properties.fullDesciption || result.properties.description || result.properties.function || 'No description available';
 
     card.innerHTML = `
         <div class="entity-type ${entityClass}">

@@ -208,6 +208,8 @@ function initD3Graph() {
 
         simulation.force("link").links(data.links);
         simulation.alpha(1).restart();
+
+        updateNetworkDetails(data);
     }
 
     // Helper functions
