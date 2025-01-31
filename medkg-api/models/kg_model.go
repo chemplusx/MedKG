@@ -43,6 +43,7 @@ type InteractionSearchRequest struct {
 type PathSearchRequest struct {
 	SourceNodeID string `json:"startNode"`
 	TargetNodeID string `json:"endNode"`
+	TargetType   string `json:"targetType"`
 	Depth        string `json:"maxHops"`
 }
 

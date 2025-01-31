@@ -527,7 +527,7 @@
         .node-item,
         .relationship-item {
             padding: 0.5rem;
-            border-bottom: 1px solid #eee;
+            /* border-bottom: 1px solid #eee; */
             font-size: 0.9rem;
         }
 
@@ -691,8 +691,8 @@
         .relationship-type {
             color: #666;
             font-size: 0.9em;
-            margin: 0 25px 0 60px;
-            min-width: 150px;
+            margin: 0 20px 0 45px;
+            min-width: 10px;
         }
 
 
@@ -962,6 +962,62 @@
             height: calc(100% - 60px);
             /* Account for header */
             position: relative;
+        }
+
+
+
+        .collapsible-list {
+            max-height: 300px;
+            overflow: hidden;
+            position: relative;
+            transition: max-height 0.3s ease-out;
+        }
+
+        .collapsible-list.expanded {
+            max-height: none;
+        }
+
+        .show-more-btnn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 8px;
+            margin-top: 10px;
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            color: #666;
+            transition: background-color 0.2s;
+        }
+
+        .show-more-btnn:hover {
+            background: #eeeeee;
+        }
+
+        .show-more-btnn i {
+            margin-left: 8px;
+            transition: transform 0.3s;
+        }
+
+        /* .show-more-btnn.expanded i {
+            transform: rotate(180deg);
+        } */
+
+        .fade-bottom {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 50px;
+            background: linear-gradient(to bottom, transparent, white);
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+
+        .collapsible-list.expanded .fade-bottom {
+            opacity: 0;
         }
     </style>
 </head>
@@ -1592,39 +1648,96 @@
 
             // Update node list with pagination
             const nodeList = document.getElementById('nodeList');
-            nodeList.innerHTML = data.nodes.map(node => `
-        <li class="node-item">
-            <span class="node-type-badge" style="background: ${getNodeColor(node.type)}">
-                ${node.type}
-            </span>
-            ${node.name} - Source: ${node.data_source} ( <a href="${node.publication}" target="_blank">Link</a> )
-        </li>
-    `).join('');
+            const allNodeItems = data.nodes.map(node => `
+                <li class="node-item">
+                    <span class="node-type-badge" style="background: ${getNodeColor(node.type)}">${node.type}</span>
+                    ${node.name}
+                </li>
+            `);
+
+            nodeList.innerHTML = `
+                <div class="collapsible-list" id="nodeListContent">
+                    ${allNodeItems.join('')}
+                    <div class="fade-bottom"></div>
+                </div>
+                <button class="show-more-btnn" onclick="toggleList('nodeListContent', this)">
+                    Show Full <i class="material-icons">expand_more</i>
+                </button>
+            `;
+
+            //         nodeList.innerHTML = data.nodes.map(node => `
+            //     <li class="node-item">
+            //         <span class="node-type-badge" style="background: ${getNodeColor(node.type)}">
+            //             ${node.type}
+            //         </span>
+            //         ${node.name} - Source: ${node.data_source} ( <a href="${node.publication}" target="_blank">Link</a> )
+            //     </li>
+            // `).join('');
 
             // Update relationship list with pagination
             const relationshipList = document.getElementById('relationshipList');
             //maintain a set of unique relationships
             const uniqueRelationships = new Set();
-            relationshipList.innerHTML = data.links.map(link => {
+            //     relationshipList.innerHTML = data.links.map(link => {
+            //         const sourceName = typeof link.source === 'object' ? link.source.name :
+            //             data.nodes.find(n => n.id === link.source)?.name;
+            //         const targetName = typeof link.target === 'object' ? link.target.name :
+            //             data.nodes.find(n => n.id === link.target)?.name;
+
+            //         const relationship = `${sourceName} - ${link.type} - ${targetName}`;
+            //         if (uniqueRelationships.has(relationship)) {
+            //             return '';
+            //         }
+            //         uniqueRelationships.add(relationship);
+
+            //         return `
+            //     <li class="relationship-net-item">
+            //         <span class="relationship-net-type">${link.type}</span>
+            //         <span class="relationship-net-source">Source: ${sourceName}</span>
+            //         <span class="relationship-net-target">Target: ${targetName}</span>
+            //     </li>
+            // `;
+            //     }).join('');
+
+
+
+            const allRelationshipItems = data.links.map(link => {
                 const sourceName = typeof link.source === 'object' ? link.source.name :
                     data.nodes.find(n => n.id === link.source)?.name;
                 const targetName = typeof link.target === 'object' ? link.target.name :
                     data.nodes.find(n => n.id === link.target)?.name;
-
                 const relationship = `${sourceName} - ${link.type} - ${targetName}`;
                 if (uniqueRelationships.has(relationship)) {
                     return '';
                 }
                 uniqueRelationships.add(relationship);
-
                 return `
-            <li class="relationship-net-item">
-                <span class="relationship-net-type">${link.type}</span>
-                <span class="relationship-net-source">Source: ${sourceName}</span>
-                <span class="relationship-net-target">Target: ${targetName}</span>
-            </li>
-        `;
-            }).join('');
+                    <li class="relationship-item">
+                        <span class="relationship-type">${link.type}</span>
+                        <br>
+                        ${sourceName} → ${targetName}
+                    </li>
+                `;
+            });
+
+            relationshipList.innerHTML = `
+                <div class="collapsible-list" id="relationshipListContent">
+                    ${allRelationshipItems.join('')}
+                    <div class="fade-bottom"></div>
+                </div>
+                <button class="show-more-btnn" onclick="toggleList('relationshipListContent', this)">
+                    Show More <i class="material-icons">expand_more</i>
+                </button>
+            `;
+        }
+
+        function toggleList(contentId, button) {
+            const content = document.getElementById(contentId);
+            content.classList.toggle('expanded');
+            button.classList.toggle('expanded');
+            button.innerHTML = content.classList.contains('expanded')
+                ? 'Show Less <i class="material-icons">expand_less</i>'
+                : 'Show More <i class="material-icons">expand_more</i>';
         }
         //     relationshipList.innerHTML = data.links.map(link => {
         //         const sourceName = typeof link.source === 'object' ? link.source.name :
@@ -1650,7 +1763,7 @@
             performSearch();
 
             // Optional: Scroll to results
-            document.querySelector('.results-panel')?.scrollIntoView({ behavior: 'smooth' });
+            // document.querySelector('.results-panel')?.scrollIntoView({ behavior: 'smooth' });
         }
 
     </script>

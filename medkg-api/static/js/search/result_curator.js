@@ -64,7 +64,8 @@ function createResultCard(result) {
 
     const entityType = result.type.toLowerCase();
     const entityClass = `entity-${entityType}`;
-    const score = result.score ? `${result.score.toFixed(2)}` : '';
+    const source = result.data_source || '';
+    const sourceLink = result.publication || '';
 
     // Get name from either label or properties.name
     const displayName = result.label || result.properties.name;
@@ -78,12 +79,12 @@ function createResultCard(result) {
     card.innerHTML = `
         <div class="entity-type ${entityClass}">
             ${result.type}
-            ${score ? `<span style="opacity: 0.8"> · Score: ${score}</span>` : ''}
         </div>
         <div class="result-title">${displayName}</div>
         <div class="result-description">${description}</div>
         <div class="result-meta">
             <span>ID: ${displayId}</span>
+            <span>Source: ${source}    <a href="${sourceLink}"/></span>
         </div>
         <div class="result-actions">
             <a href="#" onclick="toggleRelationships('${result.id}')">
@@ -235,16 +236,21 @@ function displayFilteredResults(filteredResults) {
         const toggleButton = document.createElement('div');
         toggleButton.className = 'partial-matches-toggle';
         toggleButton.innerHTML = `
-    <div>
-        <h6 style="margin: 0;">Additional Partial Matches Available</h6>
-        <span class="partial-matches-count">Found ${totalPartial} partial ${totalPartial === 1 ? 'match' : 'matches'}</span>
-    </div>
-    <i class="material-icons">expand_more</i>
-`;
+            <div>
+                <h6 style="margin: 0;">Additional Partial Matches Available</h6>
+                <span class="partial-matches-count">Found ${totalPartial} partial ${totalPartial === 1 ? 'match' : 'matches'}</span>
+            </div>
+            <i class="material-icons">expand_more</i>
+        `;
 
         // Create content container
         const contentDiv = document.createElement('div');
         contentDiv.className = 'partial-matches-content';
+
+        if (totalExact === 0) {
+            contentDiv.classList.add('visible');
+            toggleButton.querySelector('.material-icons').textContent = 'expand_less';
+        }
 
         // Add partial match cards
         filteredResults.partialMatches.forEach(result => {
@@ -506,7 +512,13 @@ async function toggleRelationships(entityId) {
             const networkBtn = document.createElement('button');
             networkBtn.className = 'view-network-btn';
             networkBtn.innerHTML = '<i class="material-icons">bubble_chart</i> View Network';
-            networkBtn.onclick = () => showNetworkVisualization(entityId);
+            networkBtn.onclick = (e) => {
+                // scroll page to the top
+                window.scrollTo(0, 0);
+
+                e.preventDefault();
+                showNetworkVisualization(entityId);
+            };
             dropdown.appendChild(networkBtn);
             
         } catch (error) {

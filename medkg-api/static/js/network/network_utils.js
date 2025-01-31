@@ -377,7 +377,97 @@ function initD3Graph() {
     function expandNode(nodeId) {
         console.log('Expanding node:', nodeId);
         // Add your expand implementation
+
+        // fetch and add more data to the graph
+        expandNodeForId(nodeId);
+
     }
+
+    function expandNodeForId(nodeId) {
+        // Fetch more data for the given node
+        // First get more details for the nodeid from the globalNetworkValues
+        const node = globalNetworkValues["nodes"].find(n => n.id === nodeId);
+        if (!node) return;
+
+        //copy the globalNetworkValues
+        const globalNetworkValuesCopy = globalNetworkValues;
+
+        const selectedEntityTypes = Array.from(document.querySelectorAll('#labelFilterSection input[type="checkbox"]'))
+        .filter(cb => cb.checked)
+        .map(cb => cb.value);
+
+        // Get selected relationship types
+        const selectedRelationTypes = Array.from(document.querySelectorAll('#relationFilterSection input[type="checkbox"]'))
+            .filter(cb => cb.checked)
+            .map(cb => cb.value);
+
+
+        fetch(`nodes/graph`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ id: nodeId,
+                name: node.name,
+                type: node.type,
+                neighbour: selectedEntityTypes.join(","), limit:10 })
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to fetch node data');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // now append the data to the globalNetworkValues, 
+                globalNetworkValuesCopy.nodes = globalNetworkValuesCopy.nodes.concat(data.nodes);
+                globalNetworkValuesCopy.links = globalNetworkValuesCopy.links.concat(data.links); 
+
+                // remove duplicate nodes and relationshipts
+                globalNetworkValuesCopy.nodes = globalNetworkValuesCopy.nodes.filter((node, index, self) =>
+                    index === self.findIndex((t) => (
+                        t.id === node.id
+                    ))
+                );
+
+                globalNetworkValuesCopy.links = globalNetworkValuesCopy.links.filter((link, index, self) =>
+                    index === self.findIndex((t) => (
+                        t.id === link.id
+                    ))
+                );
+
+                // Filter nodes based on selected entity types
+                const filteredNodes = globalNetworkValuesCopy.nodes.filter(node =>
+                    selectedEntityTypes.includes(node.type)
+                );
+
+                // Get the IDs of filtered nodes for link filtering
+                const filteredNodeIds = new Set(filteredNodes.map(node => node.id));
+
+                // Filter links based on selected relationship types and filtered nodes
+                const filteredLinks = globalNetworkValuesCopy.links.filter(link => {
+                    const sourceExists = filteredNodeIds.has(link.source.id || link.source);
+                    const targetExists = filteredNodeIds.has(link.target.id || link.target);
+                    const relationshipMatch = selectedRelationTypes.includes(link.type);
+
+                    return sourceExists && targetExists && relationshipMatch;
+                });
+
+                // Update the graph with filtered data
+                graph.updateGraph({
+                    nodes: [], links: []}); // Clear the graph first
+                graph.updateGraph({
+                    nodes: filteredNodes,
+                    links: filteredLinks
+                });
+                    //replace the globalNetworkValues with the updated one
+                globalNetworkValues = globalNetworkValuesCopy;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+
 
     function hideNode(nodeId) {
         // Get the node and its connected links
@@ -458,11 +548,11 @@ function initD3Graph() {
             <div class="modal-content">
                 <h4>Find Path</h4>
                 <div class="row">
-                    <div class="input-field col s12">
+                    <div class="input-field1 col s12">
                         <input type="text" id="sourceNode" value="${sourceNode.name}" disabled>
                         <label for="sourceNode" class="active">Source Node</label>
                     </div>
-                    <div class="input-field col s12">
+                    <div class="input-field1 col s12">
                         <select id="targetNodeType">
                             <option value="" disabled selected>Choose target type</option>
                             <option value="Drug">Drug</option>
@@ -679,6 +769,85 @@ function findPath(sourceNodeId) {
         maxDepth
     });
     
+    fetch('api/path-search', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            startNode: sourceNodeId,
+            targetType: targetType,
+            maxHops: `${maxDepth}`,
+            endNode: ""
+        })
+    }).then(response => {
+        if (!response.ok) {
+            throw new Error('Failed to find path');
+        }
+        return response.json();
+    }).then(data => {
+        console.log('Path found:', data);
+        // Handle path data
+        // returned values will be an array of each path
+        // each path will be an array of nodes and relationships
+        // {
+        //     "paths": [
+        //         {
+        //             "length": 2,
+        //             "nodes": [
+        //                 {}
+        //             ],
+        //             "relationships": [
+        //                 {}
+        //             ]
+        //         }
+        //     ]
+        // }
+        // update the same in the graph
+
+        paths = data.paths;
+        nodes = [];
+        links = [];
+        //iterate through each path and update the graph
+        graph.updateGraph({
+            nodes: [],
+            links: []
+        });
+        paths.forEach(path => {
+            nodes.push(...path.nodes);
+            links.push(...path.relationships);
+            
+            
+        });
+        
+
+        // remove duplicate nodes and relationshipts
+        nodes = nodes.filter((node, index, self) =>
+            index === self.findIndex((t) => (
+                t.id === node.id
+            ))
+        );
+
+        links = links.filter((link, index, self) =>
+            index === self.findIndex((t) => (
+                t.id === link.id
+            ))
+        );
+
+        graph.updateGraph({
+            nodes: nodes,
+            links: links
+        });
+
+
+
+        // update the graph with the path
+        // updateGraphWithPaths(paths);
+
+    }).catch(error => {
+        console.error('Error:', error);
+    });
+
     // TODO: Implement path finding logic
 };
 
