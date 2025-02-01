@@ -493,7 +493,7 @@ func GetNetworkGraphForId(driver neo4j.DriverWithContext, id string, name string
 	return result.(map[string]interface{})["nodes"].([]map[string]interface{}), result.(map[string]interface{})["relationships"].([]map[string]interface{}), nil
 }
 
-func GetNetworkGraphForIdAndDepth(driver neo4j.DriverWithContext, id string, name string, typeN string, limit string, neighbour string, depth string, nodeIdsToIgnore []interface{}) ([]models.Node, []interface{}, error) {
+func GetNetworkGraphForIdAndDepth(driver neo4j.DriverWithContext, id string, name string, typeN string, limit string, neighbour string, depth string, nodeIdsToIgnore []interface{}) ([]models.Node, []interface{}, map[string]models.Node, error) {
 	ctx := context.Background()
 
 	err := driver.VerifyConnectivity(ctx)
@@ -555,6 +555,7 @@ func GetNetworkGraphForIdAndDepth(driver neo4j.DriverWithContext, id string, nam
 					"relationships": relationships,
 				}, nil
 			}
+			nodeIdsRetreived := []string{}
 			for records.Next(ctx) {
 				record := records.Record()
 				path := record.Values[0].(neo4j.Path)
@@ -606,21 +607,64 @@ func GetNetworkGraphForIdAndDepth(driver neo4j.DriverWithContext, id string, nam
 						Type:       rel.Type,
 					})
 				}
+			}
+			for key, _ := range exists {
+				nodeIdsRetreived = append(nodeIdsRetreived, key.(string))
+			}
 
+			// Fetch all Publications linked to the nodeIdsRetreived
+			records1, err := tx.Run(ctx, "MATCH (n)-[r]->(m:Publication) where elementId(n) in $nodeIdsRetreived RETURN elementId(n), elementId(m), m", map[string]interface{}{"nodeIdsRetreived": nodeIdsRetreived})
+
+			publications := make(map[string]models.Node)
+			if err == nil {
+				for records1.Next(ctx) {
+					record1 := records1.Record()
+					sourceId := record1.Values[0].(string)
+					targetId := record1.Values[1].(string)
+					node := record1.Values[2].(dbtype.Node)
+					nme := "noname"
+					if val, ok := node.Props["name"]; ok && val != nil {
+						nme = node.Props["name"].(string)
+					} else if val, ok := node.Props["id"]; ok && val != nil {
+						nme = node.Props["id"].(string)
+					}
+					id1 := "noID"
+
+					if idd, ok := node.Props["id"]; ok {
+						id1 = idd.(string)
+					} else {
+						id1 = node.Props["internal_id"].(string)
+					}
+
+					// dataSource, publication := checkForSource(node, nme)
+
+					source := models.Node{
+						ID:          targetId,
+						NodeId:      id1,
+						Label:       nme,
+						Properties:  node.Props,
+						DisplayName: nme,
+						NodeType:    "Publication",
+						Type:        "Publication",
+					}
+
+					publications[sourceId] = source
+				}
 			}
 
 			return map[string]interface{}{
 				"nodes":         totalNodes,
 				"relationships": relationships,
+				"publications":  publications,
 			}, nil
 		},
 	)
 
 	if err != nil {
-		return nil, nil, err
+		return nil, nil, nil, err
 	}
 
-	return result.(map[string]interface{})["nodes"].([]models.Node), result.(map[string]interface{})["relationships"].([]interface{}), nil
+	return result.(map[string]interface{})["nodes"].([]models.Node), result.(map[string]interface{})["relationships"].([]interface{}), result.(map[string]interface{})["publications"].(map[string]models.Node), nil
 }
 
 func SearchForInteraction(driver neo4j.DriverWithContext, request models.InteractionSearchRequest) (map[string]interface{}, error) {
