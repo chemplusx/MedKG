@@ -459,6 +459,7 @@
             padding: 1rem;
             overflow-y: auto;
             background: #f8f9fa;
+            max-height: 76%;
         }
 
         .details-section {
@@ -1344,6 +1345,240 @@
         .ddropdown-item input[type="checkbox"] {
             margin: 0;
         }
+
+        .publications-container {
+            display: none;
+            position: absolute;
+            top: 75%;
+            /* width: 72%; */
+            font-size: 1.15rem;
+            line-height: 110%;
+            margin: .7666666667rem 0 .46rem 0;
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+            background: #f8f9fa;
+        }
+
+        .publications-container h6 {
+            color: #2c3e50;
+            /* border-bottom: 2px solid #3498db; */
+            /* padding-bottom: 0.5rem; */
+            margin-top: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .publications-container .publications-header {
+            display: flex;
+        }
+
+        .publications-panel {
+            background: #fff;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin: 1rem;
+        }
+
+        .publications-list {
+            padding: 1rem;
+        }
+
+        .publication-item {
+            border-bottom: 1px solid #eee;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .publication-item:last-child {
+            border-bottom: none;
+        }
+
+        .node-reference {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 8px;
+            border-radius: 4px;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        .citation-context {
+            font-size: 0.85rem;
+            color: #666;
+            margin: 8px 0;
+            padding-left: 8px;
+            border-left: 3px solid #e0e0e0;
+        }
+
+        .publication-title {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #2c3e50;
+            margin: 8px 0;
+        }
+
+        .publication-abstract {
+            font-size: 0.9rem;
+            color: #555;
+            margin: 8px 0;
+            line-height: 1.5;
+        }
+
+        .publication-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .node-chip {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            color: white;
+            margin-right: 8px;
+        }
+
+        .publication-meta {
+            font-size: 0.8rem;
+            color: #666;
+            margin: 4px 0;
+        }
+
+        /* .publications-container {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+    z-index: 1000;
+    max-height: 30vh;
+    display: none;
+} */
+
+        .publications-container.active {
+            display: block;
+            margin-left: 1rem;
+            margin-right: 1rem;
+            max-width: 100%;
+            /* display: flex
+        ; */
+            left: 0;
+        }
+
+        .show-more-btn.publicationContent {
+            display: none;
+        }
+
+        .show-more-btn.publicationContent.active {
+            display: block;
+            margin-top: 1rem;
+            position: absolute;
+            text-align: center;
+            margin-right: -2rem;
+            bottom: 2rem;
+            max-width: 98%;
+        }
+
+        .publications-header {
+            padding: 0px 22px;
+            /* background: #f5f5f5;
+            border-bottom: 1px solid #ddd; */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .publications-header h5 {
+            margin: 0;
+            font-size: 1rem;
+        }
+
+        .close-publications {
+            cursor: pointer;
+            padding: 4px;
+        }
+
+        .publications-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            padding: 12px;
+            overflow-y: auto;
+            max-height: calc(22rem - 40px);
+        }
+
+        .publication-item {
+            flex: 0 0 300px;
+            max-width: 300px;
+            background: #f8f9fa;
+            border-radius: 4px;
+            padding: 12px;
+            border: 1px solid #eee;
+        }
+
+        .node-type-tag {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            color: white;
+            margin-bottom: 8px;
+        }
+
+        .publication-title {
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin: 8px 0;
+            color: #2c3e50;
+        }
+
+        .publication-meta {
+            font-size: 0.75rem;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .citation-context {
+            font-size: 0.75rem;
+            color: #666;
+            margin: 8px 0;
+            padding-left: 8px;
+            border-left: 2px solid #e0e0e0;
+        }
+
+        .publication-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .action-btn {
+            padding: 4px 8px;
+            font-size: 0.75rem;
+            border-radius: 4px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+            border: none;
+            color: white;
+        }
+
+        .view-btn {
+            background: #2ecc71;
+        }
+
+        .cite-btn {
+            background: #3498db;
+        }
+
+        .material-icons {
+            font-size: 16px;
+        }
     </style>
 </head>
 
@@ -1713,6 +1948,18 @@
             </div>
             <div id="details-content"></div>
         </div>
+        <div class="publications-container" id="publicationsContainer">
+            <div class="publications-header">
+                <h6>Publications</h6>
+                <button class="btn-flat waves-effect waves-light" onclick="hidePublications()">
+                    <i class="material-icons">close</i>
+                </button>
+            </div>
+            <div id="publicationsContent"></div>
+            
+        </div>
+        <button class="show-more-btn publicationContent" id="publicationsContainerToggleButton" onclick="showPublicationDetails()">
+            Show Publications <i class="material-icons">expand_less</i>
     </main>
 
     <footer class="footer">
@@ -1756,7 +2003,7 @@
             partialMatches: []
         };
         document.addEventListener('DOMContentLoaded', function applyFilters() {
-            
+
             const filters = {
                 entityTypes: Array.from(document.querySelectorAll('input[type="checkbox"][value^="drug"], input[type="checkbox"][value^="protein"], input[type="checkbox"][value^="disease"], input[type="checkbox"][value^="gene"]'))
                     .filter(cb => cb.checked)
@@ -1969,7 +2216,7 @@
         let graph;
         function ShowNetwork(id, name, neighbour, type, depth) {
             d3.select("#network-container svg").selectAll("*").remove();
-            M.AutoInit();
+            // M.AutoInit();
             graph = initD3Graph();
 
             function updateFiltersForNetwork() {
@@ -2065,6 +2312,7 @@
                     // Update network stats
                     // document.getElementById('nodeCount').textContent = data.nodes.length;
                     // document.getElementById('edgeCount').textContent = data.links.length;
+                    updatePublications();
                     return data;
                 })
                 .catch(error => {
@@ -2074,6 +2322,78 @@
                     nodeList.innerHTML = '<li class="node-item">Error loading network data</li>';
                     relationshipList.innerHTML = '<li class="relationship-item">Error loading network data</li>';
                 });
+        }
+
+        function updatePublications() {
+            const publicationsForNodes = globalNetworkValues.publications;
+            if (!publicationsForNodes) {
+                console.error('Invalid publications data:', publicationsForNodes);
+                return;
+            }
+
+            const publicationsContainer = document.getElementById('publicationsContainer');
+            publicationsContainer.classList.add('active');
+            const publicationsContent = document.getElementById('publicationsContent');
+
+            publicationsContent.innerHTML = `
+                <div class="publications-list">
+                    ${Object.entries(publicationsForNodes).flatMap(([nodeId, pub]) => {
+                const node = globalNetworkValues.nodes.find(n => n.id === nodeId);
+                const nodeTypeColor = getNodeColor(node?.type);
+
+                return `
+                            <div class="publication-item">
+                                <div class="node-reference">
+                                    <span class="node-chip" style="background-color: ${nodeTypeColor}">
+                                        ${node?.type || 'Unknown'}: ${node?.name || 'Unknown Node'}
+                                    </span>
+                                </div>
+                                
+                                <div class="publication-title">
+                                    ${pub.properties.journal}
+                                </div>
+
+                                <div class="publication-meta">
+                                    ${pub.properties.year ? ` • ${pub.properties.year}` : ''}
+                                    ${pub.properties.linkout ? ` • ${pub.properties.linkout}` : ''}
+                                </div>
+
+                                <div class="citation-context">
+                                    Referenced for:  ${node?.name}
+                                </div>
+
+                                <div class="publication-actions">
+                                    <button class="action-btn view-btn" onclick="window.open('${pub.properties.linkout}', '_blank')">
+                                        <i class="material-icons">launch</i> View
+                                    </button>
+                                    <button class="action-btn cite-btn" onclick="citePaper('${pub.properties.DOI}')">
+                                        <i class="material-icons">content_copy</i> Cite
+                                    </button>
+                                </div>
+                                
+                            </div>
+                        `;
+            }).join('')}
+                </div>
+            `;
+        }
+
+        function hidePublications() {
+            document.getElementById('publicationsContainer').classList.remove('active');
+            document.getElementById('publicationsContainerToggleButton').classList.add('active');
+        }
+
+        function showPublicationDetails() {
+            const publicationsContainer = document.getElementById('publicationsContainer');
+            publicationsContainer.classList.add('active');
+
+            document.getElementById('publicationsContainerToggleButton').classList.remove('active');
+        }
+
+        function citePaper(paperId) {
+            // Implementation for citation functionality
+            // This could copy citation to clipboard or show citation in different formats
+            console.log('Citing paper:', paperId);
         }
 
         function getNodeColor(type) {

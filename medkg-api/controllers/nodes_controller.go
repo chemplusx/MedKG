@@ -165,14 +165,15 @@ func GetNetworkGraphForIdHandler(client neo4j.DriverWithContext) gin.HandlerFunc
 		}
 		log.Println("GetNetworkGraphForIdHandler id: ", id, " name: ", name, " type: ", typeN, " limit: ", limit, " neighbour: ", neighbour)
 		// nodes, relationships, err := ni.GetNetworkGraphForId(client, id, name, typeN, limit, neighbour)
-		nodes, relationships, err := ni.GetNetworkGraphForIdAndDepth(client, id, name, typeN, limit, neighbour, depth, nodesToIgnore)
+		nodes, relationships, pubs, err := ni.GetNetworkGraphForIdAndDepth(client, id, name, typeN, limit, neighbour, depth, nodesToIgnore)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
 		response := map[string]interface{}{
-			"nodes": nodes,
-			"links": relationships,
+			"nodes":        nodes,
+			"links":        relationships,
+			"publications": pubs,
 		}
 		c.JSON(http.StatusOK, response)
 	}
