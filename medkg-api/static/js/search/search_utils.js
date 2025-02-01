@@ -159,8 +159,8 @@ function toggleAdvancedSearch() {
 function clearSearch() {
     document.getElementById('mainSearch').value = '';
     document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = true);
-    document.getElementById('yearFrom').value = '';
-    document.getElementById('yearTo').value = '';
+    // document.getElementById('yearFrom').value = '';
+    // document.getElementById('yearTo').value = '';
     currentPage = 1;
     updateResults([]);
 }

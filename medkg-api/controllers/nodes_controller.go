@@ -138,19 +138,34 @@ func GetNetworkGraphForIdHandler(client neo4j.DriverWithContext) gin.HandlerFunc
 			neighbour = strings.Join(strings.Split(neighbour, ","), "|")
 		}
 
+		nodesToIgnore, ok := reqBody["existingNodes"].([]interface{})
+		if !ok {
+			log.Println("Nodes to ignore not found, setting to empty", nodesToIgnore, ok)
+			nodesToIgnore = []interface{}{}
+		} else {
+			log.Println("Nodes to ignore: ", nodesToIgnore)
+		}
+
+		limit, ok := reqBody["limit"].(string)
+		if !ok {
+			log.Println("Limit not found, setting to 10", limit, ok)
+			limit = "10"
+		}
+
 		// limit, ok := reqBody["limit"].(string)
 		// if !ok {
 		// 	c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request. limit not found."})
 		// 	return
 		// }
 
-		depth, ok := reqBody["depth"].(int)
+		depth, ok := reqBody["depth"].(string)
 		if !ok {
-			depth = 3
+			log.Println("Depth not found, setting to 3", depth, ok)
+			depth = "3"
 		}
-		log.Println("GetNetworkGraphForIdHandler id: ", id, " name: ", name, " type: ", typeN, " limit: ", 10, " neighbour: ", neighbour)
+		log.Println("GetNetworkGraphForIdHandler id: ", id, " name: ", name, " type: ", typeN, " limit: ", limit, " neighbour: ", neighbour)
 		// nodes, relationships, err := ni.GetNetworkGraphForId(client, id, name, typeN, limit, neighbour)
-		nodes, relationships, err := ni.GetNetworkGraphForIdAndDepth(client, id, name, typeN, "10", neighbour, depth)
+		nodes, relationships, err := ni.GetNetworkGraphForIdAndDepth(client, id, name, typeN, limit, neighbour, depth, nodesToIgnore)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return

@@ -493,7 +493,7 @@ func GetNetworkGraphForId(driver neo4j.DriverWithContext, id string, name string
 	return result.(map[string]interface{})["nodes"].([]map[string]interface{}), result.(map[string]interface{})["relationships"].([]map[string]interface{}), nil
 }
 
-func GetNetworkGraphForIdAndDepth(driver neo4j.DriverWithContext, id string, name string, typeN string, limit string, neighbour string, depth int) ([]models.Node, []interface{}, error) {
+func GetNetworkGraphForIdAndDepth(driver neo4j.DriverWithContext, id string, name string, typeN string, limit string, neighbour string, depth string, nodeIdsToIgnore []interface{}) ([]models.Node, []interface{}, error) {
 	ctx := context.Background()
 
 	err := driver.VerifyConnectivity(ctx)
@@ -501,8 +501,8 @@ func GetNetworkGraphForIdAndDepth(driver neo4j.DriverWithContext, id string, nam
 		panic(err)
 	}
 
-	if depth <= 0 {
-		depth = 1
+	if depth == "0" {
+		depth = "2"
 	}
 
 	session := driver.NewSession(ctx, neo4j.SessionConfig{AccessMode: neo4j.AccessModeRead})
@@ -517,10 +517,19 @@ func GetNetworkGraphForIdAndDepth(driver neo4j.DriverWithContext, id string, nam
 				labels = neighbour
 			}
 			labels = ":" + labels
-			query := "MATCH p=(node:" + typeN + ")-[r*" + strconv.Itoa(depth) + "]-(m" + labels + ") where elementId(node)='" + id + "'"
+			query := "MATCH p=(node:" + typeN + ")-[r*" + depth + "]-(m" + labels + ") where elementId(node)='" + id + "'"
 
 			if name != "" {
 				query += " and node.name='" + name + "'"
+			}
+
+			if len(nodeIdsToIgnore) > 0 {
+				nodesToIgnoreString := ""
+				for _, nodeId := range nodeIdsToIgnore {
+					nodesToIgnoreString += "'" + nodeId.(string) + "',"
+				}
+
+				query += " and not elementId(m) in [" + strings.TrimSuffix(nodesToIgnoreString, ",") + "]"
 			}
 
 			query += " RETURN p limit " + limit
@@ -567,6 +576,7 @@ func GetNetworkGraphForIdAndDepth(driver neo4j.DriverWithContext, id string, nam
 						id1 = node.ElementId
 					}
 					dataSource, publication := checkForSource(node.Props, node.Labels[0])
+					delete(node.Props, "embedding")
 					source := models.Node{
 						ID:          node.ElementId,
 						NodeId:      id1,
