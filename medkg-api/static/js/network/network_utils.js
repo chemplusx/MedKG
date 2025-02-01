@@ -486,10 +486,10 @@ function initD3Graph() {
                 //replace the globalNetworkValues with the updated one
                 globalNetworkValues = globalNetworkValuesCopy;
 
-                if (data.publications.length > 0) {
+                if (data.publications) {
                     // Update the publication section
-                    globalNetworkValues.publications = globalNetworkValues.publications.concat(data.publications);
-                    updatePublications(data.publications);
+                    globalNetworkValues.publications = { ...globalNetworkValues.publications, ...data.publications }
+                    updatePublications();
                 }
             })
             .catch(error => {
