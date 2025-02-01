@@ -2272,8 +2272,10 @@
             //         updateFiltersForNetwork();
             //     });
 
+            showLoading();
             fetchNetworkData(id, name, neighbour, type, depth)
                 .then(data => {
+                    hideLoading();
                     if (!data || !data.nodes || !data.links) {
                         console.error('Invalid graph data:', data);
                         return;
@@ -2316,6 +2318,7 @@
                     return data;
                 })
                 .catch(error => {
+                    hideLoading();
                     console.error('Error fetching network data:', error);
                     const nodeList = document.getElementById('nodeList');
                     const relationshipList = document.getElementById('relationshipList');
