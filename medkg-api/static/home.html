@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedKG - Medical Knowledge Graph</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --text-color: #333;
+            --background-color: #f8f9fa;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-color: var(--background-color);
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        .logo-container {
+    text-align: center;
+    margin-bottom: 1rem;
+    animation: fadeIn 1s ease-out;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.logo-container svg {
+    width: 10rem;
+    height: 10rem;
+    animation: fadeIn 1s ease-out, pulse 2s ease-in-out infinite;
+}
+
+.logo-text-wrapper {
+    text-align: left;
+}
+
+.logo-text {
+    font-size: 3.5rem;
+    color: var(--primary-color);
+    font-weight: 700;
+    margin: 0;
+    line-height: 1;
+}
+
+.logo-subtext {
+    color: var(--secondary-color);
+    font-size: 1.2rem;
+    margin-top: 0.5rem;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+.logo-nodes {
+    fill: var(--secondary-color);
+    animation: fadeNodes 1.5s ease-in-out infinite alternate;
+}
+
+.logo-lines {
+    stroke: var(--primary-color);
+    stroke-width: 2;
+    stroke-linecap: round;
+    animation: drawLines 2s ease-in-out forwards;
+    stroke-dasharray: 100;
+    stroke-dashoffset: 100;
+}
+
+@keyframes fadeNodes {
+    from { opacity: 0.6; }
+    to { opacity: 1; }
+}
+
+@keyframes drawLines {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+        .search-container {
+            width: 100%;
+            max-width: 600px;
+            padding: 0 1rem;
+            position: relative;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .search-box {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 1rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .search-box:focus-within {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: none;
+            font-size: 1.2rem;
+            outline: none;
+            color: var(--text-color);
+        }
+
+        .autocomplete-toggle {
+            margin-top: 1rem;
+            text-align: center;
+            color: #666;
+        }
+
+        .search-tips {
+            margin-top: 2rem;
+            text-align: center;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .footer {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .footer p {
+            margin: 0;
+            opacity: 0.8;
+        }
+
+        .search-examples {
+            margin-top: 1.5rem;
+            text-align: center;
+        }
+
+        .example-chip {
+            display: inline-block;
+            margin: 0.3rem;
+            padding: 0.5rem 1rem;
+            background-color: rgba(52, 152, 219, 0.1);
+            border-radius: 20px;
+            color: var(--secondary-color);
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .example-chip:hover {
+            background-color: rgba(52, 152, 219, 0.2);
+        }
+
+        /* Custom Autocomplete Styles */
+        .autocomplete-items {
+            position: absolute;
+            width: 95%;
+            max-height: 300px;
+            overflow-y: auto;
+            background: white;
+            border-radius: 0 0 8px 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            display: none;
+        }
+
+        .autocomplete-item {
+            padding: 0.8rem 1rem;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .autocomplete-item:hover {
+            background-color: rgba(52, 152, 219, 0.1);
+        }
+
+        .autocomplete-type {
+            color: #666;
+            font-size: 0.8rem;
+            margin-left: 0.5rem;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-content">
+        <div class="logo-container">
+            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <!-- Medical Cross -->
+                <g class="logo-lines">
+                    <line x1="50" y1="30" x2="50" y2="70"/>
+                    <line x1="30" y1="50" x2="70" y2="50"/>
+                </g>
+                <!-- Network Nodes -->
+                <g class="logo-nodes">
+                    <circle cx="50" cy="30" r="6"/>
+                    <circle cx="30" cy="50" r="6"/>
+                    <circle cx="70" cy="50" r="6"/>
+                    <circle cx="50" cy="70" r="6"/>
+                </g>
+                <!-- Connecting Lines -->
+                <g class="logo-lines">
+                    <line x1="30" y1="50" x2="50" y2="30"/>
+                    <line x1="50" y1="30" x2="70" y2="50"/>
+                    <line x1="30" y1="50" x2="50" y2="70"/>
+                    <line x1="70" y1="50" x2="50" y2="70"/>
+                </g>
+            </svg>
+            <div class="logo-text-wrapper">
+                <h1 class="logo-text">MedKG</h1>
+                <p class="logo-subtext">Explore the Medical Knowledge Graph</p>
+            </div>
+        </div>
+
+        <div class="search-container">
+            <div class="search-box">
+                <input type="text" class="search-input browser-default"
+                    placeholder="Search drugs, diseases, proteins, or pathways..." 
+                    id="mainSearch" 
+                    autocomplete="off">
+            </div>
+            <div id="autocompleteList" class="autocomplete-items"></div>
+
+            <div class="autocomplete-toggle">
+                <label>
+                    <input type="checkbox" id="enableAutocomplete" checked>
+                    <span>Enable search suggestions</span>
+                </label>
+            </div>
+
+            <div class="search-examples">
+                <div class="example-chip" onclick="setSearchExample('Clonidine')">Clonidine</div>
+                <div class="example-chip" onclick="setSearchExample('Diabetes')">Diabetes</div>
+                <div class="example-chip" onclick="setSearchExample('ACE2')">ACE2</div>
+            </div>
+
+            <div class="search-tips">
+                Press Enter to search or click on suggestions
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>© 2024 MedKG - NIPER SAS Nagar | Department of PharmacoInformatics</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('mainSearch');
+            const autocompleteList = document.getElementById('autocompleteList');
+            const enableAutocompleteCheckbox = document.getElementById('enableAutocomplete');
+
+            function debounce(func, wait) {
+                let timeout;
+                return function(...args) {
+                    clearTimeout(timeout);
+                    timeout = setTimeout(() => func.apply(this, args), wait);
+                };
+            }
+
+            function performSearch() {
+                const searchQuery = searchInput.value.trim();
+                if (searchQuery) {
+                    window.location.href = `search?q=${encodeURIComponent(searchQuery)}`;
+                }
+            }
+
+            function showAutocomplete(items) {
+                autocompleteList.innerHTML = items.map(item => `
+                    <div class="autocomplete-item" onclick="selectAutocomplete('${item.text}')">
+                        ${item.text}
+                        <span class="autocomplete-type">${item.type}</span>
+                    </div>
+                `).join('');
+                autocompleteList.style.display = 'block';
+            }
+
+            function hideAutocomplete() {
+                autocompleteList.style.display = 'none';
+            }
+
+            const handleInputChange = debounce((query) => {
+                if (query.length >= 2 && enableAutocompleteCheckbox.checked) {
+                    fetch(`search_in_graph?limit=10&term=${encodeURIComponent(query)}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            const suggestions = [];
+                            
+                            if (data.exactMatches) {
+                                data.exactMatches.forEach(item => {
+                                    suggestions.push({
+                                        text: item.label || item.properties.name,
+                                        type: item.type
+                                    });
+                                });
+                            }
+
+                            if (data.partialMatches) {
+                                data.partialMatches.forEach(item => {
+                                    suggestions.push({
+                                        text: item.label || item.properties.name,
+                                        type: item.type
+                                    });
+                                });
+                            }
+
+                            if (suggestions.length > 0) {
+                                showAutocomplete(suggestions);
+                            } else {
+                                hideAutocomplete();
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Search error:', error);
+                            hideAutocomplete();
+                        });
+                } else {
+                    hideAutocomplete();
+                }
+            }, 300);
+
+            // Handle search input
+            searchInput.addEventListener('input', (e) => {
+                handleInputChange(e.target.value);
+            });
+
+            // Handle Enter key
+            searchInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    performSearch();
+                }
+            });
+
+            // Handle click outside
+            document.addEventListener('click', (e) => {
+                if (!searchInput.contains(e.target) && !autocompleteList.contains(e.target)) {
+                    hideAutocomplete();
+                }
+            });
+
+            // Handle autocomplete toggle
+            enableAutocompleteCheckbox.addEventListener('change', function() {
+                if (!this.checked) {
+                    hideAutocomplete();
+                } else if (searchInput.value.length >= 2) {
+                    handleInputChange(searchInput.value);
+                }
+            });
+        });
+
+        function setSearchExample(text) {
+            const searchInput = document.getElementById('mainSearch');
+            searchInput.value = text;
+            searchInput.focus();
+            
+            // Trigger input event
+            const inputEvent = new Event('input', {
+                bubbles: true,
+                cancelable: true,
+            });
+            searchInput.dispatchEvent(inputEvent);
+        }
+
+        function selectAutocomplete(text) {
+            const searchInput = document.getElementById('mainSearch');
+            searchInput.value = text;
+            document.getElementById('autocompleteList').style.display = 'none';
+            performSearch();
+        }
+
+        function performSearch() {
+            const searchQuery = document.getElementById('mainSearch').value.trim();
+            if (searchQuery) {
+                window.location.href = `search?q=${encodeURIComponent(searchQuery)}`;
+            }
+        }
+    </script>
+</body>
+</html>

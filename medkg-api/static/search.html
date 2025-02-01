@@ -741,7 +741,7 @@
         }
 
         .relationship-net-type {
-            
+
             font-size: 0.9em;
             margin: 0 23px 0 50px;
             min-width: 150px;
@@ -1003,7 +1003,7 @@
 
 
         .collapsible-list {
-            max-height: 300px;
+            max-height: 100px;
             overflow: hidden;
             position: relative;
             transition: max-height 0.3s ease-out;
@@ -1181,7 +1181,7 @@
             padding: 0 20px;
             font-size: 0.9rem;
             z-index: 1000;
-            box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
         }
 
         .footer-left {
@@ -1215,6 +1215,135 @@
         #visualizationPanel {
             bottom: 40px;
         }
+
+
+        .expansion-controls {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            z-index: 100;
+            /* background: rgba(255, 255, 255, 0.95); */
+            padding: 1rem;
+            /* border-radius: 4px; */
+            /* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); */
+            min-width: 250px;
+        }
+
+        .expansion-controls h6 {
+            margin: 0 0 10px 0;
+            color: #2c3e50;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .control-group {
+            margin-bottom: 1rem;
+            display: inline-block;
+            margin-right: 16px;
+        }
+
+        .control-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .control-label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .max-neighbours-input {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 8px;
+        }
+
+        .neighbour-types-select {
+            width: 100%;
+            min-height: 80px;
+        }
+
+        .control-note {
+            font-size: 0.75rem;
+            color: #666;
+            font-style: italic;
+            /* margin-top: 8px; */
+            padding: 4px;
+            background: #f8f9fa;
+            border-radius: 4px;
+        }
+
+        /* Separator between expansion controls and zoom controls */
+        .controls-separator {
+            margin: 1rem 0;
+            border-top: 1px solid #eee;
+            padding-top: 1rem;
+        }
+
+        .ddropdown-wrapper {
+            position: relative;
+        }
+
+        .ddropdown-trigger {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background: white;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .sselected-options {
+            max-width: 180px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .ddropdown-content {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-top: 4px;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+        .ddropdown-content.active {
+            display: block;
+        }
+
+        .ddropdown-item {
+            padding: 8px;
+            cursor: pointer;
+        }
+
+        .ddropdown-item:hover {
+            background: #f5f5f5;
+        }
+
+        .ddropdown-item label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .ddropdown-item input[type="checkbox"] {
+            margin: 0;
+        }
     </style>
 </head>
 
@@ -1232,7 +1361,7 @@
     </div>
     <nav>
         <div class="nav-wrapper">
-            <a href="#" class="brand-logo">MedKG</a>
+            <a href="/" class="brand-logo">MedKG</a>
             <!-- Show info in small : Niper: Department of PharmacoInformatics-->
             <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
             <ul id="nav-mobile" class="right">
@@ -1395,7 +1524,72 @@
 
     <main id="visualizationPanel" class="visualization-container">
         <i class="material-icons close-panel" onclick="closeVisualization()">close</i>
-        <h5 style="position: absolute;">Network View</h5>
+        <!-- <h5 style="position: absolute;">Network View</h5> -->
+
+        <div class="expansion-controls">
+            <!-- <h6>Network Expansion Settings</h6> -->
+
+            <div class="control-group">
+                <label class="control-label">Max Neighbours</label>
+                <input type="number" class="max-neighbours-input browser-default" id="maxNeighbours" value="5" min="1"
+                    max="200">
+            </div>
+
+            <div class="control-group">
+                <label class="control-label">Max Depth</label>
+                <input type="number" class="max-neighbours-input browser-default" id="maxDepth" value="3" min="1"
+                    max="10">
+            </div>
+
+            <div class="control-group">
+                <label class="control-label">Neighbour Types</label>
+                <div class="ddropdown-wrapper">
+                    <button class="ddropdown-trigger">
+                        <span class="sselected-options">Select types...</span>
+                        <i class="material-icons">arrow_drop_down</i>
+                    </button>
+                    <div class="ddropdown-content">
+                        <div class="ddropdown-item">
+                            <label>
+                                <input type="checkbox" value="Drug" checked> Drug
+                            </label>
+                        </div>
+                        <div class="ddropdown-item">
+                            <label>
+                                <input type="checkbox" value="Disease" checked> Disease
+                            </label>
+                        </div>
+                        <div class="ddropdown-item">
+                            <label>
+                                <input type="checkbox" value="Protein" checked> Protein
+                            </label>
+                        </div>
+                        <div class="ddropdown-item">
+                            <label>
+                                <input type="checkbox" value="Gene" checked> Gene
+                            </label>
+                        </div>
+                        <div class="ddropdown-item">
+                            <label>
+                                <input type="checkbox" value="Metabolite"> Metabolite
+                            </label>
+                        </div>
+                        <div class="ddropdown-item">
+                            <label>
+                                <input type="checkbox" value="Pathway"> Pathway
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="control-note">
+                Note: These filters apply when expanding nodes in the network
+            </div>
+        </div>
+
+        <div class="controls-separator"></div>
+
         <div class="controls-panel">
             <button class="btn waves-effect waves-light" onclick="graph.zoomIn()">
                 <i class="material-icons">zoom_in</i>
@@ -1415,6 +1609,7 @@
             <svg width="100%" height="100%"></svg>
         </div>
 
+
         <div class="custom-tooltip"></div>
         <div class="details-sidebar">
             <div class="details-section network-stats">
@@ -1429,28 +1624,9 @@
                 </div>
             </div>
 
-            <!-- case 'Drug':
-                return d3.symbol().type(d3.symbolCircle).size(size)();
-            case 'Protein':
-                return d3.symbol().type(d3.symbolDiamond).size(size)();
-            case 'Disease':
-                return d3.symbol().type(d3.symbolTriangle).size(size)();
-            case 'Gene':
-                return d3.symbol().type(d3.symbolSquare).size(size)();
-            case 'Metabolite':
-                return d3.symbol().type(d3.symbolWye).size(size)();
-            case 'Pathway':
-                return d3.symbol().type(d3.symbolStar).size(size)();
-            case 'Peptide':
-                return d3.symbol().type(d3.symbolCross).size(size)();
-            case 'Transcript':
-                return d3.symbol().type(d3.symbolCross).size(size)();
-            default:
-                return d3.symbol().type(d3.symbolCircle).size(size)(); -->
-
             <div class="details-section">
                 <h6>Node Types</h6>
-                <div class="legend-container">
+                <div class="legend-container collapsible-list" id="legendListContent">
                     <div class="legend-item">
                         <div class="legend-shape">
                             <div class="shape-circle"></div>
@@ -1483,7 +1659,7 @@
                     <div class="legend-item">
                         <div class="legend-shape">
                             <div class="shape-wye"></div>
-                        </div>  
+                        </div>
                         <div class="legend-color" style="background: #ff7675;"></div>
                         <span>Metabolite</span>
                     </div>
@@ -1509,6 +1685,9 @@
                         <span>Transcript</span>
                     </div>
                 </div>
+                <button class="show-more-btnn" onclick="toggleList('legendListContent', this)">
+                    Show Full <i class="material-icons">expand_more</i>
+                </button>
             </div>
 
             <div class="details-section">
@@ -1577,6 +1756,7 @@
             partialMatches: []
         };
         document.addEventListener('DOMContentLoaded', function applyFilters() {
+            
             const filters = {
                 entityTypes: Array.from(document.querySelectorAll('input[type="checkbox"][value^="drug"], input[type="checkbox"][value^="protein"], input[type="checkbox"][value^="disease"], input[type="checkbox"][value^="gene"]'))
                     .filter(cb => cb.checked)
@@ -1590,6 +1770,17 @@
                 // yearFrom: document.getElementById('yearFrom').value,
                 // yearTo: document.getElementById('yearTo').value
             };
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const q = urlParams.get('q');
+            //decodeURIComponent(q);
+
+            if (q) {
+                const decodedQuery = q ? decodeURIComponent(q) : '';
+                document.getElementById('mainSearch').value = decodedQuery;
+
+                performSearch();
+            }
 
             // performSearch(filters);
         });
@@ -2025,6 +2216,83 @@
             // document.querySelector('.results-panel')?.scrollIntoView({ behavior: 'smooth' });
         }
 
+        document.addEventListener('DOMContentLoaded', function () {
+            // Initialize Materialize select
+            var elems = document.querySelectorAll('select');
+            M.FormSelect.init(elems);
+
+            // Add event listeners for the controls
+            document.getElementById('maxNeighbours').addEventListener('change', function (e) {
+                const value = parseInt(e.target.value);
+                if (value < 1) this.value = 1;
+                if (value > 200) this.value = 200;
+            });
+            document.getElementById('maxDepth').addEventListener('change', function (e) {
+                const value = parseInt(e.target.value);
+                if (value < 1) this.value = 1;
+                if (value > 10) this.value = 10;
+            });
+        });
+
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const dropdownTrigger = document.querySelector('.ddropdown-trigger');
+            const dropdownContent = document.querySelector('.ddropdown-content');
+            const selectedOptionsText = document.querySelector('.sselected-options');
+            const checkboxes = document.querySelectorAll('.ddropdown-item input[type="checkbox"]');
+
+            // Toggle dropdown
+            dropdownTrigger.addEventListener('click', (e) => {
+                e.stopPropagation();
+                dropdownContent.classList.toggle('active');
+            });
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!dropdownContent.contains(e.target) && !dropdownTrigger.contains(e.target)) {
+                    dropdownContent.classList.remove('active');
+                }
+            });
+
+            // Update selected options text
+            function updateSelectedOptions() {
+                const selected = Array.from(checkboxes)
+                    .filter(cb => cb.checked)
+                    .map(cb => cb.value);
+
+                selectedOptionsText.textContent = selected.length > 0
+                    ? selected.join(', ')
+                    : 'Select types...';
+            }
+
+            // Handle checkbox changes
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', updateSelectedOptions);
+            });
+
+            // Initial update
+            updateSelectedOptions();
+        });
+
+        function getSelectedNeighbourTypes() {
+            return Array.from(document.querySelectorAll('.ddropdown-item input[type="checkbox"]'))
+                .filter(cb => cb.checked)
+                .map(cb => cb.value);
+        }
+
+        // Function to get current expansion settings
+        function getExpansionSettings() {
+            const maxNeighbours = parseInt(document.getElementById('maxNeighbours').value);
+            const neighbourTypes = getSelectedNeighbourTypes();
+            const maxDepth = parseInt(document.getElementById('maxDepth').value);
+
+            return {
+                maxNeighbours,
+                neighbourTypes,
+                maxDepth
+            };
+        }
+
     </script>
 
     <!-- Advanced Search Modal -->
@@ -2032,9 +2300,9 @@
         <div class="modal-content">
             <h4>Advanced Search</h4>
             <div class="row">
-                <div class="input-field col s12">
+                <!-- <div class="input-field col s12">
                     <input type="text" id="advancedSearchQuery" placeholder="Enter search query">
-                </div>
+                </div> -->
                 <div class="col s12">
                     <h6>Search Syntax</h6>
                     <ul>
@@ -2052,6 +2320,28 @@
                         <li><code>id:</code> Search by identifier (e.g., "id:MESH123")</li>
                         <li><code>year:</code> Search by year (e.g., "year:2020..2024")</li>
                     </ul>
+                </div>
+                <div id="path-search">
+                    <h5>Path Search</h5>
+                    <div class="input-field-advanced">
+                        <input class="autocomplete" name="pathStartNode" id="pathStartNode"
+                            placeholder="Enter Start node name (Eg. Drug, Disease, Protein etc)">
+                        <input type="hidden" name="pathStartNode" id="pathStartNode_f_name" value="">
+                    </div>
+                    <div class="input-field-advanced">
+                        <input class="autocomplete" name="pathEndNode" id="pathEndNode"
+                            placeholder="Enter End node name (Eg. Drug, Disease, Protein etc)">
+                        <input type="hidden" name="pathEndNode" id="pathEndNode_f_name" value="">
+                    </div>
+                    <div class="input-field-advanced">
+                        <input id="maxHops" type="number" min="-1">
+                        <label for="maxHops">Search Depth</label>
+                    </div>
+                    <div class="center-align">
+                        <button id="pathSearchBtn" class="btn waves-effect waves-light">Find Path
+                            <i class="material-icons right">timeline</i>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

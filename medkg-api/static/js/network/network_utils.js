@@ -110,7 +110,7 @@ function initD3Graph() {
         // Link labels
         const linkLabels = links.append("text")
             .attr("class", "link-label")
-            .attr("dy", -2)
+            .attr("dy", -4)
             .text(d => {
                 // Shorten long relationship names
                 const type = d.type || "";
@@ -411,7 +411,9 @@ function initD3Graph() {
             .filter(cb => cb.checked)
             .map(cb => cb.value);
 
+        const expansionSetting = getExpansionSettings()
 
+        showLoading();
         fetch(`nodes/graph`, {
             method: 'POST',
             headers: {
@@ -421,16 +423,24 @@ function initD3Graph() {
                 id: nodeId,
                 name: node.name,
                 type: node.type,
-                neighbour: selectedEntityTypes.join(","), limit: 10
+                neighbour: expansionSetting.neighbourTypes.join(",") || selectedEntityTypes.join(","), 
+                existingNodes: globalNetworkValuesCopy.nodes.map(n => {if (n !== null) { return n.id}}),
+                limit: `${expansionSetting.maxNeighbours || 10}`,
+                depth: `${expansionSetting.maxDepth || 2}`,
             })
         })
             .then(response => {
+                hideLoading();
                 if (!response.ok) {
                     throw new Error('Failed to fetch node data');
                 }
                 return response.json();
             })
             .then(data => {
+                if (data.nodes === null || data.links === null) {
+                    console.log("No data found for the node");
+                    return;
+                }
                 // now append the data to the globalNetworkValues, 
                 globalNetworkValuesCopy.nodes = globalNetworkValuesCopy.nodes.concat(data.nodes);
                 globalNetworkValuesCopy.links = globalNetworkValuesCopy.links.concat(data.links);
@@ -477,6 +487,7 @@ function initD3Graph() {
                 globalNetworkValues = globalNetworkValuesCopy;
             })
             .catch(error => {
+                hideLoading();
                 console.error('Error:', error);
             });
     }
@@ -578,8 +589,8 @@ function initD3Graph() {
                         <label>Target Node Type</label>
                     </div>
                     <div class="input-field col s12">
-                        <input type="number" id="maxDepth" min="1" max="5" value="3">
-                        <label for="maxDepth">Maximum Path Depth</label>
+                        <input type="number" id="maxDepthFP" min="1" max="5" value="3">
+                        <label for="maxDepthFP">Maximum Path Depth</label>
                     </div>
                 </div>
             </div>
@@ -846,7 +857,7 @@ function initD3Graph() {
 
 function findPath(sourceNodeId) {
     const targetType = document.getElementById('targetNodeType').value;
-    const maxDepth = parseInt(document.getElementById('maxDepth').value);
+    const maxDepth = parseInt(document.getElementById('maxDepthFP').value);
 
     console.log('Finding path:', {
         sourceNodeId,
