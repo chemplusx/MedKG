@@ -517,10 +517,10 @@ func GetNetworkGraphForIdAndDepth(driver neo4j.DriverWithContext, id string, nam
 				labels = neighbour
 			}
 			labels = ":" + labels
-			query := "MATCH p=(node:" + typeN + ")-[r*" + depth + "]-(m" + labels + ") where elementId(node)='" + id + "'"
+			query := "MATCH p=(node:" + typeN + ")-[*.." + depth + "]-(m" + labels + ") where elementId(node)='" + id + "'"
 
 			if name != "" {
-				query += " and node.name='" + name + "'"
+				query += " and node.name='" + strings.ReplaceAll(name, "'", "\\'") + "'"
 			}
 
 			if len(nodeIdsToIgnore) > 0 {
