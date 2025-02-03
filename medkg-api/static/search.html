@@ -495,17 +495,27 @@
             justify-content: center;
         }
 
+        /* Drug: '#ff7675',
+            Protein: '#4834d4',
+            Disease: '#6c5ce7',
+            Gene: '#00b894',
+            Metabolite: '#e17055',
+            Pathway: '#fdcb6e',
+            Default: '#95a5a6',
+            Transcript: '#e84393',
+            Peptide: '#fbc531' */
+
         .shape-circle {
             width: 16px;
             height: 16px;
             border-radius: 50%;
-            background: #ccc;
+            background: #ff7675;
         }
 
         .shape-diamond {
             width: 16px;
             height: 16px;
-            background: #ccc;
+            background: #4834d4;
             transform: rotate(45deg);
         }
 
@@ -514,19 +524,19 @@
             height: 0;
             border-left: 8px solid transparent;
             border-right: 8px solid transparent;
-            border-bottom: 16px solid #ccc;
+            border-bottom: 16px solid #51d6df;
         }
 
         .shape-square {
             width: 16px;
             height: 16px;
-            background: #ccc;
+            background: #00b894;
         }
 
         .shape-cross {
             width: 16px;
             height: 16px;
-            background: #ccc;
+            background: #fbc531;
             position: relative;
             clip-path: polygon(25% 0%, 75% 0%, 75% 25%, 100% 25%, 100% 75%, 75% 75%, 75% 100%, 25% 100%, 25% 75%, 0% 75%, 0% 25%, 25% 25%);
         }
@@ -534,15 +544,22 @@
         .shape-wye {
             width: 16px;
             height: 16px;
-            background: #ccc;
+            background: #e17055;
             clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0 38%);
         }
 
         .shape-star {
             width: 16px;
             height: 16px;
-            background: #ccc;
+            background: #fdcb6e;
             clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+        }
+
+        .shape-hexagon {
+            width: 16px;
+            height: 16px;
+            background: #e84393;
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
         }
 
         .node-list,
@@ -1866,7 +1883,6 @@
                         <div class="legend-shape">
                             <div class="shape-circle"></div>
                         </div>
-                        <div class="legend-color" style="background: #ff7675;"></div>
                         <span>Drug</span>
                     </div>
 
@@ -1874,49 +1890,42 @@
                         <div class="legend-shape">
                             <div class="shape-triangle"></div>
                         </div>
-                        <div class="legend-color" style="background: #6c5ce7;"></div>
                         <span>Disease</span>
                     </div>
                     <div class="legend-item">
                         <div class="legend-shape">
                             <div class="shape-square"></div>
                         </div>
-                        <div class="legend-color" style="background: #00b894;"></div>
                         <span>Gene</span>
                     </div>
                     <div class="legend-item">
                         <div class="legend-shape">
                             <div class="shape-diamond"></div>
                         </div>
-                        <div class="legend-color" style="background: #4834d4;"></div>
                         <span>Protein</span>
                     </div>
                     <div class="legend-item">
                         <div class="legend-shape">
                             <div class="shape-wye"></div>
                         </div>
-                        <div class="legend-color" style="background: #ff7675;"></div>
                         <span>Metabolite</span>
                     </div>
                     <div class="legend-item">
                         <div class="legend-shape">
                             <div class="shape-star"></div>
                         </div>
-                        <div class="legend-color" style="background: #6c5ce7;"></div>
                         <span>Pathway</span>
                     </div>
                     <div class="legend-item">
                         <div class="legend-shape">
                             <div class="shape-cross"></div>
                         </div>
-                        <div class="legend-color" style="background: #00b894;"></div>
                         <span>Peptide</span>
                     </div>
                     <div class="legend-item">
                         <div class="legend-shape">
-                            <div class="shape-cross"></div>
+                            <div class="shape-hexagon"></div>
                         </div>
-                        <div class="legend-color" style="background: #4834d4;"></div>
                         <span>Transcript</span>
                     </div>
                 </div>
@@ -1956,9 +1965,10 @@
                 </button>
             </div>
             <div id="publicationsContent"></div>
-            
+
         </div>
-        <button class="show-more-btn publicationContent" id="publicationsContainerToggleButton" onclick="showPublicationDetails()">
+        <button class="show-more-btn publicationContent" id="publicationsContainerToggleButton"
+            onclick="showPublicationDetails()">
             Show Publications <i class="material-icons">expand_less</i>
     </main>
 
@@ -1966,7 +1976,7 @@
         <div class="footer-left">
             <span>© 2024 MedKG</span>
             <span> NIPER SAS Nagar</span>
-            <span>Department of PharmacoInformatics</span>
+            <span>Department of Pharmacoinformatics</span>
             <!-- <a href="#">Documentation</a> -->
         </div>
         <!-- <div class="footer-right">
@@ -2620,30 +2630,133 @@
 
     <!-- Advanced Search Modal -->
     <div id="advancedSearchModal" class="modal">
+        <style>
+            .input-field-advanced {
+                position: relative;
+                margin: 1rem 0;
+            }
+
+            .input-field-advanced input {
+                width: 95%;
+                padding: 12px;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+                font-size: 16px;
+                transition: border-color 0.3s;
+            }
+
+            .input-field-advanced input:focus {
+                border-color: #3498db;
+                outline: none;
+                box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.1);
+            }
+
+            .input-field-advanced select {
+                width: 95%;
+                padding: 12px;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+                font-size: 16px;
+                transition: border-color 0.3s;
+            }
+
+            .input-field-advanced select:focus {
+                border-color: #3498db;
+                outline: none;
+                box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.1);
+            }
+
+            .suggestions-container {
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: white;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                z-index: 1000;
+                max-height: 200px;
+                overflow-y: auto;
+                display: none;
+            }
+
+            .suggestions-container.active {
+                display: block;
+            }
+
+            .suggestion-item {
+                padding: 8px 12px;
+                cursor: pointer;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .suggestion-item:hover {
+                background-color: #f5f5f5;
+            }
+
+            .suggestion-name {
+                font-weight: 500;
+            }
+
+            .suggestion-type {
+                color: #666;
+                font-size: 0.9em;
+            }
+
+            #maxHops {
+                height: 3rem;
+            }
+
+            .center-align {
+                text-align: center;
+                margin-top: 2rem;
+            }
+
+            #pathSearchBtn {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+            }
+
+            .modal-footer {
+                display: flex;
+                justify-content: flex-end;
+                padding: 16px;
+                background-color: #f5f5f5;
+                border-top: 1px solid #ddd;
+            }
+
+            .modal-footer button {
+                margin-left: 8px;
+            }
+
+            .category-toggle {
+                margin: 1rem 0;
+                color: #666;
+            }
+
+            #categorySelection select {
+                width: 100%;
+                padding: 12px;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+                font-size: 16px;
+                height: 5rem;
+                background-color: white;
+            }
+
+            #categorySelection select:focus {
+                border-color: #3498db;
+                outline: none;
+                box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.1);
+            }
+        </style>
         <div class="modal-content">
             <h4>Advanced Search</h4>
             <div class="row">
-                <!-- <div class="input-field col s12">
-                    <input type="text" id="advancedSearchQuery" placeholder="Enter search query">
-                </div> -->
-                <div class="col s12">
-                    <h6>Search Syntax</h6>
-                    <ul>
-                        <li><code>AND</code>: Combine terms (e.g., "diabetes AND insulin")</li>
-                        <li><code>OR</code>: Alternative terms (e.g., "heart OR cardiac")</li>
-                        <li><code>NOT</code>: Exclude terms (e.g., "cancer NOT lung")</li>
-                        <li><code>"..."</code>: Exact phrase (e.g., "breast cancer")</li>
-                        <li><code>*</code>: Wildcard (e.g., "immun*" for immune, immunity, etc.)</li>
-                    </ul>
-                </div>
-                <div class="col s12">
-                    <h6>Field-Specific Search</h6>
-                    <ul>
-                        <li><code>type:</code> Search by entity type (e.g., "type:protein")</li>
-                        <li><code>id:</code> Search by identifier (e.g., "id:MESH123")</li>
-                        <li><code>year:</code> Search by year (e.g., "year:2020..2024")</li>
-                    </ul>
-                </div>
                 <div id="path-search">
                     <h5>Path Search</h5>
                     <div class="input-field-advanced">
@@ -2656,10 +2769,29 @@
                             placeholder="Enter End node name (Eg. Drug, Disease, Protein etc)">
                         <input type="hidden" name="pathEndNode" id="pathEndNode_f_name" value="">
                     </div>
-                    <div class="input-field-advanced">
+                    <div class="input-field-advanced" id="categorySelection" style="display: none;">
+                        <select id="nodeCategory" class="browser-default">
+                            <option value="" disabled selected>Select a category</option>
+                            <option value="Drug">Drug</option>
+                            <option value="Disease">Disease</option>
+                            <option value="Protein">Protein</option>
+                            <option value="Gene">Gene</option>
+                            <option value="Metabolite">Metabolite</option>
+                        </select>
+                        <!-- Add a note below this mentioning this will search for top 10 paths -->
+                        <p class="control-note">This search will be llimited to top 10 paths.</p>
+                    </div>
+                    <div class="category-toggle">
+                        <label>
+                            <input type="checkbox" id="useCategory" class="filled-in">
+                            <span>Search by Category Instead</span>
+                        </label>
+                    </div>
+
+                    <!-- <div class="input-field-advanced">
                         <input id="maxHops" type="number" min="-1">
                         <label for="maxHops">Search Depth</label>
-                    </div>
+                    </div> -->
                     <div class="center-align">
                         <button id="pathSearchBtn" class="btn waves-effect waves-light">Find Path
                             <i class="material-icons right">timeline</i>
@@ -2669,10 +2801,838 @@
             </div>
         </div>
         <div class="modal-footer">
-            <button class="modal-close btn-flat">Cancel</button>
-            <button class="btn" onclick="performAdvancedSearch()">Search</button>
+            <button class="btn-flat waves-effect waves-light" onclick="togglePathSearchHelp()">
+                <i class="material-icons">help_outline</i>
+            </button>
+        </div>
+        <div id="pathSearchHelpModal" class="modal small-modal"
+            style="top: 5% !important;width: 80%;height: 82%;max-width: 100%;">
+            <div class="modal-content">
+                <h6>How to Use Path Search</h6>
+                <p>Path Search helps you discover connections between two entities within the knowledge graph. Follow
+                    these steps:</p>
+                <ol>
+                    <li><strong>Enter Start Node:</strong> Type the name of the starting entity (e.g., Drug, Disease,
+                        Protein).</li>
+                    <li><strong>Enter End Node:</strong> Type the name of the ending entity.</li>
+                    <li><strong>Specify Search Depth:</strong> Set the maximum number of connections (hops) to explore.
+                    </li>
+                    <li><strong>Find Path:</strong> Click "Find Path" to visualize the shortest path between the two
+                        nodes.</li>
+                </ol>
+                <p>The search will return the shortest path between the two nodes, if one exists, helping you understand
+                    the relationships within the graph.</p>
+            </div>
         </div>
     </div>
+    <style>
+        .large-modal {
+            width: 80% !important;
+            height: 75% !important;
+            max-height: 80% !important;
+        }
+
+        .path-graph-container {
+            width: 100%;
+            height: calc(100vh - 300px);
+            min-height: 500px;
+            position: relative;
+            background: #fafafa;
+            border-radius: 4px;
+            border: 1px solid #eee;
+        }
+
+        .path-stats {
+            margin-top: 1rem;
+            display: flex;
+            gap: 2rem;
+            color: #666;
+        }
+
+        .path-node {
+            cursor: pointer;
+        }
+
+        .path-link {
+            stroke-width: 2px;
+        }
+
+        .path-node text {
+            font-size: 12px;
+            fill: #333;
+        }
+
+        .path-tooltip {
+            position: absolute;
+            padding: 8px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            pointer-events: none;
+            display: none;
+            z-index: 1000;
+        }
+
+        .path-graph-container {
+            width: 100%;
+            height: calc(100vh - 300px);
+            min-height: 500px;
+            position: relative;
+            background: #fafafa;
+            border-radius: 4px;
+            border: 1px solid #eee;
+            overflow: hidden;
+            /* Add these properties */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .path-graph-container svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+            /* Add this to ensure proper positioning */
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .path-link {
+            stroke-width: 2px;
+        }
+
+        .path-node {
+            cursor: pointer;
+        }
+
+        .path-node text {
+            pointer-events: none;
+        }
+    </style>
+    <div id="pathVisualizationModal" class="modal-fixed-footer large-modal modal" style="z-index: 1005;max-width: 80%; position: absolute; top: 10%; left: 10%; opacity: 1; transform: scaleX(1) scaleY(1);">
+        <div class="modal-content">
+            <h4 style="padding: 10px;">Path Results</h4>
+            <div id="pathGraph" class="path-graph-container">
+                <svg></svg>
+                <div class="path-tooltip"></div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-flat waves-effect waves-light" onclick="downloadPathGraph()">
+                <i class="material-icons left">file_download</i>Export
+            </button>
+        </div>
+    </div>
+    <script>
+        function togglePathSearchHelp() {
+            const helpModal = document.getElementById('pathSearchHelpModal');
+            const instance = M.Modal.init(helpModal);
+            instance.open();
+        }
+    </script>
+    <style>
+        .small-modal {
+            max-width: 400px;
+            max-height: 300px;
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const modal = document.getElementById('advancedSearchModal');
+            M.Modal.init(modal);
+
+            // Initialize autocomplete inputs
+            setupAutocomplete('pathStartNode');
+            setupAutocomplete('pathEndNode');
+
+            document.getElementById('useCategory').addEventListener('change', function () {
+                const endNodeInput = document.getElementById('pathEndNode').parentNode;
+                const categorySelect = document.getElementById('categorySelection');
+
+                if (this.checked) {
+                    endNodeInput.style.display = 'none';
+                    categorySelect.style.display = 'block';
+                    // Clear the end node value when switching to category
+                    document.getElementById('pathEndNode').value = '';
+                    document.getElementById('pathEndNode_f_name').value = '';
+                } else {
+                    endNodeInput.style.display = 'block';
+                    categorySelect.style.display = 'none';
+                    // Clear the category selection when switching to node
+                    document.getElementById('nodeCategory').value = '';
+                }
+            });
+        });
+
+
+        class PathGraph {
+            constructor(containerId) {
+                this.svg = d3.select(`#${containerId} svg`);
+                this.width = this.svg.node().getBoundingClientRect().width;
+                this.height = this.svg.node().getBoundingClientRect().height;
+                // this.svg = null;
+                this.simulation = null;
+                this.tooltip = null;
+                this.nodeColors = {
+                    'Drug': '#ff7675',
+                    'Protein': '#4834d4',
+                    'Disease': '#6c5ce7',
+                    'Gene': '#00b894',
+                    'Metabolite': '#e17055',
+                    'Default': '#95a5a6'
+                };
+                this.init();
+            }
+
+
+
+            init() {
+                // Clear any existing content
+                // this.svg.html('');
+
+                // Create SVG with a group for zoom
+                // this.svg = this.container.append('svg')
+                //     .attr('width', '100%')
+                //     .attr('height', '100%')
+                //     .attr('viewBox', [0, 0, this.width, this.height]);
+
+                // Add main group for zoom transformation
+                const defs = this.svg.append("defs");
+                const STYLES = {
+                    colors: {
+                        primary: '#2c3e50',
+                        secondary: '#3498db',
+                        accent: '#e74c3c',
+                        background: '#f8f9fa',
+                        nodeTypes: {
+                            Drug: '#ff7675',
+                            Protein: '#4834d4',
+                            Disease: '#51d6df',
+                            Gene: '#00b894',
+                            Metabolite: '#e17055',
+                            Pathway: '#fdcb6e',
+                            Default: '#95a5a6',
+                            Transcript: '#e84393',
+                            Peptide: '#fbc531'
+                        }
+                    },
+                    nodes: {
+                        minRadius: 8,
+                        maxRadius: 20,
+                        labelOffset: 8,
+                        highlightStrokeWidth: 3
+                    }
+                };
+                const markers = [
+                    { id: "arrow-inhibits", color: STYLES.colors.accent },
+                    { id: "arrow-activates", color: STYLES.colors.secondary },
+                    { id: "arrow-interacts", color: STYLES.colors.primary }
+                ];
+
+                markers.forEach(marker => {
+                    defs.append("marker")
+                        .attr("id", marker.id)
+                        .attr("viewBox", "0 -5 10 10")
+                        .attr("refX", 20)
+                        .attr("refY", 0)
+                        .attr("markerWidth", 6)
+                        .attr("markerHeight", 6)
+                        .attr("orient", "auto")
+                        .append("path")
+                        .attr("fill", marker.color)
+                        .attr("d", "M0,-5L10,0L0,5");
+                });
+
+                // Create container with zoom behavior
+                this.mainGroup = this.svg.append("g");
+                this.zoom = d3.zoom()
+                    .scaleExtent([0.2, 4])
+                    .on("zoom", (event) => {
+                        this.mainGroup.attr("transform", event.transform);
+                        // Update label visibility based on zoom level
+                        updateLabels(event.transform.k);
+                    });
+
+                this.svg.call(this.zoom);
+
+                // Store zoom reference for later use
+                // this.mainGroup.attr('transform', 'translate(0,0)');
+
+                // Create tooltip
+                this.tooltip = this.mainGroup.append('div')
+                    .attr('class', 'path-tooltip');
+
+                this.simulation = d3.forceSimulation()
+                    .force("link", d3.forceLink().id(d => d.id)
+                        .distance(100)
+                        .strength(0.5))
+                    .force("charge", d3.forceManyBody()
+                        .strength(-500)
+                        .distanceMax(300))
+                    .force("center", d3.forceCenter(this.width / 2, this.height / 2))
+                    .force("collision", d3.forceCollide().radius(50))
+                    .alphaDecay(0.01);
+            }
+
+            drag(simulation) {
+                return d3.drag()
+                    .on("start", (event) => {
+                        if (!event.active) simulation.alphaTarget(0.3).restart();
+                        event.subject.fx = event.subject.x;
+                        event.subject.fy = event.subject.y;
+                    })
+                    .on("drag", (event) => {
+                        event.subject.fx = event.x;
+                        event.subject.fy = event.y;
+                    })
+                    .on("end", (event) => {
+                        if (!event.active) simulation.alphaTarget(0);
+                        event.subject.fx = null;
+                        event.subject.fy = null;
+                    });
+            }
+
+
+            handleNodeHover(event, d) {
+                const node = d3.select(this);
+                node.select("path")
+                    .transition()
+                    .duration(200)
+                    .attr("stroke", "#000")
+                    .attr("stroke-width", STYLES.nodes.highlightStrokeWidth);
+
+                // Highlight connected nodes and links
+                const linkedNodes = new Set();
+                this.container.selectAll(".link-line")
+                    .filter(link => {
+                        if (link.source === d || link.target === d) {
+                            linkedNodes.add(link.source);
+                            linkedNodes.add(link.target);
+                            return true;
+                        }
+                        return false;
+                    })
+                    .transition()
+                    .duration(200)
+                    .attr("stroke", STYLES.colors.secondary)
+                    .attr("stroke-width", 2)
+                    .attr("stroke-opacity", 1);
+
+                    this.container.selectAll(".node")
+                    .transition()
+                    .duration(200)
+                    .style("opacity", n => linkedNodes.has(n) ? 1 : 0.2);
+            }
+
+            handleNodeUnhover() {
+                this.container.selectAll(".node")
+                    .transition()
+                    .duration(200)
+                    .style("opacity", 1)
+                    .select("path")
+                    .attr("stroke", "#fff")
+                    .attr("stroke-width", 2);
+
+                    this.container.selectAll(".link-line")
+                    .transition()
+                    .duration(200)
+                    .attr("stroke", "#999")
+                    .attr("stroke-width", 1.5)
+                    .attr("stroke-opacity", 0.6);
+            }
+
+            handleNodeClick(event, d) {
+                event.preventDefault();
+                showNodeModal(d);
+            }
+
+            // Helper functions
+            getNodeShape(type) {
+                const size = 150;
+                switch (type) {
+                    case 'Drug':
+                        return d3.symbol().type(d3.symbolCircle).size(size)();
+                    case 'Protein':
+                        return d3.symbol().type(d3.symbolDiamond).size(size)();
+                    case 'Disease':
+                        return d3.symbol().type(d3.symbolTriangle).size(size)();
+                    case 'Gene':
+                        return d3.symbol().type(d3.symbolSquare).size(size)();
+                    case 'Metabolite':
+                        return d3.symbol().type(d3.symbolWye).size(size)();
+                    case 'Pathway':
+                        return d3.symbol().type(d3.symbolStar).size(size)();
+                    case 'Peptide':
+                        return d3.symbol().type(d3.symbolCross).size(size)();
+                    case 'Transcript':
+                        return d3.symbol().type(d3.symbolCross).size(size)();
+                    default:
+                        return d3.symbol().type(d3.symbolCircle).size(size)();
+                }
+            }
+
+            getNodeLabelOffset(type) {
+                return type === 'Disease' ? 25 : 20;
+            }
+
+            updateGraph(data) {
+                // Clear existing elements
+                // Clear existing elements
+                this.mainGroup.selectAll("*").remove();
+
+                // Create link group with multiple line types
+                const links = this.mainGroup.append("g")
+                    .attr("class", "links")
+                    .selectAll("g")
+                    .data(data.links)
+                    .join("g");
+
+                // Main link line
+                links.append("line")
+                    .attr("class", "link-line")
+                    .attr("stroke", "#999")
+                    .attr("stroke-width", 1.5)
+                    .attr("stroke-opacity", 0.6)
+                    .attr("marker-end", d => `url(#arrow-${d.type || 'interacts'})`);
+
+                // Link labels
+                const linkLabels = links.append("text")
+                    .attr("class", "link-label")
+                    .attr("dy", -4)
+                    .text(d => {
+                        // Shorten long relationship names
+                        const type = d.type || "";
+                        // if (type.includes("IS_A_CONTRAINDICATION_FOR")) {
+                        //     return "contraindication";
+                        // }
+                        // Add more mappings as needed
+                        return type;
+                    })
+                    .attr("fill", "#666")
+                    .attr("font-size", "6px") // Even smaller font
+                    .style("pointer-events", "none")
+                    .style("opacity", 0.7); // Make labels slightly transparent
+
+                // Add textPath for edge labels
+                linkLabels.append("textPath")
+                    .attr("xlink:href", (d, i) => `#linkPath${i}`)
+                    .attr("startOffset", "50%")
+                    .style("text-anchor", "middle");
+
+                // Create paths for edge labels
+                links.append("path")
+                    .attr("id", (d, i) => `linkPath${i}`)
+                    .attr("class", "link-path")
+                    .style("fill", "none")
+                    .style("stroke", "none");
+
+                // Create nodes with custom shapes
+                const nodes = this.mainGroup.append("g")
+                    .attr("class", "nodes")
+                    .selectAll("g")
+                    .data(data.nodes)
+                    .join("g")
+                    .attr("class", "node")
+                    .call(this.drag(this.simulation));
+
+                // Node shapes
+                nodes.append("path")
+                    .attr("d", d => this.getNodeShape(d.type))
+                    .attr("fill", d => STYLES.colors.nodeTypes[d.type] || STYLES.colors.nodeTypes.Default)
+                    .attr("stroke", "#fff")
+                    .attr("stroke-width", 2);
+
+                // Node labels
+                const labels = nodes.append("text")
+                    .attr("class", "node-label")
+                    .attr("dy", d => this.getNodeLabelOffset(d.type))
+                    .attr("text-anchor", "middle")
+                    .text(d => d.name)
+                    .attr("fill", "#333")
+                    .attr("font-size", "10px")
+                    .style("pointer-events", "none");
+
+                // Hover interactions
+                nodes
+                    .on("mouseover", this.handleNodeHover)
+                    .on("mouseout", this.handleNodeUnhover)
+                    .on("click", this.handleNodeClick);
+
+                // Then update the event bindings like this:
+                nodes.on("contextmenu", (event, d) => {
+                    event.preventDefault();
+                    // handleContextMenu(event, d);
+                });
+
+                nodes.on("click", (event, d) => {
+                    event.preventDefault();
+                    // showNodeModal(d);  // This was previously updateDetails(d)
+                });
+
+                // Update simulation
+                this.simulation
+                    .nodes(data.nodes)
+                    .on("tick", () => {
+                        // Update link lines
+                        links.selectAll("line")
+                            .attr("x1", d => d.source.x)
+                            .attr("y1", d => d.source.y)
+                            .attr("x2", d => d.target.x)
+                            .attr("y2", d => d.target.y);
+
+                        // Update link paths for labels
+                        links.selectAll(".link-path")
+                            .attr("d", d => {
+                                const dx = d.target.x - d.source.x;
+                                const dy = d.target.y - d.source.y;
+                                const dr = Math.sqrt(dx * dx + dy * dy);
+                                return `M ${d.source.x} ${d.source.y} A ${dr} ${dr} 0 0 1 ${d.target.x} ${d.target.y}`;
+                            });
+
+                        links.selectAll("text")
+                            .attr("x", d => (d.source.x + d.target.x) / 2)
+                            .attr("y", d => (d.source.y + d.target.y) / 2);
+
+                        nodes.attr("transform", d => `translate(${d.x},${d.y})`);
+                    });
+
+                this.simulation.force("link").links(data.links);
+                this.simulation.alpha(1).restart();
+            }
+
+            // Add a method to center the graph
+            centerGraph() {
+                const initialTransform = d3.zoomIdentity
+                    .translate(this.width / 2, this.height / 2)
+                    .scale(0.8);
+
+                this.svg.call(this.zoom.transform, initialTransform);
+            }
+
+            drag(simulation) {
+                function dragstarted(event) {
+                    if (!event.active) simulation.alphaTarget(0.3).restart();
+                    event.subject.fx = event.subject.x;
+                    event.subject.fy = event.subject.y;
+                }
+
+                function dragged(event) {
+                    event.subject.fx = event.x;
+                    event.subject.fy = event.y;
+                }
+
+                function dragended(event) {
+                    if (!event.active) simulation.alphaTarget(0);
+                    event.subject.fx = null;
+                    event.subject.fy = null;
+                }
+
+                return d3.drag()
+                    .on('start', dragstarted)
+                    .on('drag', dragged)
+                    .on('end', dragended);
+            }
+        }
+
+
+        // Initialize path visualization
+        let pathGraph;
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize the path visualization modal
+            const pathModal = document.getElementById('pathVisualizationModal');
+            M.Modal.init(pathModal, {
+                onOpenStart: () => {
+                    setTimeout(() => {
+                        if (!pathGraph) {
+                        pathGraph = new PathGraph('pathGraph');
+                    }
+                    }, 500);
+                    
+                },
+                
+            });
+        });
+
+
+        function setupAutocomplete(inputId) {
+            const input = document.getElementById(inputId);
+            const hiddenInput = document.getElementById(`${inputId}_f_name`);
+
+            // Create suggestions container
+            const suggestionsContainer = document.createElement('div');
+            suggestionsContainer.className = 'suggestions-container';
+            input.parentNode.appendChild(suggestionsContainer);
+
+            // Handle input changes
+            input.addEventListener('input', debounce(function () {
+                const searchTerm = this.value.toLowerCase();
+                if (searchTerm.length < 2) {
+                    suggestionsContainer.classList.remove('active');
+                    return;
+                }
+                fetch(`search_in_graph?limit=10&term=${encodeURIComponent(searchTerm)}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data);
+                        // Update the graph with data
+                        const suggestions = [];
+
+                        if (data.exactMatches) {
+                            data.exactMatches.forEach(item => {
+                                if (item.type === 'Drug') {
+                                    suggestions.push({
+                                        id: item.id,
+                                        text: item.label || item.properties.name,
+                                        type: item.type,
+                                        value: item.label || item.properties.name,
+                                    });
+                                } else if (item.type === 'Disease') {
+                                    suggestions.push({
+                                        id: item.id,
+                                        text: item.label || item.properties.name,
+                                        type: item.type,
+                                        value: item.label || item.properties.name,
+                                    });
+                                } else if (item.type === 'Protein') {
+                                    suggestions.push({
+                                        id: item.id,
+                                        text: `${item.properties.accession} (${item.properties.name})` || item.properties.name,
+                                        type: item.type,
+                                        value: item.properties.accession
+                                    });
+                                } else if (item.type === 'Pathway') {
+                                    suggestions.push({
+                                        id: item.id,
+                                        text: item.label || item.properties.name,
+                                        type: item.type,
+                                        value: item.label || item.properties.name,
+                                    });
+                                } else {
+                                    suggestions.push({
+                                        id: item.id,
+                                        text: item.label || item.properties.name,
+                                        type: item.type,
+                                        value: item.label || item.properties.name,
+                                    });
+                                }
+                            });
+                        }
+
+                        if (data.partialMatches) {
+                            data.partialMatches.forEach(item => {
+                                if (item.type === 'Drug') {
+                                    suggestions.push({
+                                        id: item.id,
+                                        text: item.label || item.properties.name,
+                                        type: item.type,
+                                        value: item.label || item.properties.name,
+                                    });
+                                } else if (item.type === 'Disease') {
+                                    suggestions.push({
+                                        id: item.id,
+                                        text: item.label || item.properties.name,
+                                        type: item.type,
+                                        value: item.label || item.properties.name,
+                                    });
+                                } else if (item.type === 'Protein') {
+                                    suggestions.push({
+                                        id: item.id,
+                                        text: `${item.properties.accession} (${item.properties.name})` || item.properties.name,
+                                        type: item.type,
+                                        value: item.properties.accession
+                                    });
+                                } else if (item.type === 'Pathway') {
+                                    suggestions.push({
+                                        id: item.id,
+                                        text: item.label || item.properties.name,
+                                        type: item.type,
+                                        value: item.label || item.properties.name,
+                                    });
+                                } else {
+                                    suggestions.push({
+                                        id: item.id,
+                                        text: item.label || item.properties.name,
+                                        type: item.type,
+                                        value: item.label || item.properties.name,
+                                    });
+                                }
+                            });
+                        }
+                        updateSuggestions(suggestions, suggestionsContainer, input, hiddenInput);
+                    });
+
+            }, 300));
+
+            // Close suggestions when clicking outside
+            document.addEventListener('click', function (e) {
+                if (!input.contains(e.target) && !suggestionsContainer.contains(e.target)) {
+                    suggestionsContainer.classList.remove('active');
+                }
+            });
+        }
+
+        function updateSuggestions(suggestions, container, input, hiddenInput) {
+            if (suggestions.length === 0) {
+                container.classList.remove('active');
+                return;
+            }
+
+            container.innerHTML = suggestions.map(item => `
+                <div class="suggestion-item" data-id="${item.id}" data-name="${item.value}">
+                    <span class="suggestion-name">${item.text}</span>
+                    <span class="suggestion-type">${item.type}</span>
+                </div>
+            `).join('');
+
+            container.classList.add('active');
+
+            // Add click handlers to suggestions
+            container.querySelectorAll('.suggestion-item').forEach(item => {
+                item.addEventListener('click', function () {
+                    input.value = this.dataset.name;
+                    hiddenInput.value = this.dataset.id;
+                    container.classList.remove('active');
+                });
+            });
+        }
+
+        // Debounce function to limit API calls
+        function debounce(func, wait) {
+            let timeout;
+            return function (...args) {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(this, args), wait);
+            };
+        }
+
+        // Handle path search
+        function performAdvancedSearch() {
+            const startNode = document.getElementById('pathStartNode_f_name').value;
+            const useCategory = document.getElementById('useCategory').checked;
+
+            let endValue;
+            if (useCategory) {
+                endValue = document.getElementById('nodeCategory').value;
+                if (!endValue) {
+                    M.toast({ html: 'Please select a category' });
+                    return;
+                }
+            } else {
+                endValue = document.getElementById('pathEndNode_f_name').value;
+                if (!endValue) {
+                    M.toast({ html: 'Please select an end node' });
+                    return;
+                }
+            }
+
+            // Show loading state
+            document.getElementById('loadingOverlay').classList.add('active');
+
+            // Simulate API call with category support
+            fetch('api/path-search', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    startNode: startNode,
+                    targetType: useCategory ? endValue : "",
+                    maxHops: `6`,
+                    endNode: useCategory ? "" : endValue,
+                })
+            }).then(response => {
+                hideLoading();
+                if (!response.ok) {
+                    throw new Error('Failed to find path');
+                }
+                return response.json();
+            }).then(data => {
+                console.log('Path search result:', data);
+                // Format the data
+                // Update the visualization with the path
+                // Close the advanced search modal
+                if (data.paths.length === 0) {
+                    M.toast({ html: 'No path found' });
+                    return;
+                }
+                const searchModal = M.Modal.getInstance(document.getElementById('advancedSearchModal'));
+                // searchModal.close();
+
+                // Open the path visualization modal and update the graph
+                const pathModal = M.Modal.getInstance(document.getElementById('pathVisualizationModal'));
+                pathModal.open();
+
+                setTimeout(() => {
+                    if (pathGraph) {
+                        paths = data.paths;
+                        nodes = [];
+                        links = [];
+                        //iterate through each path and update the graph
+                        pathGraph.updateGraph({
+                            nodes: [],
+                            links: []
+                        });
+                        paths.forEach(path => {
+                            nodes.push(...path.nodes);
+                            links.push(...path.relationships);
+
+
+                        });
+
+
+                        // remove duplicate nodes and relationshipts
+                        nodes = nodes.filter((node, index, self) =>
+                            index === self.findIndex((t) => (
+                                t.id === node.id
+                            ))
+                        );
+
+                        links = links.filter((link, index, self) =>
+                            index === self.findIndex((t) => (
+                                t.id === link.id
+                            ))
+                        );
+
+                        pathGraph.updateGraph({
+                            nodes: nodes,
+                            links: links
+                        });
+                    }
+                }, 2000);
+            }).catch(error => {
+                console.error('Error finding path:', error);
+                M.toast({ html: 'Failed to find path' });
+            });
+        }
+
+        // Add event listener to search button
+        document.getElementById('pathSearchBtn').addEventListener('click', performAdvancedSearch);
+
+        // Initialize maxHops input with default value and validation
+        // document.getElementById('maxHops').addEventListener('input', function () {
+        //     const value = parseInt(this.value);
+        //     if (value < 1) this.value = 1;
+        //     if (value > 10) this.value = 10;
+        // });
+
+
+        // Function to download the path graph as SVG
+        function downloadPathGraph() {
+            const svgData = document.querySelector('#  svg').outerHTML;
+            const blob = new Blob([svgData], { type: 'image/svg+xml' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'path_graph.svg';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        }
+
+    </script>
 
     <!-- Help Modal -->
     <div id="helpModal" class="modal">

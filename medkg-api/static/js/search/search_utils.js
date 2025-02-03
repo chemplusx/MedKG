@@ -150,10 +150,7 @@ function clearAllEntities(type) {
 
 
 function toggleAdvancedSearch() {
-    const advancedOptions = document.querySelector('.advanced-options');
-    if (advancedOptions) {
-        advancedOptions.style.display = advancedOptions.style.display === 'none' ? 'block' : 'none';
-    }
+   showAdvancedSearch();
 }
 
 function clearSearch() {

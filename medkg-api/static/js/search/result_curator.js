@@ -68,14 +68,33 @@ function createResultCard(result) {
     const sourceLink = result.publication || '';
 
     // Get name from either label or properties.name
-    const displayName = result.label || result.properties.name;
+    let displayName = result.label || result.properties.name;
+    
 
     // Get ID from either properties.id or the main id field
     const displayId = result.properties.id || result.id;
 
     // Get description from properties and truncate it
-    const description = result.properties.fullDesciption || result.properties.description || result.properties.function || 'No description available';
+    let description = result.properties.fullDesciption || result.properties.description || result.properties.function || 'No description available';
+    if (entityType==="protein"){
+        displayName = result.properties.accession;
+        if (result.properties.full_name){
+            description = `<strong>Full name:</strong> ${result.properties.full_name} 
+            <br> <strong>Gene:</strong> ${result.properties.name} 
+            <br> <strong>General Function::</strong> ${result.properties.general_function} 
+            <br> <strong>Specific Function::</strong> ${result.properties.specific_function}`;
+        }
+    }else if (entityType==="disease"){
+        if (description == 'No description available') {
+            description = ""
+            description = result.properties.mondo_name ? `${result.properties.mondo_name} <br>`: "";
+            description +=  result.properties.mondo_definition ? `${result.properties.mondo_definition}` : "";
 
+            if (description == ""){
+                description = result.properties.orphanet_definition ? `${result.properties.orphanet_definition}`: "";
+            }
+        }
+    }
     card.innerHTML = `
         <div class="entity-type ${entityClass}">
             ${result.type}
@@ -219,6 +238,7 @@ function displayFilteredResults(filteredResults) {
     <h5>Exact Matches</h5>
     <div class="search-stats">Found ${totalExact} exact ${totalExact === 1 ? 'match' : 'matches'}</div>
 `;
+
 
         filteredResults.exactMatches.forEach(result => {
             const card = createResultCard(result);

@@ -17,7 +17,7 @@ const STYLES = {
         nodeTypes: {
             Drug: '#ff7675',
             Protein: '#4834d4',
-            Disease: '#6c5ce7',
+            Disease: '#51d6df',
             Gene: '#00b894',
             Metabolite: '#e17055',
             Pathway: '#fdcb6e',
@@ -423,8 +423,8 @@ function initD3Graph() {
                 id: nodeId,
                 name: node.name,
                 type: node.type,
-                neighbour: expansionSetting.neighbourTypes.join(",") || selectedEntityTypes.join(","), 
-                existingNodes: globalNetworkValuesCopy.nodes.map(n => {if (n !== null) { return n.id}}),
+                neighbour: expansionSetting.neighbourTypes.join(",") || selectedEntityTypes.join(","),
+                existingNodes: globalNetworkValuesCopy.nodes.map(n => { if (n !== null) { return n.id } }),
                 limit: `${expansionSetting.maxNeighbours || 10}`,
                 depth: `${expansionSetting.maxDepth || 2}`,
             })
@@ -650,85 +650,525 @@ function initD3Graph() {
     function showNodeModal(node) {
         getNodeDetails(node.id).then(nodeData => {
             const modalContent = `
-        <style>
-            .modal-content {
-                padding: 20px;
-                background: white;
-                border-radius: 4px;
-                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-                max-width: 600px;
-                margin: 20px auto;
-            }
+            <style>
+                .modal.open {
+                    max-width: 80%;
+                }
+                .modal-content {
+                    background: white;
+                    border-radius: 8px;
+                    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+                    max-width: 900px;
+                    margin: 20px auto;
+                    position: relative;
+                }
 
-            .modal-header {
-                margin-bottom: 15px;
-                position: relative;
-            }
+                .modal-header {
+                    padding: 20px;
+                    border-bottom: 1px solid #eee;
+                    background: #f8f9fa;
+                    border-radius: 8px 8px 0 0;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                }
 
-            .modal-close {
-                cursor: pointer;
-                position: absolute;
-                right: 0;
-                top: 0;
-            }
+                .modal-header h4 {
+                    margin: 0;
+                    font-size: 1.4rem;
+                    color: #2c3e50;
+                    font-weight: 600;
+                }
 
-            .modal-body {
-                margin: 15px 0;
-            }
+                .modal-close {
+                    cursor: pointer;
+                    font-size: 1.5rem;
+                    color: #666;
+                }
 
-            pre {
-                background: #f8f8f8;
-                padding: 10px;
-                border-radius: 3px;
-                overflow: auto;
-            }
+                .entity-badge {
+                    display: inline-block;
+                    padding: 4px 12px;
+                    border-radius: 4px;
+                    font-size: 0.875rem;
+                    font-weight: 500;
+                    color: white;
+                    margin-left: 12px;
+                }
 
-            .modal-footer {
-                text-align: right;
-                margin-top: 15px;
-            }
+                .entity-disease { background: #e74c3c; }
+                .entity-protein { background: #3498db; }
+                .entity-drug { background: #2ecc71; }
 
-            button {
-                padding: 5px 15px;
-                cursor: pointer;
-            }
-        </style>
+                .modal-body {
+                    padding: 20px;
+                }
+
+                .info-section {
+                    margin-bottom: 24px;
+                    background: #fff;
+                    border-radius: 8px;
+                    border: 1px solid #e1e4e8;
+                }
+
+                .section-header {
+                    padding: 12px 16px;
+                    background: #f8f9fa;
+                    border-bottom: 1px solid #e1e4e8;
+                    font-weight: 600;
+                    color: #2c3e50;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                }
+
+                .section-content {
+                    padding: 16px;
+                }
+
+                .info-grid {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+                    gap: 16px;
+                }
+
+                .info-item {
+                    background: #f8f9fa;
+                    padding: 12px;
+                    max-height: 300px;
+                    overflow-y: auto;
+                    border-radius: 6px;
+                    border: 1px solid #e1e4e8;
+                }
+
+                .info-label {
+                    font-size: 0.875rem;
+                    color: #666;
+                    margin-bottom: 4px;
+                    font-weight: 500;
+                }
+
+                .info-value {
+                    font-size: 0.95rem;
+                    color: #2c3e50;
+                    line-height: 1.4;
+                }
+
+                .long-text {
+                    white-space: pre-wrap;
+                    max-height: 300px;
+                    overflow-y: auto;
+                    padding: 12px;
+                    background: #f8f9fa;
+                    border-radius: 6px;
+                    border: 1px solid #e1e4e8;
+                    font-size: 0.95rem;
+                    line-height: 1.5;
+                }
+
+                .tag-container {
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 8px;
+                }
+
+                .tag {
+                    background: #e9ecef;
+                    padding: 4px 8px;
+                    border-radius: 4px;
+                    font-size: 0.875rem;
+                    color: #495057;
+                    max-width: 200px;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                }
+
+                .copy-button {
+                    padding: 4px 8px;
+                    font-size: 0.8rem;
+                    color: #666;
+                    background: #e9ecef;
+                    border: none;
+                    border-radius: 4px;
+                    cursor: pointer;
+                    margin-left: auto;
+                }
+
+                .copy-button:hover {
+                    background: #dee2e6;
+                }
+
+                .chemical-formula {
+                    font-family: monospace;
+                    background: #f1f8ff;
+                    padding: 2px 6px;
+                    border-radius: 4px;
+                    color: #0366d6;
+                }
+
+                .collapsible-content {
+                    max-height: 0;
+                    overflow: hidden;
+                    transition: max-height 0.3s ease-out;
+                }
+
+                .expanded {
+                    max-height: 1000px;
+                }
+
+                .toggle-button {
+                    background: none;
+                    border: none;
+                    color: #0366d6;
+                    cursor: pointer;
+                    padding: 0;
+                    font-size: 0.9rem;
+                }
+            </style>
+
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4>${node.name}</h4>
-                    <i class="material-icons modal-close" style="cursor: pointer; position: absolute; right: 10px; top: 10px;"></i>
-                </div>
-                <div class="entity-type">
-                    <span style="padding:2px;" class="entity-${node.type.toLowerCase()}">
-                    ${node.type}
-                    </span>
-                </div>
-                <div class="modal-body">
-                    <div id="nodeDetails">
-                        <h5>Node Details</h5>
-                        <pre id="jsonContainer">${JSON.stringify(nodeData, null, 2)}</pre>
+                    <div style="display: flex; align-items: center;">
+                        <h4 id="entityName"></h4>
+                        <span id="entityType" class="entity-badge"></span>
                     </div>
-                    <div class="relationships-section">
-                        <h5>Relationships</h5>
-                        <div id="nodeRelationships">
-                            Loading relationships...
-                        </div>
-                    </div>
+                    <span class="modal-close">×</span>
                 </div>
-                
+                <div class="modal-body" id="modalBody">
+                    <!-- Content will be dynamically inserted here -->
+                </div>
             </div>
-        `;
+            `;
 
-            // <p><strong>ID:</strong> ${node.id}</p>
-            // <p><strong>Type:</strong> ${node.type}</p>
-            // ${node.description ? `<p><strong>Description:</strong> ${node.description}</p>` : ''}
+            function formatData(data, label) {
+                const modalBody = document.getElementById('modalBody');
+                const entityName = document.getElementById('entityName');
+                const entityType = document.getElementById('entityType');
 
-            // <div class="relationships-section">
-            //     <h5>Relationships</h5>
-            //     <div id="nodeRelationships">
-            //         Loading relationships...
-            //     </div>
-            // </div>
+                // Set entity name and type
+                entityName.textContent = data.name;
+                // let type = determineEntityType(data);
+                entityType.textContent = label;
+                entityType.className = `entity-badge entity-${label.toLowerCase()}`;
+
+                modalBody.innerHTML = ''; // Clear existing content
+
+                // Create sections based on entity type
+                if (label === 'Disease') {
+                    createDiseaseView(data, modalBody);
+                } else if (label === 'Protein') {
+                    createProteinView(data, modalBody);
+                } else if (label === 'Drug') {
+                    createDrugView(data, modalBody);
+                } else if (label === 'Gene') {
+                    createGeneView(data, modalBody);
+                } else if (label === 'Metabolite') {
+                    createMetaboliteView(data, modalBody);
+                } else if (label === 'Pathway') {
+                    createPathwayView(data, modalBody);
+                } else if (label === 'Transcript') {
+                    createTranscriptView(data, modalBody);
+                } else if (label === 'Peptide') {
+                    createPeptideView(data, modalBody);
+                }
+            }
+
+            function determineEntityType(data) {
+                if (data.id?.startsWith('DOID:')) return 'Disease';
+                if (data.molecular_weight && data.organism) return 'Protein';
+                if (data.drugbank_id) return 'Drug';
+                return 'Unknown';
+            }
+
+            function createSection(title, content) {
+                const section = document.createElement('div');
+                section.className = 'info-section';
+
+                const header = document.createElement('div');
+                header.className = 'section-header';
+                header.textContent = title;
+
+                const sectionContent = document.createElement('div');
+                sectionContent.className = 'section-content';
+                sectionContent.appendChild(content);
+
+                section.appendChild(header);
+                section.appendChild(sectionContent);
+                return section;
+            }
+
+            function createInfoItem(label, value, isLongText = false) {
+                const item = document.createElement('div');
+                isLongText = false;
+                item.className = isLongText ? 'info-item' : 'info-item';
+
+                if (!isLongText) {
+                    const labelDiv = document.createElement('div');
+                    labelDiv.className = 'info-label';
+                    labelDiv.textContent = label;
+                    item.appendChild(labelDiv);
+                } else {
+                    const labelDiv = document.createElement('div');
+                    labelDiv.className = 'info-label';
+                    labelDiv.textContent = label;
+                    item.appendChild(labelDiv);
+                }
+
+                const valueDiv = document.createElement('div');
+                valueDiv.className = isLongText ? 'info-value' : 'info-value';
+
+                if (Array.isArray(value)) {
+                    const tagContainer = document.createElement('div');
+                    tagContainer.className = 'tag-container';
+                    value.forEach(v => {
+                        const tag = document.createElement('span');
+                        tag.className = 'tag';
+                        tag.textContent = v;
+                        tagContainer.appendChild(tag);
+                    });
+                    valueDiv.appendChild(tagContainer);
+                } else {
+                    valueDiv.textContent = value;
+                }
+
+                if (!isLongText) {
+                    item.appendChild(valueDiv);
+                } else {
+                    item.textContent = value;
+                }
+
+                return item;
+            }
+
+            function createDiseaseView(data, container) {
+                // Overview section
+                const overviewGrid = document.createElement('div');
+                overviewGrid.className = 'info-grid';
+                overviewGrid.appendChild(createInfoItem('ID', data.id));
+                overviewGrid.appendChild(createInfoItem('Name', data.name));
+                if (data.source) overviewGrid.appendChild(createInfoItem('Source', data.source));
+                if (data.orphanet_definition) overviewGrid.appendChild(createInfoItem('Is Orphanet?', 'Yes'));
+                container.appendChild(createSection('Overview', overviewGrid));
+
+                // Description section
+                let descContent = createInfoItem('Full Description', data.full_description, true);
+                if (!data.full_description) {
+                    descContent = createInfoItem('Description', data.description, true);
+                    if (!data.description) {
+                        descContent = createInfoItem('Description', data.umls_description, true);
+                    }
+                }
+                container.appendChild(createSection('Description', descContent));
+
+                if (data.orphanet_definition) {
+                    // Orphanet section
+                    const orphanetGrid = document.createElement('div');
+                    orphanetGrid.className = 'info-grid';
+                    orphanetGrid.appendChild(createInfoItem('Orphanet Definition', data.orphanet_definition));
+                    orphanetGrid.appendChild(createInfoItem('Orphanet Epidemiology', data.orphanet_epidemiology));
+                    orphanetGrid.appendChild(createInfoItem('Orphanet Treatment', data.orphanet_management_and_treatment));
+                    container.appendChild(createSection('Orphanet Information', orphanetGrid));
+                }
+
+                // Identifiers section
+                const identifiersGrid = document.createElement('div');
+                identifiersGrid.className = 'info-grid';
+                identifiersGrid.appendChild(createInfoItem('Synonyms', data.synonyms));
+                container.appendChild(createSection('Identifiers', identifiersGrid));
+            }
+
+            function createProteinView(data, container) {
+                // Basic Information
+                const basicGrid = document.createElement('div');
+                basicGrid.className = 'info-grid';
+                basicGrid.appendChild(createInfoItem('Accession', data.accession));
+                basicGrid.appendChild(createInfoItem('Full Name', data.full_name));
+                basicGrid.appendChild(createInfoItem('Organism', data.organism));
+                basicGrid.appendChild(createInfoItem('Molecular Weight', data.molecular_weight));
+                container.appendChild(createSection('Basic Information', basicGrid));
+
+                // Function Information
+                if (data.general_function) {
+                    const functionContent = createInfoItem('General Function', data.general_function, true);
+                    container.appendChild(createSection('Function', functionContent));
+                }
+
+                // Technical Details
+                const techGrid = document.createElement('div');
+                techGrid.className = 'info-grid';
+                if (data.isoelectric_point) techGrid.appendChild(createInfoItem('Isoelectric Point', data.isoelectric_point));
+                if (data.specific_function) techGrid.appendChild(createInfoItem('Specific Function', data.specific_function));
+                container.appendChild(createSection('Technical Details', techGrid));
+
+                // Identifiers
+                const identifiersGrid = document.createElement('div');
+                identifiersGrid.className = 'info-grid';
+                identifiersGrid.appendChild(createInfoItem('Synonyms', data.synonyms));
+                container.appendChild(createSection('Identifiers', identifiersGrid));
+            }
+
+            function createDrugView(data, container) {
+                // Basic Information
+                const basicGrid = document.createElement('div');
+                basicGrid.className = 'info-grid';
+                basicGrid.appendChild(createInfoItem('Name', data.name));
+                basicGrid.appendChild(createInfoItem('DrugBank ID', data.drugbank_id));
+                basicGrid.appendChild(createInfoItem('CAS Number', data.cas_number));
+                container.appendChild(createSection('Basic Information', basicGrid));
+
+                // Clinical Information
+                const clinicalContent = document.createElement('div');
+                clinicalContent.className = 'info-grid';
+                if (data.indication) clinicalContent.appendChild(createInfoItem('Indication', data.indication));
+                if (data.mechanism_of_action) {
+                    const mechanismContent = createInfoItem('Mechanism of Action', data.mechanism_of_action, true);
+                    clinicalContent.appendChild(mechanismContent);
+                }
+                container.appendChild(createSection('Clinical Information', clinicalContent));
+
+                // Chemical Properties
+                const chemGrid = document.createElement('div');
+                chemGrid.className = 'info-grid';
+                if (data.chemical_formula) chemGrid.appendChild(createInfoItem('Chemical Formula', data.chemical_formula));
+                if (data.molecular_weight) chemGrid.appendChild(createInfoItem('Molecular Weight', data.molecular_weight));
+                if (data.state) chemGrid.appendChild(createInfoItem('State', data.state));
+                container.appendChild(createSection('Chemical Properties', chemGrid));
+
+                // Pharmacological Properties
+                const pharmaGrid = document.createElement('div');
+                pharmaGrid.className = 'info-grid';
+                if (data.half_life) pharmaGrid.appendChild(createInfoItem('Half Life', data.half_life));
+                if (data.protein_binding) pharmaGrid.appendChild(createInfoItem('Protein Binding', data.protein_binding));
+                if (data.route_of_elimination) pharmaGrid.appendChild(createInfoItem('Route of Elimination', data.route_of_elimination));
+                container.appendChild(createSection('Pharmacological Properties', pharmaGrid));
+            }
+
+            function createPeptideView(data, container) {
+                const overviewGrid = document.createElement('div');
+                overviewGrid.className = 'info-grid';
+                overviewGrid.appendChild(createInfoItem('ID', data.id));
+                overviewGrid.appendChild(createInfoItem('Type', data.type));
+                if (data.source) overviewGrid.appendChild(createInfoItem('Unique', data.unique));
+                container.appendChild(createSection('Overview', overviewGrid));
+
+                // Identifiers
+                if (data.synonyms) {
+                    const identifiersGrid = document.createElement('div');
+                    identifiersGrid.className = 'info-grid';
+                    identifiersGrid.appendChild(createInfoItem('Synonyms', data.synonyms));
+                    container.appendChild(createSection('Identifiers', identifiersGrid));
+                }
+            }
+
+            function createTranscriptView(data, container) {
+                /*
+                {
+                "id": "NM_080876.4",
+                "assembly": "GCF_000001405.39",
+                "name": "dual specificity phosphatase 19, transcript variant 1",
+                "embedding": null,
+                "taxid": "9606"
+                }
+                */
+                const overviewGrid = document.createElement('div');
+                overviewGrid.className = 'info-grid';
+                overviewGrid.appendChild(createInfoItem('ID', data.id));
+                overviewGrid.appendChild(createInfoItem('Name', data.name));
+                overviewGrid.appendChild(createInfoItem('Assembly', data.assembly));
+                overviewGrid.appendChild(createInfoItem('Tax ID', data.taxid));
+                container.appendChild(createSection('Overview', overviewGrid));
+            }
+
+
+            function createGeneView(data, container) {
+                const overviewGrid = document.createElement('div');
+                overviewGrid.className = 'info-grid';
+                overviewGrid.appendChild(createInfoItem('ID', data.id));
+                overviewGrid.appendChild(createInfoItem('Name', data.name));
+                if (data.source) overviewGrid.appendChild(createInfoItem('Source', data.source));
+                if (data.family) overviewGrid.appendChild(createInfoItem('Family', data.family));
+                container.appendChild(createSection('Overview', overviewGrid));
+
+                // Identifiers
+                if (data.synonyms) {
+                    const identifiersGrid = document.createElement('div');
+                    identifiersGrid.className = 'info-grid';
+                    identifiersGrid.appendChild(createInfoItem('Synonyms', data.synonyms));
+                    container.appendChild(createSection('Identifiers', identifiersGrid));
+                }
+            }
+
+            function createMetaboliteView(data, container) {
+                /*
+                {
+                    "id": "FDB005417",
+                    "biomarker_type": "Chemical",
+                    "name": "Guanidoacetic acid",
+                    "biomarker_normal_state_values": [
+                        "age: Adult,
+                        sex: Both,
+                        biofluid: Blood,
+                        concentration: 16.8 (0.81-32.9) uM,
+                        citation: Gatti, R. & Gioia, M. G. Liquid chromatographic analysis of guanidino compounds using furoin as a new fluorogenic reagent. J Pharm Biomed Anal 48, 754-759 (2008).",
+                        "age: Adult,
+                        sex: Both,
+                    b   iofluid: Blood,
+                    concentration: 16.8 (0.81-32.9) uM,
+                    citation: Salomons, G. S., van Dooren, S. J., Verhoeven, N. M., Cecil, K. M., Ball, W. S., Degrauw, T. J. & Jakobs, C. X-linked creatine-transporter gene (SLC6A8) defect: a new creatine-deficiency syndrome. Am J Hum Genet 68, 1497-1500 (2001)."
+                    ],
+                    "embedding": null
+                }
+                */
+                const overviewGrid = document.createElement('div');
+                overviewGrid.className = 'info-grid';
+                overviewGrid.appendChild(createInfoItem('ID', data.id));
+                overviewGrid.appendChild(createInfoItem('Name', data.name));
+                overviewGrid.appendChild(createInfoItem('Type', data.biomarker_type));
+                container.appendChild(createSection('Overview', overviewGrid));
+
+                // Normal State Values
+                const normalValuesGrid = document.createElement('div');
+                normalValuesGrid.className = 'info-grid';
+                data.biomarker_normal_state_values.forEach((value, index) => {
+                    const valueContent = createInfoItem(`Value ${index + 1}`, value, true);
+                    normalValuesGrid.appendChild(valueContent);
+                }
+                );
+                container.appendChild(createSection('Normal State Values', normalValuesGrid));
+            }
+
+            function createPathwayView(data, container) {
+                /*{
+                    "id": "R-HSA-983168",
+                    "source": "Reactome",
+                    "description": "Antigen processing: Ubiquitination & Proteasome degradation",
+                    "name": "Antigen processing: Ubiquitination & Proteasome degradation",
+                    "linkout": "https://reactome.org/PathwayBrowser/#/R-HSA-983168",
+                    "embedding": null
+                    }*/
+                const overviewGrid = document.createElement('div');
+                overviewGrid.className = 'info-grid';
+                overviewGrid.appendChild(createInfoItem('ID', data.id));
+                overviewGrid.appendChild(createInfoItem('Name', data.name));
+                overviewGrid.appendChild(createInfoItem('Source', data.source));
+                container.appendChild(createSection('Overview', overviewGrid));
+
+                // Description
+                const descContent = createInfoItem('Description', data.description, true);
+                container.appendChild(createSection('Description', descContent));
+
+                // Linkout, a better view
+                const linkoutContent = createInfoItem('Linkout', data.linkout);
+                container.appendChild(createSection('Linkout', linkoutContent));
+            }
+
+
+            // Close button functionality
+            document.querySelector('.modal-close').addEventListener('click', () => {
+                // Add your close modal logic here
+                console.log('Modal closed');
+            });
 
             const modalElement = document.createElement('div');
             modalElement.className = 'modal';
@@ -738,7 +1178,22 @@ function initD3Graph() {
             // Initialize modal with specific options
             const modal = M.Modal.init(modalElement, {
                 onOpenEnd: () => {
-                    loadNodeRelationships(node.id);
+                    // formatProperties(nodeData);
+
+                    // const relationships = globalNetworkValues["links"]
+                    //     .filter(link => link.target.id === node.id)
+                    //     .map(link => {
+                    //         const source = link.source.id === node.id ? link.target : link.source;
+                    //         return {
+                    //             id: source.id,
+                    //             name: source.name,
+                    //             type: link.type
+                    //         };
+                    //     });
+                    // formatRelationships(relationships);
+
+                    formatData(nodeData.Properties, nodeData.Type);
+                    // loadNodeRelationships(node.id);
                 },
                 onCloseEnd: () => {
                     modalElement.remove();

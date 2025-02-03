@@ -398,11 +398,11 @@
                     <div class="stat-label">Drugs</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-number">10K+</div>
+                    <div class="stat-number">35K+</div>
                     <div class="stat-label">Diseases</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-number">100K+</div>
+                    <div class="stat-number">250K+</div>
                     <div class="stat-label">Proteins</div>
                 </div>
                 <div class="stat-item">
@@ -434,7 +434,7 @@
     </div>
 
     <footer class="footer">
-        <p>© 2024 MedKG - NIPER SAS Nagar | Department of PharmacoInformatics</p>
+        <p>© 2024 MedKG - NIPER SAS Nagar | Department of Pharmacoinformatics</p>
     </footer>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -458,12 +458,14 @@
             }
 
             function showAutocomplete(items) {
-                autocompleteList.innerHTML = items.map(item => `
-                    <div class="autocomplete-item" onclick="selectAutocomplete('${item.text}')">
+                autocompleteList.innerHTML = items.map(item => {
+                    item.value = item.value.replace('\'', "\\'");
+                return `
+                    <div class="autocomplete-item" onclick="selectAutocomplete('${item.value}')">
                         ${item.text}
                         <span class="autocomplete-type">${item.type}</span>
                     </div>
-                `).join('');
+                `}).join('');
                 autocompleteList.style.display = 'block';
             }
 
@@ -480,19 +482,73 @@
 
                             if (data.exactMatches) {
                                 data.exactMatches.forEach(item => {
+                                    if (item.type === 'Drug') {
+                                        suggestions.push({
+                                            text: item.label || item.properties.name,
+                                            type: item.type,
+                                            value: item.label || item.properties.name,
+                                        });
+                                    } else if (item.type === 'Disease') {
+                                        suggestions.push({
+                                            text: item.label || item.properties.name,
+                                            type: item.type,
+                                            value: item.label || item.properties.name,
+                                        });
+                                    } else if (item.type === 'Protein') {
+                                        suggestions.push({
+                                            text: `${item.properties.accession} (${item.properties.name})` || item.properties.name,
+                                            type: item.type,
+                                            value: item.properties.accession
+                                        });
+                                    } else if (item.type === 'Pathway') {
+                                        suggestions.push({
+                                            text: item.label || item.properties.name,
+                                            type: item.type,
+                                            value: item.label || item.properties.name,
+                                        });
+                                    }else {
                                     suggestions.push({
                                         text: item.label || item.properties.name,
-                                        type: item.type
+                                        type: item.type,
+                                        value: item.label || item.properties.name,
                                     });
+                                }
                                 });
                             }
 
                             if (data.partialMatches) {
                                 data.partialMatches.forEach(item => {
+                                    if (item.type === 'Drug') {
+                                        suggestions.push({
+                                            text: item.label || item.properties.name,
+                                            type: item.type,
+                                            value: item.label || item.properties.name,
+                                        });
+                                    } else if (item.type === 'Disease') {
+                                        suggestions.push({
+                                            text: item.label || item.properties.name,
+                                            type: item.type,
+                                            value: item.label || item.properties.name,
+                                        });
+                                    } else if (item.type === 'Protein') {
+                                        suggestions.push({
+                                            text: `${item.properties.accession} (${item.properties.name})` || item.properties.name,
+                                            type: item.type,
+                                            value: item.properties.accession
+                                        });
+                                    } else if (item.type === 'Pathway') {
+                                        suggestions.push({
+                                            text: item.label || item.properties.name,
+                                            type: item.type,
+                                            value: item.label || item.properties.name,
+                                        });
+                                    }else {
                                     suggestions.push({
                                         text: item.label || item.properties.name,
-                                        type: item.type
+                                        type: item.type,
+                                        value: item.label || item.properties.name,
                                     });
+                                }
                                 });
                             }
 
