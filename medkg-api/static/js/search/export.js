@@ -24,7 +24,7 @@ function exportEntry(id) {
     <div class="modal-content">
         <h4>Export Entry</h4>
         <p>Choose export format:</p>
-        <div class="input-field">
+        <div class="input-field-1">
             <select id="exportFormat">
                 ${formatChoices.map(format =>
         `<option value="${format.toLowerCase()}">${format}</option>`
