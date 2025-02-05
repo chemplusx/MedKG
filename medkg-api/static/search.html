@@ -301,6 +301,19 @@
             background-color: #ffeaa7;
             color: #333;
         }
+        /* 
+        'Experimental_factor': 'entity-epf',
+        'Chromosome': 'entity-chromosome',*/
+
+        .entity-epf {
+            background-color: #ed6c6c;
+            color: #333;
+        }
+
+        .entity-chromosome {
+            background-color: #746f96;
+            color: #333;
+        }
 
         .collapsible-header {
             display: flex;
@@ -1366,7 +1379,7 @@
         .publications-container {
             display: none;
             position: absolute;
-            top: 75%;
+            top: 70%;
             /* width: 72%; */
             font-size: 1.15rem;
             line-height: 110%;
@@ -1525,7 +1538,7 @@
             gap: 12px;
             padding: 12px;
             overflow-y: auto;
-            max-height: calc(22rem - 40px);
+            max-height: calc(28rem - 40px);
         }
 
         .publication-item {
@@ -1619,9 +1632,9 @@
             <ul id="nav-mobile" class="right">
                 <li><a href="#" onclick="toggleAdvancedSearch()"><i class="material-icons left">tune</i>Advanced
                         Search</a></li>
-                <li><a href="#" onclick="exportResults()"><i class="material-icons left">file_download</i>Export</a>
-                </li>
-                <li><a href="#"><i class="material-icons left">help_outline</i>Help</a></li>
+                <!-- <li><a href="#" onclick="exportResults()"><i class="material-icons left">file_download</i>Export</a>
+                </li> -->
+                <li><a href="#" onclick="showHelp()"><i class="material-icons left">help_outline</i>Help</a></li>
             </ul>
         </div>
     </nav>
@@ -2115,6 +2128,12 @@
         // Advanced search modal functionality
         function showAdvancedSearch() {
             const modal = document.getElementById('advancedSearchModal');
+            const instance = M.Modal.init(modal);
+            instance.open();
+        }
+
+        function showHelp() {
+            const modal = document.getElementById('helpModal');
             const instance = M.Modal.init(modal);
             instance.open();
         }
@@ -2758,7 +2777,7 @@
             <h4>Advanced Search</h4>
             <div class="row">
                 <div id="path-search">
-                    <h5>Path Search</h5>
+                    <h6 style="margin-bottom: 50px;">Lookup Node Interactions</h6>
                     <div class="input-field-advanced">
                         <input class="autocomplete" name="pathStartNode" id="pathStartNode"
                             placeholder="Enter Start node name (Eg. Drug, Disease, Protein etc)">
@@ -2808,8 +2827,8 @@
         <div id="pathSearchHelpModal" class="modal small-modal"
             style="top: 5% !important;width: 80%;height: 82%;max-width: 100%;">
             <div class="modal-content">
-                <h6>How to Use Path Search</h6>
-                <p>Path Search helps you discover connections between two entities within the knowledge graph. Follow
+                <h6>How to Use Node Interaction Search</h6>
+                <p>Node Interaction helps you discover connections between two entities within the knowledge graph. Follow
                     these steps:</p>
                 <ol>
                     <li><strong>Enter Start Node:</strong> Type the name of the starting entity (e.g., Drug, Disease,
@@ -3052,7 +3071,7 @@
                     .on("zoom", (event) => {
                         this.mainGroup.attr("transform", event.transform);
                         // Update label visibility based on zoom level
-                        updateLabels(event.transform.k);
+                        this.updateLabels(event.transform.k);
                     });
 
                 this.svg.call(this.zoom);
@@ -3074,6 +3093,16 @@
                     .force("center", d3.forceCenter(this.width / 2, this.height / 2))
                     .force("collision", d3.forceCollide().radius(50))
                     .alphaDecay(0.01);
+            }
+
+            updateLabels(zoomLevel) {
+                this.mainGroup.selectAll(".node-label")
+                    .style("display", zoomLevel > 0.6 ? "block" : "none")
+                    .style("font-size", `${Math.min(12 * zoomLevel, 16)}px`);
+
+                this.mainGroup.selectAll(".link-label")
+                    .style("display", zoomLevel > 0.8 ? "block" : "none")
+                    .style("font-size", `${Math.min(10 * zoomLevel, 14)}px`);
             }
 
             drag(simulation) {
@@ -3105,7 +3134,7 @@
 
                 // Highlight connected nodes and links
                 const linkedNodes = new Set();
-                this.container.selectAll(".link-line")
+                this.mainGroup.selectAll(".link-line")
                     .filter(link => {
                         if (link.source === d || link.target === d) {
                             linkedNodes.add(link.source);
@@ -3120,14 +3149,14 @@
                     .attr("stroke-width", 2)
                     .attr("stroke-opacity", 1);
 
-                    this.container.selectAll(".node")
+                    this.mainGroup.selectAll(".node")
                     .transition()
                     .duration(200)
                     .style("opacity", n => linkedNodes.has(n) ? 1 : 0.2);
             }
 
             handleNodeUnhover() {
-                this.container.selectAll(".node")
+                this.mainGroup.selectAll(".node")
                     .transition()
                     .duration(200)
                     .style("opacity", 1)
@@ -3135,7 +3164,7 @@
                     .attr("stroke", "#fff")
                     .attr("stroke-width", 2);
 
-                    this.container.selectAll(".link-line")
+                    this.mainGroup.selectAll(".link-line")
                     .transition()
                     .duration(200)
                     .attr("stroke", "#999")
@@ -3620,7 +3649,7 @@
 
         // Function to download the path graph as SVG
         function downloadPathGraph() {
-            const svgData = document.querySelector('#  svg').outerHTML;
+            const svgData = document.querySelector('#pathGraph svg').outerHTML;
             const blob = new Blob([svgData], { type: 'image/svg+xml' });
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
@@ -3649,14 +3678,14 @@
                     <li>Use filters to narrow down results by entity type, relationship type, and evidence level</li>
                     <li>Export results in various formats (CSV, JSON, BibTeX)</li>
                     <li>Visualize relationships between entities</li>
-                    <li>Batch process multiple searches</li>
                 </ul>
             </div>
             <div class="section">
                 <h5>Keyboard Shortcuts</h5>
                 <ul>
                     <li><kbd>Ctrl</kbd>/<kbd>⌘</kbd> + <kbd>/</kbd> - Open Advanced Search</li>
-                    <li><kbd>Ctrl</kbd>/<kbd>⌘</kbd> + <kbd>E</kbd> - Export Results</li>
+                    
+                    <!-- <li><kbd>Ctrl</kbd>/<kbd>⌘</kbd> + <kbd>E</kbd> - Export Results</li> -->
                 </ul>
             </div>
         </div>

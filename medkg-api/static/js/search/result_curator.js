@@ -663,6 +663,13 @@ function getEntityTypeStyle(type) {
         'Gene': 'entity-gene',
         'Compound': 'entity-drug', // Treating Compound same as Drug for styling,
         'Peptide': 'entity-peptide',
+        'Pathway': 'entity-pathway',
+        'Experimental_factor': 'entity-epf',
+        'Cell': 'entity-cell',
+        'Chromosome': 'entity-chromosome',
+        'Metabolite': 'entity-metabolite',
+        'Tissue': 'entity-tissue',
+        'Transcript': 'entity-transcript',
     };
     return typeStyles[type] || '';
 }

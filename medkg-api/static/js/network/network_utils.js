@@ -4,9 +4,64 @@ const CONTEXT_MENU_ITEMS = [
     { text: "Expand Node", icon: "add_circle_outline", action: "expand" },
     { text: "Hide Node", icon: "visibility_off", action: "hide" },
     { text: "Focus on this Node", icon: "center_focus_strong", action: "focus" },
-    { text: "Find Path", icon: "timeline", action: "path" },
+    { text: "Explore Connections", icon: "timeline", action: "path" },
     { text: "View in New Graph", icon: "open_in_new", action: "newGraph" }
 ];
+
+
+const style = document.createElement('style');
+style.textContent = `
+    .context-menu {
+        position: fixed;
+        background: white;
+        border-radius: 4px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        padding: 4px 0;
+        min-width: 150px;
+        z-index: 1000;
+    }
+
+    .menu-items {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .menu-item {
+        padding: 8px 16px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        position: relative;
+    }
+
+    .menu-item:hover {
+        background: #f0f0f0;
+    }
+
+    .menu-item i {
+        font-size: 18px;
+    }
+
+    .sub-menu {
+        position: absolute;
+        left: 100%;
+        top: 0;
+        background: white;
+        border-radius: 4px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        display: none;
+        min-width: 180px;
+        z-index: 1001;
+    }
+
+    .menu-item:hover > .sub-menu {
+        display: block;
+    }
+`;
+document.head.appendChild(style);
+document.head.appendChild(style);
 
 const STYLES = {
     colors: {
@@ -330,30 +385,42 @@ function initD3Graph() {
         const contextMenu = document.createElement('div');
         contextMenu.className = 'context-menu';
 
-        // Create menu structure
-        const menuItems = [
-            { action: 'expand', icon: 'add_circle_outline', text: 'Expand Node' },
-            { action: 'hide', icon: 'visibility_off', text: 'Hide Node' },
-            { action: 'focus', icon: 'center_focus_strong', text: 'Focus on Node' },
-            { action: 'path', icon: 'timeline', text: 'Find Path' },
-            { action: 'newGraph', icon: 'open_in_new', text: 'View in New Graph' }
-        ];
-
         const ul = document.createElement('ul');
         ul.className = 'menu-items';
 
-        menuItems.forEach(item => {
+        CONTEXT_MENU_ITEMS.forEach(item => {
             const li = document.createElement('li');
-            li.innerHTML = `
-                <i class="material-icons">${item.icon}</i>
-                <span>${item.text}</span>
-            `;
-
-            // Add event listener directly to the element
-            li.addEventListener('click', () => {
-                handleContextMenuAction(item.action, d.id);
-                contextMenu.remove(); // Close menu after action
-            });
+            li.className = 'menu-item';
+            
+            // For expand action, create a special menu item with sub-menu
+            if (item.action === 'expand') {
+                const itemContent = document.createElement('div');
+                itemContent.style.display = 'flex';
+                itemContent.style.alignItems = 'center';
+                itemContent.style.gap = '8px';
+                itemContent.style.width = '100%';
+                itemContent.innerHTML = `
+                    <i class="material-icons">${item.icon}</i>
+                    <span>${item.text}</span>
+                    <i class="material-icons" style="margin-left: auto; font-size: 16px;">chevron_right</i>
+                `;
+                li.appendChild(itemContent);
+                
+                // Create sub-menu for node types
+                const subMenu = createExpandSubMenu(d);
+                li.appendChild(subMenu);
+            } else {
+                li.innerHTML = `
+                    <i class="material-icons">${item.icon}</i>
+                    <span>${item.text}</span>
+                `;
+                
+                // Add event listener for other actions
+                li.addEventListener('click', () => {
+                    handleContextMenuAction(item.action, d.id);
+                    contextMenu.remove();
+                });
+            }
 
             ul.appendChild(li);
         });
@@ -381,7 +448,57 @@ function initD3Graph() {
         });
     }
 
-
+    function createExpandSubMenu(node) {
+        const subMenu = document.createElement('div');
+        subMenu.className = 'sub-menu';
+        
+        const subUl = document.createElement('ul');
+        subUl.className = 'menu-items';
+        
+        // Define node types with their icons and colors
+        const nodeTypes = [
+            { type: 'Drug', icon: 'local_pharmacy', color: '#ff7675' },
+            { type: 'Disease', icon: 'healing', color: '#51d6df' },
+            { type: 'Protein', icon: 'science', color: '#4834d4' },
+            { type: 'Gene', icon: 'dashboard', color: '#00b894' },
+            { type: 'Metabolite', icon: 'bubble_chart', color: '#e17055' },
+            { type: 'Pathway', icon: 'account_tree', color: '#fdcb6e' },
+            { type: 'Transcript', icon: 'description', color: '#e84393' },
+            { type: 'Peptide', icon: 'architecture', color: '#fbc531' }
+        ];
+    
+        nodeTypes.forEach(nodeType => {
+            const li = document.createElement('li');
+            li.className = 'menu-item';
+            li.innerHTML = `
+                <i class="material-icons" style="color: ${nodeType.color}">${nodeType.icon}</i>
+                <span>Expand ${nodeType.type}</span>
+            `;
+            
+            li.addEventListener('click', () => {
+                expandNodeWithType(node.id, nodeType.type);
+                // Close all menus
+                document.querySelectorAll('.context-menu').forEach(menu => menu.remove());
+            });
+            
+            subUl.appendChild(li);
+        });
+        
+        subMenu.appendChild(subUl);
+        return subMenu;
+    }
+    
+    function expandNodeWithType(nodeId, nodeType) {
+        // Set expansion settings for single node type
+        window.expansionSettings = {
+            neighbourTypes: [nodeType],
+            maxNeighbours: 10,  // Default value
+            maxDepth: 2         // Default value
+        };
+        
+        // Call the existing expand function
+        expandNodeForId(nodeId);
+    }
 
     // Example implementation of the actions
     function expandNode(nodeId) {
@@ -391,6 +508,14 @@ function initD3Graph() {
         // fetch and add more data to the graph
         expandNodeForId(nodeId);
 
+    }
+
+    function getExpansionSettings() {
+        return window.expansionSettings || {
+            neighbourTypes: ['Drug', 'Disease', 'Protein', 'Gene', 'Metabolite', 'Pathway', 'Transcript', 'Peptide'],
+            maxNeighbours: 10,
+            maxDepth: 1
+        };
     }
 
     function expandNodeForId(nodeId) {

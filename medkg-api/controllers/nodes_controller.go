@@ -161,7 +161,7 @@ func GetNetworkGraphForIdHandler(client neo4j.DriverWithContext) gin.HandlerFunc
 		depth, ok := reqBody["depth"].(string)
 		if !ok {
 			log.Println("Depth not found, setting to 3", depth, ok)
-			depth = "3"
+			depth = "1"
 		}
 		log.Println("GetNetworkGraphForIdHandler id: ", id, " name: ", name, " type: ", typeN, " limit: ", limit, " neighbour: ", neighbour)
 		// nodes, relationships, err := ni.GetNetworkGraphForId(client, id, name, typeN, limit, neighbour)
