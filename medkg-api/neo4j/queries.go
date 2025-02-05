@@ -250,7 +250,7 @@ func SearchNodesInGraph(driver neo4j.DriverWithContext, term string, limit strin
 				// 	id = node["id"].(string)
 				// }
 				nodeIdMap[id] = true
-				dataSource, publication := checkForSource(node, nme)
+				dataSource, publication := checkForSource(node, types[0].(string))
 				nodes = append(nodes, models.Node{
 					ID:          id,
 					Label:       nme,
@@ -284,7 +284,7 @@ func SearchNodesInGraph(driver neo4j.DriverWithContext, term string, limit strin
 				// 	id = node["id"].(string)
 				// }
 				if _, ok := nodeIdMap[id]; !ok {
-					dataSource, publication := checkForSource(node, nme)
+					dataSource, publication := checkForSource(node, types[0].(string))
 					nodesPartial = append(nodesPartial, models.Node{
 						ID:          id,
 						Label:       nme,
