@@ -61,7 +61,7 @@ func checkForSource(nodeProps map[string]interface{}, label string) (string, str
 
 	switch label {
 	case "Gene":
-		return "GeneCards", "https://www.genecards.org/"
+		return "GO", "http://geneontology.org/"
 	case "Disease":
 		return "Disease Ontology", "http://disease-ontology.org/"
 	case "Drug":
@@ -70,12 +70,14 @@ func checkForSource(nodeProps map[string]interface{}, label string) (string, str
 		return "Reactome", "https://reactome.org/"
 	case "Protein":
 		return "UniProt", "https://www.uniprot.org/uniprotkb/" + nodeProps["id"].(string)
+	case "Transcript":
+		return "UniProt", "https://www.uniprot.org/uniprotkb/" + nodeProps["id"].(string)
 	case "Compound":
 		return "PubChem", "https://pubchem.ncbi.nlm.nih.gov/"
 	case "Anatomy":
 		return "Uberon", "http://uberon.github.io/"
 	case "Cell":
-		return "CL", "http://www.obofoundry.org/ontology/cl.html"
+		return "GO", "http://www.obofoundry.org/ontology/cl.html"
 	case "Biological Process":
 		return "GO", "http://geneontology.org/"
 	case "Molecular Function":
