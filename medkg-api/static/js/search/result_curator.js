@@ -78,9 +78,16 @@ function createResultCard(result) {
     let description = result.properties.fullDesciption || result.properties.description || result.properties.function || 'No description available';
     if (entityType==="protein"){
         displayName = result.properties.accession;
-        if (result.properties.full_name){
-            description = `<strong>Full name:</strong> ${result.properties.full_name} 
-            <br> <strong>Gene:</strong> ${result.properties.name} 
+        let geneName = result.properties.gene_name, fullName = result.properties.full_name;
+        if (result.properties.name && !result.properties.gene_name){
+            geneName = result.properties.name;
+        }
+        if (!result.properties.full_name && result.properties.gene_name){
+            fullName = result.properties.name;
+        }
+        if (result.properties.full_name || result.properties.general_function || result.properties.specific_function){
+            description = `<strong>Full name:</strong> ${fullName} 
+            <br> <strong>Gene:</strong> ${geneName} 
             <br> <strong>General Function::</strong> ${result.properties.general_function} 
             <br> <strong>Specific Function::</strong> ${result.properties.specific_function}`;
         }

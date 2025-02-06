@@ -73,7 +73,9 @@ func checkForSource(nodeProps map[string]interface{}, label string) (string, str
 	case "Transcript":
 		return "UniProt", "https://www.uniprot.org/uniprotkb/" + nodeProps["id"].(string)
 	case "Compound":
-		return "PubChem", "https://pubchem.ncbi.nlm.nih.gov/"
+		return "CHEBI", "https://www.ebi.ac.uk/chebi/searchId.do?chebiId=" + nodeProps["id"].(string)
+	case "Metabolite":
+		return "HMDB", "https://hmdb.ca/metabolites/" + nodeProps["id"].(string)
 	case "Anatomy":
 		return "Uberon", "http://uberon.github.io/"
 	case "Cell":
