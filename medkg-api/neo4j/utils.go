@@ -63,7 +63,7 @@ func checkForSource(nodeProps map[string]interface{}, label string) (string, str
 	case "Gene":
 		return "GO", "http://geneontology.org/"
 	case "Disease":
-		return "Disease Ontology", "http://disease-ontology.org/"
+		return "Mayo Clinic", "https://www.mayoclinic.org/diseases-conditions/index"
 	case "Drug":
 		return "DrugBank", "https://www.drugbank.ca/"
 	case "Pathway":
