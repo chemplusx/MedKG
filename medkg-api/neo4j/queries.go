@@ -284,6 +284,16 @@ func SearchNodesInGraph(driver neo4j.DriverWithContext, term string, limit strin
 						break
 					}
 				}
+				var dd string
+				for _, key := range descriptionKeyMap[nodes[j].Type] {
+					if val, ok := nodes[j].Properties[key]; ok {
+						dd = val.(string)
+						break
+					}
+				}
+				if len(dd) > 0 {
+					return false
+				}
 				return len(d) > 0
 			})
 
