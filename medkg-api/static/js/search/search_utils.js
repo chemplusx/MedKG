@@ -130,7 +130,7 @@ function GetAllLabels() {
         .catch(error => {
             console.error('Error:', error);
         });
-
+        // http://192.168.101.13/medkg/home
 }
 
 

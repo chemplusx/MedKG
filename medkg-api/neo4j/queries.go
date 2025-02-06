@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"sort"
 	"strconv"
 	"strings"
 
@@ -213,6 +214,18 @@ func SearchNodes(driver neo4j.DriverWithContext, term string, limit string) ([]m
 	return result.([]models.Node), nil
 }
 
+var descriptionKeyMap = map[string][]string{
+	"Drug":               []string{"description"},
+	"Compound":           []string{"description"},
+	"Protein":            []string{"description", "general_function", "specific_function"},
+	"Disease":            []string{"description", "full_description", "mondo_description", "umls_description"},
+	"Biological_process": []string{"description"},
+	"Gene":               []string{"description"},
+	"Pathway":            []string{"description"},
+	"Metabolite":         []string{"description"},
+	"Protein_structure":  []string{"description"},
+}
+
 func SearchNodesInGraph(driver neo4j.DriverWithContext, term string, limit string, fileName string) (map[string]interface{}, error) {
 	ctx := context.Background()
 
@@ -227,10 +240,13 @@ func SearchNodesInGraph(driver neo4j.DriverWithContext, term string, limit strin
 		func(tx neo4j.ManagedTransaction) (interface{}, error) {
 
 			labels := "Disease|Tissue|Biological_process|Chromosome|Gene|Transcript|Protein|Amino_acid_sequence|Peptide|Modified_protein|Drug|Functional_region|Metabolite|Protein_structure|Pathway|Biological_sample"
-			records, err := tx.Run(ctx, "CALL db.index.fulltext.queryNodes('allIndex', $term) YIELD node, score MATCH (node:"+labels+") RETURN elementId(node), labels(node), node {.*, embedding:null} AS node LIMIT toInteger($limit)", map[string]interface{}{"term": term, "limit": limit})
+			records, err := tx.Run(ctx, "CALL db.index.fulltext.queryNodes('newAllIndex', $term) YIELD node, score MATCH (node:"+labels+") RETURN elementId(node), labels(node), node {.*, embedding:null} AS node LIMIT toInteger($limit)", map[string]interface{}{"term": term, "limit": limit})
 			if err != nil {
 				return nil, err
 			}
+
+			log.Println("records.Err(): ", records.Err())
+			log.Println("Query: ", "CALL db.index.fulltext.queryNodes('newAllIndex', $term) YIELD node, score MATCH (node:"+labels+") RETURN elementId(node), labels(node), node {.*, embedding:null} AS node LIMIT toInteger($limit)")
 
 			var nodeIdMap = make(map[string]bool)
 			var nodes []models.Node
@@ -260,6 +276,16 @@ func SearchNodesInGraph(driver neo4j.DriverWithContext, term string, limit strin
 					Publication: publication,
 				})
 			}
+			sort.Slice(nodes, func(i, j int) bool {
+				var d string
+				for _, key := range descriptionKeyMap[nodes[i].Type] {
+					if val, ok := nodes[i].Properties[key]; ok {
+						d = val.(string)
+						break
+					}
+				}
+				return len(d) > 0
+			})
 
 			labelsPartial := "Disease|Tissue|Biological_process|Chromosome|Gene|Transcript|Protein|Amino_acid_sequence|Peptide|Modified_protein|Drug|Functional_region|Metabolite|Protein_structure|Pathway|Biological_sample"
 			recordsPartial, err := tx.Run(ctx, "CALL db.index.fulltext.queryNodes('all_index_fulltext', $term) YIELD node, score MATCH (node:"+labelsPartial+") RETURN elementId(node), labels(node), node {.*, embedding:null  } AS node LIMIT toInteger($limit)", map[string]interface{}{"term": term, "limit": limit})
@@ -295,6 +321,16 @@ func SearchNodesInGraph(driver neo4j.DriverWithContext, term string, limit strin
 					})
 				}
 			}
+			sort.Slice(nodesPartial, func(i, j int) bool {
+				var d string
+				for _, key := range descriptionKeyMap[nodesPartial[i].Type] {
+					if val, ok := nodesPartial[i].Properties[key]; ok {
+						d = val.(string)
+						break
+					}
+				}
+				return len(d) > 0
+			})
 			return map[string]interface{}{
 				"exactMatches":   nodes,
 				"partialMatches": nodesPartial,

@@ -2390,9 +2390,9 @@
                                     ${pub.properties.linkout ? ` • ${pub.properties.linkout}` : ''}
                                 </div>
 
-                                <div class="citation-context">
-                                    Referenced for:  ${node?.name}
-                                </div>
+                                ${pub.properties?.title ? `<div class="citation-context">
+                                    Title:  ${pub.properties?.title}
+                                </div>` : ''}
 
                                 <div class="publication-actions">
                                     <button class="action-btn view-btn" onclick="window.open('${pub.properties.linkout}', '_blank')">
