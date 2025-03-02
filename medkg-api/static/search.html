@@ -4168,13 +4168,13 @@
                         const detailsGrid = document.createElement('div');
                         detailsGrid.className = 'info-grid';
                         detailsGrid.appendChild(createInfoItem('Type', data.type));
-                        detailsGrid.appendChild(createInfoItem('DOI', data.doi));
+                        detailsGrid.appendChild(createInfoItem('DOI', data.doi || data.DOI));
                         detailsGrid.appendChild(createInfoItem('Volume', data.volume));
-                        detailsGrid.appendChild(createInfoItem('Pages', `${data.first_page} - ${data.last_page}`));
+                        detailsGrid.appendChild(createInfoItem('Pages', data.page ||  `${data.first_page} - ${data.last_page}`));
                         container.appendChild(createSection('Details', detailsGrid));
 
                         // Linkout
-                        const linkoutContent = createInfoItem('Linkout', data.doi);
+                        const linkoutContent = createInfoItem('Linkout', data.linkout);
                         container.appendChild(createSection('Linkout', linkoutContent));
                     }
 
