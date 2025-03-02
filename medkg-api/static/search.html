@@ -2950,6 +2950,9 @@
             <button class="btn-flat waves-effect waves-light" onclick="downloadPathGraph()">
                 <i class="material-icons left">file_download</i>Export
             </button>
+            <button class="btn-flat waves-effect waves-light" onclick="downloadPathAsCSV()">
+                <i class="material-icons left">file_download</i>Export as CSV
+            </button>
         </div>
     </div>
     <script>
@@ -4170,7 +4173,7 @@
                         detailsGrid.appendChild(createInfoItem('Type', data.type));
                         detailsGrid.appendChild(createInfoItem('DOI', data.doi || data.DOI));
                         detailsGrid.appendChild(createInfoItem('Volume', data.volume));
-                        detailsGrid.appendChild(createInfoItem('Pages', data.page ||  `${data.first_page} - ${data.last_page}`));
+                        detailsGrid.appendChild(createInfoItem('Pages', data.page || `${data.first_page} - ${data.last_page}`));
                         container.appendChild(createSection('Details', detailsGrid));
 
                         // Linkout
@@ -4538,7 +4541,17 @@
 
         // Function to download the path graph as SVG
         function downloadPathGraph() {
-            const svgData = document.querySelector('#pathGraph svg').outerHTML;
+            const svgElement = document.querySelector('#pathGraph svg');
+
+            // Clone it to avoid modifying the original
+            const svgClone = svgElement.cloneNode(true);
+
+            // Add the missing xlink namespace
+            svgClone.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink');
+            svgClone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+
+            // Get the modified SVG as a string
+            const svgData = svgClone.outerHTML;
             const blob = new Blob([svgData], { type: 'image/svg+xml' });
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
@@ -4548,6 +4561,65 @@
             a.click();
             document.body.removeChild(a);
             window.URL.revokeObjectURL(url);
+        }
+
+        function downloadPathAsCSV() {
+            const headers = ['Start Node', 'Relationship', 'End Node', 'Publication'];
+            const rows = paths[0].relationships.map(rel => {
+                // find the node from the nodes array
+                const row = [];
+                paths[0].nodes.forEach(node => {
+                    if (node.id === rel.source.id) {
+                        row.push(node.name);
+                    }
+                });
+
+
+                // row.push(path.nodes[rel.source].name);
+                row.push(rel.label);
+
+                // find the node from the nodes array
+                paths[0].nodes.forEach(node => {
+                    if (node.id === rel.target.id) {
+                        row.push(node.name);
+                    }
+                });
+                // row.push(path.nodes[rel.target].name);
+                row.push(rel.publication);
+                return row;
+            });
+
+            const csvContent = [headers, ...rows].map(row => row.join(',')).join('\n');
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'path_data.csv';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+
+
+
+
+
+
+            // const csvData = paths.map(path => {
+            //     const nodes = path.nodes.map(node => node.name).join(' -> ');
+            //     const relationships = path.relationships.map(rel => rel.type).join(' -> ');
+            //     return `${nodes},${relationships}`;
+            // }).join('\n');
+
+            // const blob = new Blob([csvData], { type: 'text/csv' });
+            // const url = window.URL.createObjectURL(blob);
+            // const a = document.createElement('a');
+            // a.href = url;
+            // a.download = 'path_data.csv';
+            // document.body.appendChild(a);
+            // a.click();
+            // document.body.removeChild(a);
+            // window.URL.revokeObjectURL(url);
         }
 
     </script>
