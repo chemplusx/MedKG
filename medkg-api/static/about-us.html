@@ -4,341 +4,157 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MedKG - About Us</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+    <title>About MedKG</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link rel="stylesheet" href="css/app.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="css/custom.css">
-    <style>
-        :root {
-            --primary-color: #1c4966;
-            --primary-light: #3e6b8a;
-            --primary-dark: #0d2b3e;
-            --secondary-color: #ff4081;
-            --text-color: #333;
-            --background-color: #f5f5f5;
-        }
-
-        body {
-            display: flex;
-            min-height: 100vh;
-            flex-direction: column;
-            background-color: var(--background-color);
-            color: var(--text-color);
-        }
-
-        main {
-            flex: 1 0 auto;
-        }
-
-        nav {
-            background-color: var(--primary-color);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            height: 150px;
-        }
-
-        nav .brand-logo {
-            display: flex;
-            align-items: center;
-            padding: 0;
-            height: 100%;
-        }
-
-        nav .brand-logo .logo-container {
-            background-color: white;
-            border-radius: 0 50% 50% 0;
-            padding: 3px 0px 0px 0px;
-            height: 100%;
-            position: relative;
-            align-items: center;
-        }
-
-        nav .brand-logo img {
-            height: 140px;
-        }
-
-        nav ul {
-            padding-right: 2rem;
-        }
-
-        nav ul a {
-            color: white;
-            margin-top: 2rem;
-            font-size: large;
-        }
-
-        .about-section {
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            padding: 2rem;
-            margin-top: 2rem;
-        }
-
-        .timeline {
-            position: relative;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 40px 0;
-        }
-
-        .timeline::after {
-            content: '';
-            position: absolute;
-            width: 100%;
-            height: 4px;
-            background-color: var(--primary-color);
-            top: 50%;
-            left: 0;
-            transform: translateY(-50%);
-        }
-
-        .timeline-item {
-            position: relative;
-            width: 20%;
-            float: left;
-            text-align: center;
-            padding: 5px;
-        }
-
-        .timeline-content {
-            padding: 10px;
-            background-color: white;
-            border-radius: 6px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            position: relative;
-            z-index: 1;
-            margin-bottom: 20px;
-        }
-
-        .timeline-content::after {
-            content: '';
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            background-color: var(--primary-color);
-            border-radius: 50%;
-            top: -15px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 2;
-        }
-
-        .timeline-content h5 {
-            margin: 0;
-            font-size: 1.2rem;
-            color: var(--primary-color);
-        }
-
-        .timeline-content p {
-            margin: 5px 0 0;
-            font-size: 0.9rem;
-        }
-
-        .team-member {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-
-        .team-member img {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin-bottom: 1rem;
-            border: 3px solid var(--primary-color);
-            padding: 10px;
-            opacity: 75%;
-        }
-
-        .team-member h5 {
-            margin: 0;
-            color: var(--primary-color);
-        }
-
-        .team-member p {
-            margin: 5px 0 0;
-            color: var(--primary-light);
-        }
-
-        footer {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 10px 0;
-        }
-
-        footer .container {
-            max-width: -webkit-fill-available;
-            width: 100%;
-            margin: 1px;
-        }
-
-        footer .logo-container {
-            height: 100%;
-            position: relative;
-            align-items: center;
-            padding: 0px 20px 0px 20px !important;
-        }
-
-        footer .logo-container img {
-            height: 140px;
-        }
-
-        @media screen and (max-width: 600px) {
-            .timeline-item {
-                width: 100%;
-                float: none;
-                margin-bottom: 30px;
-            }
-
-            .timeline::after {
-                height: 100%;
-                width: 4px;
-                left: 50%;
-                top: 0;
-                transform: translateX(-50%);
-            }
-
-            .timeline-content::after {
-                bottom: auto;
-                right: -30px;
-                top: 50%;
-                left: auto;
-                transform: translateY(-50%);
-            }
-        }
-    </style>
 </head>
 
 <body>
-    <header>
-        <nav>
-            <div class="nav-wrapper">
-                <a href="#" class="brand-logo">
-                    <div class="logo-container">
-                        <img src="images/logo-3.png" alt="MedKG Logo">
-                    </div>
+    <div class="site-shell">
+        <header class="site-nav">
+            <div class="nav-inner">
+                <a class="brand" href="home">
+                    <span class="brand-pill"><span class="material-icons" aria-hidden="true">hub</span></span>
+                    <span>MedKG Platform</span>
                 </a>
-                <ul id="nav-mobile" class="right hide-on-med-and-down">
-                    <li><a href="search">Search</a></li>
-                    <li><a href="documentation">Tutorials</a></li>
-                    <li><a href="api-docs">API Docs</a></li>
-                    <li><a href="swagger">Swagger Docs</a></li>
-                    <li><a href="https://github.com/chemplusx/MedKG" target="_blank">Github</a></li>
-                    <li><a href="about-us">Project/Team</a></li>
-                </ul>
+                <nav class="nav-links">
+                    <a href="home">Home</a>
+                    <a href="search">Explore</a>
+                    <a href="viz">Network</a>
+                    <a href="docs">Docs</a>
+                    <a href="about-us" class="active">About</a>
+                    <a href="contact">Contact</a>
+                </nav>
+                <a class="nav-cta" href="https://github.com/chemplusx/MedKG" target="_blank" rel="noopener">
+                    <span class="material-icons" aria-hidden="true">code</span>
+                    GitHub
+                </a>
             </div>
-        </nav>
-    </header>
+        </header>
 
-    <main class="container">
-        <div class="about-section">
-            <h2 class="center-align">About MedKG</h2>
-            <p>MedKG is a medical knowledge graph project developed by the Department of
-                Pharmacoinformatics at the National Institute of Pharmaceutical Education and Research, S.A.S. Nagar
-                (Mohali). Our mission is to revolutionize the way medical knowledge is organized, accessed, and utilized
-                in the field of pharmacology and beyond.</p>
-        </div>
+        <main class="page-content">
+            <section class="hero">
+                <div class="hero-grid">
+                    <div class="hero-content">
+                        <span class="badge-soft"><span class="material-icons" aria-hidden="true">insights</span>Research-driven</span>
+                        <h1>MedKG: research infrastructure for biomedical discovery</h1>
+                        <p>
+                            MedKG is an applied research initiative from the Department of Pharmacoinformatics at NIPER SAS
+                            Nagar. The project unifies 35 biomedical sources, maintains a CI/CU ingestion pipeline, and
+                            exposes graph-native tooling for translational medicine teams.
+                        </p>
+                        <div class="pill-grid" style="margin-top:1.5rem;">
+                            <span><span class="material-icons" aria-hidden="true">sync</span>Continuous integration / update pipeline</span>
+                            <span><span class="material-icons" aria-hidden="true">travel_explore</span>Interactive graph exploration</span>
+                            <span><span class="material-icons" aria-hidden="true">schema</span>MedLINK hybrid graph learning</span>
+                        </div>
+                    </div>
+                    <div class="glass-panel" style="padding:2rem;">
+                        <h3 style="margin-top:0;">Peer-reviewed publication</h3>
+                        <p style="color:var(--brand-muted); line-height:1.7;">
+                            Kumari, M. &amp; Chauhan, R. (2025). <em>MedKG: enabling drug discovery through a unified biomedical
+                                knowledge graph</em>. Molecular Diversity, 29, 3465–3483.
+                        </p>
+                        <a class="btn-outline" style="margin-top:1rem; justify-content:center;" href="https://link.springer.com/article/10.1007/s11030-025-11164-z" target="_blank" rel="noopener">
+                            <span class="material-icons" aria-hidden="true">open_in_new</span>View on Molecular Diversity
+                        </a>
+                    </div>
+                </div>
+            </section>
 
-        <div class="about-section">
-            <h3 class="center-align">Our Journey</h3>
-            <div class="timeline">
-                <div class="timeline-item">
-                    <div class="timeline-content">
-                        <h5>June 2023</h5>
-                        <p>Project inception and initial research</p>
+            <section class="page-section" style="padding-top:0;">
+                <div class="page-container glass-panel">
+                    <h2 class="section-title" style="font-size:2rem;">Timeline</h2>
+                    <div class="pill-grid" style="margin-top:1.5rem; grid-template-columns:repeat(auto-fit,minmax(200px,1fr));">
+                        <span><strong>Jun 2023</strong> &mdash; Project inception and ontology survey</span>
+                        <span><strong>Dec 2023</strong> &mdash; Core schema &amp; CI/CU pipeline established</span>
+                        <span><strong>Feb 2024</strong> &mdash; MedLINK prototype and analytics suite</span>
+                        <span><strong>Jun 2024</strong> &mdash; Go-based API + production deployment</span>
+                        <span><strong>Aug 2024</strong> &mdash; Expanded coverage and public documentation</span>
                     </div>
                 </div>
-                <div class="timeline-item">
-                    <div class="timeline-content">
-                        <h5>Dec 2023</h5>
-                        <p>Development of core knowledge graph structure</p>
-                    </div>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-content">
-                        <h5>Feb 2024</h5>
-                        <p>Integration of machine learning algorithms</p>
-                    </div>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-content">
-                        <h5>June 2024</h5>
-                        <p>Launch of MedKG API and web interface</p>
-                    </div>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-content">
-                        <h5>Aug 2024</h5>
-                        <p>Expansion of database and ongoing research</p>
-                    </div>
-                </div>
-            </div>
-            <div style="height: 2rem;"></div>
-        </div>
+            </section>
 
-        <div class="about-section">
-            <h3 class="center-align">Our Team</h3>
-            <div class="row">
-                <div class="col s12 m6">
-                    <div class="team-member">
-                        <img src="images/scholar_mk.jpg" alt="Dr. Jane Doe">
-                        <h5>Madhavi Kumari</h5>
-                        <p>Research Scholar</p>
+            <section class="page-section" style="padding-top:0;">
+                <div class="page-container two-column">
+                    <div class="glass-panel team-card">
+                        <div class="team-photo" style="background-image:url('images/scholar_mk.jpg');"></div>
+                        <div>
+                            <h3 style="margin:0;">Madhavi Kumari</h3>
+                            <p class="section-subtitle" style="margin:0.35rem 0 0;">Research Scholar · Department of Pharmacoinformatics, NIPER SAS Nagar</p>
+                            <ul>
+                                <li>Conceptualisation, methodology, and data curation for the MedKG knowledge graph.</li>
+                                <li>Lead author of the Molecular Diversity publication documenting MedKG and MedLINK.</li>
+                                <li>Drives MedLINK graph learning benchmarks and public documentation.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="glass-panel team-card">
+                        <div class="team-avatar">RC</div>
+                        <div>
+                            <h3 style="margin:0;">Rohit Chauhan</h3>
+                            <p class="section-subtitle" style="margin:0.35rem 0 0;">Department of Computer Science, NIT Durgapur</p>
+                            <ul>
+                                <li>Engineering lead for MedKG application services, CI/CD, and deployment operations.</li>
+                                <li>Implements software validation suites, CI/CU infrastructure, and API hardening.</li>
+                                <li>Maintains the MedKG research application and advances the MedLINK algorithm.</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
-                <div class="col s12 m6">
-                    <div class="team-member">
-                        <img src="images/prof_pg.JPG" alt="Dr. John Smith">
-                        <h5>Prof. Prabha Garg</h5>
-                        <p>Project Guide</p>
+            </section>
+
+            <section class="page-section" style="padding-top:0;">
+                <div class="page-container two-column">
+                    <div class="glass-panel">
+                        <h3 style="margin-top:0;">Project pillars</h3>
+                        <div class="pill-grid" style="margin-top:1.25rem;">
+                            <span><span class="material-icons" aria-hidden="true">dataset</span>Curated biomedical datasets</span>
+                            <span><span class="material-icons" aria-hidden="true">sync</span>Automated refresh pipeline</span>
+                            <span><span class="material-icons" aria-hidden="true">api</span>Full-stack Go + Neo4j services</span>
+                            <span><span class="material-icons" aria-hidden="true">psychology</span>Graph ML with MedLINK</span>
+                        </div>
+                    </div>
+                    <div class="glass-panel">
+                        <h3 style="margin-top:0;">Acknowledgements</h3>
+                        <p class="section-subtitle">Supported by the Department of Biotechnology (DBT Project BT/PR40164/BTIS/137/17/2021 and BT/PR40226/BTIS/137/66/2023).</p>
+                        <p class="section-subtitle">Thanks to the Neo4j, PyTorch Geometric, and open-source communities for tooling.</p>
                     </div>
                 </div>
-            </div>
-        </div>
+            </section>
+        </main>
 
-        <div class="about-section">
-            <h3 class="center-align">Our Vision</h3>
-            <p>At MedKG, we envision a future where medical knowledge is seamlessly integrated, easily accessible, and
-                continuously evolving. Our goal is to create a comprehensive, interconnected web of medical information
-                that can be leveraged by researchers, healthcare professionals, and AI systems to advance medical
-                science and improve patient care.</p>
-        </div>
-    </main>
-
-    <footer class="page-footer">
-        <div class="container">
-            <div class="row">
-                <div class="logo-container col">
-                    <img src="images/logo-3.png" alt="MedKG Logo">
-                </div>
-                <div class="col l5 s12">
-                    <h5 class="white-text" style="width: inherit;text-align: justify;"><strong>MedKG</strong></h5>
-                    <p class="grey-text text-lighten-4" style="width: inherit;text-align: justify;">
-                        <b>Department of Pharmacoinformatics</b>
+        <footer class="site-footer">
+            <div class="footer-grid">
+                <div>
+                    <div class="brand" style="color:white;">
+                        <span class="brand-pill" style="width:2.4rem;height:2.4rem;"><span class="material-icons" aria-hidden="true">hub</span></span>
+                        <span>MedKG Platform</span>
+                    </div>
+                    <p style="margin-top:1rem; font-size:0.9rem; color:rgba(226,232,240,0.75);">
+                        MedKG is developed by ChemPlusX in collaboration with research partners worldwide.
                     </p>
-                    <p class="grey-text text-lighten-4" style="width: inherit;text-align: justify;">
-                        National Institute of Pharmaceutical
-                        Education and Research,
-                        S.A.S. Nagar (Mohali)
-                    </p>
                 </div>
-
-                <div class="col offset-l2">
-                    <h5 class="white-text">Links</h5>
-                    <ul>
-                        <li><a class="grey-text text-lighten-3" href="about-us">About Us</a></li>
-                        <li><a class="grey-text text-lighten-3" href="contact">Contact</a></li>
-                    </ul>
+                <div>
+                    <h4>Explore</h4>
+                    <a href="home">Overview</a><br>
+                    <a href="search">Search</a><br>
+                    <a href="viz">Network explorer</a>
+                </div>
+                <div>
+                    <h4>Resources</h4>
+                    <a href="docs">Documentation</a><br>
+                    <a href="swagger-ui.html">Swagger UI</a><br>
+                    <a href="https://github.com/chemplusx/MedKG" target="_blank" rel="noopener">GitHub repository</a>
                 </div>
             </div>
-        </div>
-        <div class="footer-copyright">
-            <div class="container">
-                © 2024 ChemPlusX. All rights reserved.
+            <div class="footer-bottom">
+                &copy; 2025 MedKG · ChemPlusX. All rights reserved.
             </div>
-        </div>
-    </footer>
-
+        </footer>
+    </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 </body>
 

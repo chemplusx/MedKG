@@ -5,1620 +5,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MedKG Advanced Search</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/app.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <style>
-        :root {
-            --primary-color: #2c3e50;
-            --secondary-color: #3498db;
-            --accent-color: #e74c3c;
-            --text-color: #333;
-            --background-color: #f8f9fa;
-            --card-background: #ffffff;
-        }
-
-        body {
-            background-color: var(--background-color);
-            color: var(--text-color);
-            line-height: 1.6;
-        }
-
-        nav {
-            background-color: var(--primary-color);
-            padding: 0 20px;
-            height: 64px;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-        }
-
-        .container {
-            margin-top: 80px;
-            width: 90% !important;
-            /* navbar height (64px) + some padding */
-        }
-
-
-
-        .controls-panel {
-            position: absolute;
-            top: 2rem;
-            right: 27%;
-            z-index: 100;
-            background: rgba(255, 255, 255, 0.9);
-            padding: 0.5rem;
-            border-radius: 4px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-
-        .controls-panel button {
-            margin: 0.2rem;
-            background-color: var(--secondary-color);
-        }
-
-        .controls-panel button:hover {
-            background-color: var(--primary-color);
-        }
-
-        #network-container {
-            width: 100%;
-            height: 100%;
-        }
-
-        .details-panel {
-            position: absolute;
-            bottom: 0;
-            left: 300px;
-            right: 0;
-            background: var(--card-background);
-            padding: 1rem;
-            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
-            transform: translateY(100%);
-            transition: transform 0.3s ease;
-        }
-
-
-
-
-
-        .search-results-container {
-            display: flex;
-            gap: 20px;
-            margin: 20px 0;
-        }
-
-        .filters-panel {
-            width: 300px;
-            background: var(--card-background);
-            padding: 20px;
-            border-radius: 4px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .results-panel {
-            flex: 1;
-            background: var(--card-background);
-            padding: 20px;
-            border-radius: 4px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .filter-section {
-            margin-bottom: 20px;
-        }
-
-        .filter-section h6 {
-            color: var(--primary-color);
-            font-weight: 600;
-            margin-bottom: 10px;
-        }
-
-
-
-        .relation-filter-section {
-            position: relative;
-            max-height: 300px;
-            overflow: hidden;
-            transition: max-height 0.3s ease-out;
-        }
-
-        .relation-filter-section.expanded {
-            max-height: none;
-            overflow: visible;
-        }
-
-        .relation-filter-section::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 50px;
-            background: linear-gradient(to bottom, transparent, #fff);
-            pointer-events: none;
-            transition: opacity 0.3s ease;
-        }
-
-        .relation-filter-section.expanded::after {
-            opacity: 0;
-        }
-
-        .show-more-btn {
-            width: 100%;
-            padding: 8px;
-            background: #f5f5f5;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            margin-top: 10px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 5px;
-            transition: background-color 0.2s;
-        }
-
-        .show-more-btn:hover {
-            background: #eeeeee;
-        }
-
-        .show-more-btn i {
-            transition: transform 0.3s;
-        }
-
-        .show-more-btn.expanded i {
-            transform: rotate(180deg);
-        }
-
-
-
-        .chip {
-            background-color: var(--secondary-color);
-            color: white;
-            margin: 3px;
-            font-size: 12px;
-        }
-
-        .result-card {
-            border: 1px solid #eee;
-            padding: 16px;
-            margin-bottom: 15px;
-            border-radius: 8px;
-            transition: box-shadow 0.2s ease;
-        }
-
-        .result-card:hover {
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .result-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin: 8px 0;
-            color: var(--primary-color);
-        }
-
-        .result-description {
-            color: #666;
-            font-size: 0.9rem;
-            margin-bottom: 12px;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            line-height: 1.4;
-        }
-
-        .result-meta {
-            font-size: 0.8rem;
-            color: #888;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-top: 8px;
-            border-top: 1px solid #eee;
-        }
-
-        .result-actions {
-            margin-top: 8px;
-        }
-
-        .result-actions a {
-            color: var(--secondary-color);
-            margin-right: 16px;
-            font-size: 0.9rem;
-            text-decoration: none;
-        }
-
-        .result-actions a:hover {
-            text-decoration: underline;
-        }
-
-        .advanced-options {
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid #eee;
-        }
-
-        .search-stats {
-            font-size: 14px;
-            color: #666;
-            margin-bottom: 20px;
-        }
-
-        .entity-type {
-            color: white;
-            font-weight: 500;
-            padding: 4px 8px;
-            border-radius: 4px;
-            display: inline-block;
-            margin-bottom: 8px;
-            font-size: 0.75rem;
-        }
-
-        .entity-drug {
-            background-color: #ff7675;
-        }
-
-        .entity-protein {
-            background-color: #4834d4;
-        }
-
-        .entity-disease {
-            background-color: #6c5ce7;
-        }
-
-        .entity-gene {
-            background-color: #00b894;
-        }
-
-        .entity-metabolite {
-            background-color: #e17055;
-        }
-
-        .entity-pathway {
-            background-color: #fdcb6e;
-            color: #333;
-        }
-
-        .entity-cell {
-            background-color: #00cec9;
-        }
-
-        .entity-tissue {
-            background-color: #fab1a0;
-            color: #333;
-        }
-
-        .entity-peptide {
-            background-color: #55efc4;
-            color: #333;
-        }
-
-        .entity-transcript {
-            background-color: #ffeaa7;
-            color: #333;
-        }
-
-        .entity-publication {
-            background-color: #81ecec;
-            color: #333;
-        }
-
-        /* 
-        'Experimental_factor': 'entity-epf',
-        'Chromosome': 'entity-chromosome',*/
-
-        .entity-epf {
-            background-color: #ed6c6c;
-            color: #333;
-        }
-
-        .entity-chromosome {
-            background-color: #746f96;
-            color: #333;
-        }
-
-        .collapsible-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .search-actions {
-            margin: 20px 0;
-            display: flex;
-            gap: 10px;
-        }
-
-        .search-section {
-            padding: 2rem 0;
-            background-color: var(--background-color);
-        }
-
-        .search-container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        .search-bar {
-            width: 60%;
-            margin: 0 auto;
-        }
-
-        .input-field input[type="text"] {
-            transition: width 0.5s ease;
-            width: 100%;
-            text-align: center;
-        }
-
-        .input-field input[type="text"]:focus {
-            width: 120%;
-            margin-left: -10%;
-            text-align: center;
-            font-size: xx-large;
-        }
-
-        .search-actions {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-        .search-input-wrapper {
-            margin-bottom: 1rem;
-        }
-
-        .search-input-wrapper input {
-            height: 3rem;
-            padding: 0 1rem;
-            border: 1px solid #e0e0e0;
-            border-radius: 4px;
-            font-size: 1.1rem;
-        }
-
-        .search-input-wrapper input:focus {
-            border-color: var(--secondary-color);
-            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.1);
-        }
-
-        .autocomplete-toggle {
-            margin: 0.5rem 0;
-            color: #666;
-        }
-
-        /* .search-actions {
-        display: flex;
-        justify-content: center;
-        gap: 1rem;
-        margin-top: 1.5rem;
-    } */
-
-        .search-actions button {
-            min-width: 120px;
-            height: 36px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .search-actions button i {
-            margin: 0;
-        }
-
-        .search-header {
-            text-align: center;
-            margin-bottom: 1.5rem;
-            color: var(--primary-color);
-        }
-
-        .search-header h4 {
-            margin: 0;
-            font-weight: 500;
-        }
-
-        .search-header p {
-            color: #666;
-            margin: 0.5rem 0 0;
-        }
-
-        .btn {
-            background-color: var(--secondary-color);
-        }
-
-        .btn:hover {
-            background-color: var(--primary-color);
-        }
-
-        .citation-info {
-            font-size: 12px;
-            color: #666;
-            margin-top: 10px;
-        }
-
-        #visualizationPanel {
-            position: fixed;
-            right: -90%;
-            top: 64px;
-            width: 90%;
-            /* opacity: 80%; */
-            height: calc(100vh - 124px);
-            background: white;
-            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
-            transition: right 0.3s ease;
-            z-index: 1000;
-            padding: 20px;
-        }
-
-        #visualizationPanel.open {
-            right: 5%;
-            margin-bottom: 80px;
-        }
-
-        .visualization-container {
-            display: flex;
-            width: 100%;
-            height: calc(100vh - 64px);
-            background: white;
-        }
-
-        .network-panel {
-            flex: 0 0 75%;
-            position: relative;
-            border-right: 1px solid #eee;
-        }
-
-        .details-sidebar {
-            flex: 0 0 25%;
-            padding: 1rem;
-            overflow-y: auto;
-            background: #f8f9fa;
-            max-height: 76%;
-        }
-
-        .details-section {
-            margin-bottom: 2rem;
-        }
-
-        .details-section h6 {
-            color: #2c3e50;
-            border-bottom: 2px solid #3498db;
-            padding-bottom: 0.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .legend-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 0.5rem;
-        }
-
-        .legend-color {
-            width: 20px;
-            height: 20px;
-            margin-right: 0.5rem;
-            border-radius: 4px;
-        }
-
-        .legend-shape {
-            width: 20px;
-            height: 20px;
-            margin-right: 0.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* Drug: '#ff7675',
-            Protein: '#4834d4',
-            Disease: '#6c5ce7',
-            Gene: '#00b894',
-            Metabolite: '#e17055',
-            Pathway: '#fdcb6e',
-            Default: '#95a5a6',
-            Transcript: '#e84393',
-            Peptide: '#fbc531' */
-
-        .shape-circle {
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            background: #ff7675;
-        }
-
-        .shape-diamond {
-            width: 16px;
-            height: 16px;
-            background: #4834d4;
-            transform: rotate(45deg);
-        }
-
-        .shape-triangle {
-            width: 0;
-            height: 0;
-            border-left: 8px solid transparent;
-            border-right: 8px solid transparent;
-            border-bottom: 16px solid #51d6df;
-        }
-
-        .shape-square {
-            width: 16px;
-            height: 16px;
-            background: #00b894;
-        }
-
-        .shape-cross {
-            width: 16px;
-            height: 16px;
-            background: #fbc531;
-            position: relative;
-            clip-path: polygon(25% 0%, 75% 0%, 75% 25%, 100% 25%, 100% 75%, 75% 75%, 75% 100%, 25% 100%, 25% 75%, 0% 75%, 0% 25%, 25% 25%);
-        }
-
-        .shape-wye {
-            width: 16px;
-            height: 16px;
-            background: #e17055;
-            clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0 38%);
-        }
-
-        .shape-star {
-            width: 16px;
-            height: 16px;
-            background: #fdcb6e;
-            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
-        }
-
-        .shape-hexagon {
-            width: 16px;
-            height: 16px;
-            background: #e84393;
-            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
-        }
-
-        .node-list,
-        .relationship-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .node-item,
-        .relationship-item {
-            padding: 0.5rem;
-            /* border-bottom: 1px solid #eee; */
-            font-size: 0.9rem;
-        }
-
-        .node-type-badge {
-            display: inline-block;
-            padding: 2px 6px;
-            border-radius: 3px;
-            color: white;
-            font-size: 0.8rem;
-            margin-right: 0.5rem;
-        }
-
-        .network-stats {
-            background: #fff;
-            padding: 0.5rem;
-            border-radius: 4px;
-            margin-bottom: 1rem;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
-
-        .stat-item {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 0.25rem;
-        }
-
-        .close-panel {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            cursor: pointer;
-        }
-
-        .relationship-path {
-            display: flex;
-            align-items: center;
-            margin: 10px 0;
-            overflow-x: auto;
-            padding: 10px;
-        }
-
-        .node-item {
-            padding: 5px 10px;
-            border-radius: 4px;
-            margin: 0 5px;
-            white-space: nowrap;
-        }
-
-        .path-arrow {
-            color: #666;
-            margin: 0 5px;
-        }
-
-        .evidence-section {
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid #eee;
-        }
-
-        .evidence-item {
-            font-size: 13px;
-            margin-bottom: 10px;
-        }
-
-        .pubmed-link {
-            color: var(--secondary-color);
-            text-decoration: underline;
-        }
-
-        .matches-section {
-            margin-bottom: 20px;
-        }
-
-        .exact-matches {
-            margin-bottom: 30px;
-        }
-
-        .partial-matches-toggle {
-            background-color: #f5f5f5;
-            padding: 15px;
-            border-radius: 8px;
-            margin: 20px 0;
-            cursor: pointer;
-            user-select: none;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .partial-matches-toggle:hover {
-            background-color: #eeeeee;
-        }
-
-        .partial-matches-count {
-            color: #666;
-            font-size: 0.9rem;
-        }
-
-        .partial-matches-content {
-            display: none;
-            padding: 15px;
-            border-left: 3px solid var(--secondary-color);
-            margin-left: 10px;
-        }
-
-        .partial-matches-content.visible {
-            display: block;
-        }
-
-        .relationships-dropdown {
-            display: none;
-            background: #f8f9fa;
-            border: 1px solid #e0e0e0;
-            border-radius: 4px;
-            margin-top: 10px;
-            padding: 15px;
-            padding-bottom: 3.5rem;
-        }
-
-        .relationships-dropdown.active {
-            display: block;
-        }
-
-        .relationship-container {
-            position: relative;
-            padding: 20px;
-        }
-
-        .source-entity {
-            background: #ff7675;
-            color: white;
-            padding: 8px 16px;
-            border-radius: 4px;
-            display: inline-block;
-            margin-bottom: 15px;
-        }
-
-        .relationships-list {
-            margin-left: 40px;
-            border-left: 2px solid #ddd;
-            padding-left: 20px;
-        }
-
-        .relationship-item {
-            position: relative;
-            margin: 10px 0;
-            display: flex;
-            align-items: center;
-        }
-
-        .relationship-item::before {
-            content: '';
-            position: absolute;
-            left: -22px;
-            top: 50%;
-            width: 60px;
-            height: 2px;
-            background: #ddd;
-        }
-
-        .relationship-type {
-            color: #666;
-            font-size: 0.9em;
-            margin: 0 20px 0 45px;
-            min-width: 10px;
-        }
-
-
-        .relationship-net-item {
-            position: relative;
-            margin: 10px 0;
-            /* display: flex; */
-            align-items: center;
-        }
-
-        .relationship-net-item::before {
-            content: '';
-            position: absolute;
-            left: -20px;
-            top: 16%;
-            width: 60px;
-            height: 2px;
-            background: #ddd;
-        }
-
-        .relationship-net-type {
-
-            font-size: 0.9em;
-            margin: 0 23px 0 50px;
-            min-width: 150px;
-            display: block;
-        }
-
-        .relationship-net-source {
-            display: block;
-            font-size: small;
-            color: #666;
-        }
-
-        .relationship-net-target {
-            display: block;
-            font-size: small;
-            color: #666;
-        }
-
-
-
-
-
-        .entity-badge {
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 0.85em;
-            color: white;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-
-        .entity-badge:hover {
-            transform: scale(1.05);
-        }
-
-        .entity-modal {
-            display: none;
-            position: absolute;
-            z-index: 1000;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            padding: 15px;
-            max-width: 30rem;
-            max-height: 30rem;
-            overflow-y: auto;
-        }
-
-        .entity-modal.active {
-            display: block;
-        }
-
-        .modal-header {
-            border-bottom: 1px solid #eee;
-            padding-bottom: 10px;
-            margin-bottom: 10px;
-        }
-
-        .modal-content {
-            margin-bottom: 15px;
-        }
-
-        .modal-actions {
-            display: flex;
-            gap: 10px;
-            border-top: 1px solid #eee;
-            padding-top: 10px;
-        }
-
-        .modal-close {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            cursor: pointer;
-            color: #666;
-        }
-
-        /* Entity type-specific styles */
-        .entity-drug {
-            background-color: #ff7675;
-        }
-
-        .entity-disease {
-            background-color: #6c5ce7;
-        }
-
-        .entity-protein {
-            background-color: #4834d4;
-        }
-
-        .entity-gene {
-            background-color: #00b894;
-        }
-
-        .view-network-btn {
-            background-color: var(--secondary-color);
-            margin-bottom: 15px;
-            color: white;
-            padding: 8px 16px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            /* margin-top: 10px; */
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            float: right;
-        }
-
-        .view-network-btn:hover {
-            background-color: var(--primary-color);
-        }
-
-
-
-
-        .network-stats {
-            font-size: 0.9rem;
-            color: #666;
-            margin-bottom: 1rem;
-            padding: 0.5rem;
-            background: #f5f5f5;
-            border-radius: 4px;
-        }
-
-        .custom-tooltip {
-            position: absolute;
-            background: white;
-            padding: 8px;
-            border-radius: 4px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-            pointer-events: none;
-            display: none;
-            z-index: 1000;
-        }
-
-
-
-
-        .context-menu {
-            position: fixed;
-            background: white;
-            min-width: 200px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-            border-radius: 4px;
-            padding: 5px 0;
-            z-index: 1000;
-        }
-
-        .context-menu .menu-items {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-        }
-
-        .context-menu .menu-items li {
-            padding: 8px 15px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-
-        .context-menu .menu-items li:hover {
-            background-color: #f5f5f5;
-        }
-
-        .context-menu .material-icons {
-            font-size: 18px;
-            color: #666;
-        }
-
-        .context-menu span {
-            font-size: 14px;
-            color: #333;
-        }
-
-        /* Node Modal Styles */
-        .modal {
-            max-width: 600px;
-            border-radius: 8px;
-        }
-
-        .modal .entity-type {
-            display: inline-block;
-            padding: 4px 8px;
-            border-radius: 4px;
-            margin: 8px 0;
-            color: white;
-            font-size: 0.9rem;
-        }
-
-        .modal-body {
-            margin: 16px 0;
-        }
-
-        .relationships-section {
-            margin-top: 24px;
-            padding-top: 16px;
-            border-top: 1px solid #eee;
-        }
-
-        /* Edge Label Styles */
-        .link-label {
-            font-family: Arial, sans-serif;
-            pointer-events: none;
-        }
-
-        /* Add to your existing CSS */
-        .modal {
-            max-height: 85vh !important;
-            /* Ensure modal isn't too tall */
-            overflow-y: auto;
-        }
-
-        .modal .modal-close:hover {
-            color: var(--accent-color);
-        }
-
-        .link-label {
-            opacity: 0;
-            transition: opacity 0.2s;
-        }
-
-        /* Only show edge labels on hover */
-        .link:hover .link-label {
-            opacity: 0.7;
-        }
-
-
-        #network-container {
-            width: 100%;
-            height: calc(100vh - 200px);
-            /* Adjust height to fit the visualization panel */
-            position: relative;
-        }
-
-        #network-container svg {
-            width: 100%;
-            height: 100%;
-            display: block;
-            /* Ensure SVG takes up full space */
-        }
-
-        #visualizationPanel {
-            padding: 20px;
-            overflow: hidden;
-            /* Prevent scrolling issues */
-        }
-
-        /* Ensure the visualization content fills the panel */
-        #visualizationContent {
-            height: calc(100% - 60px);
-            /* Account for header */
-            position: relative;
-        }
-
-
-
-        .collapsible-list {
-            max-height: 100px;
-            overflow: hidden;
-            position: relative;
-            transition: max-height 0.3s ease-out;
-        }
-
-        .collapsible-list.expanded {
-            max-height: none;
-        }
-
-        .show-more-btnn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            padding: 8px;
-            margin-top: 10px;
-            background: #f5f5f5;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            cursor: pointer;
-            color: #666;
-            transition: background-color 0.2s;
-        }
-
-        .show-more-btnn:hover {
-            background: #eeeeee;
-        }
-
-        .show-more-btnn i {
-            margin-left: 8px;
-            transition: transform 0.3s;
-        }
-
-        /* .show-more-btnn.expanded i {
-            transform: rotate(180deg);
-        } */
-
-        .fade-bottom {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 50px;
-            background: linear-gradient(to bottom, transparent, white);
-            pointer-events: none;
-            transition: opacity 0.3s;
-        }
-
-        .collapsible-list.expanded .fade-bottom {
-            opacity: 0;
-        }
-
-
-
-
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(255, 255, 255, 0.9);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-        }
-
-        .loading-overlay.active {
-            display: flex;
-        }
-
-        .loading-content {
-            text-align: center;
-        }
-
-        .loading-spinner {
-            width: 100px;
-            height: 100px;
-            position: relative;
-            margin-bottom: 20px;
-        }
-
-        .loading-spinner::before,
-        .loading-spinner::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            border: 4px solid transparent;
-            border-top-color: #3498db;
-            animation: spin 1.5s linear infinite;
-        }
-
-        .loading-spinner::before {
-            border-top-color: #3498db;
-            animation-delay: 0s;
-        }
-
-        .loading-spinner::after {
-            width: 60px;
-            height: 60px;
-            border-top-color: #2c3e50;
-            animation-delay: 0.3s;
-        }
-
-        .loading-nodes {
-            display: flex;
-            justify-content: center;
-            margin-top: 10px;
-        }
-
-        .loading-node {
-            width: 12px;
-            height: 12px;
-            background-color: #3498db;
-            border-radius: 50%;
-            margin: 0 4px;
-            animation: pulse 1s ease-in-out infinite;
-        }
-
-        .loading-node:nth-child(2) {
-            animation-delay: 0.2s;
-        }
-
-        .loading-node:nth-child(3) {
-            animation-delay: 0.4s;
-        }
-
-        @keyframes spin {
-            0% {
-                transform: translate(-50%, -50%) rotate(0deg);
-            }
-
-            100% {
-                transform: translate(-50%, -50%) rotate(360deg);
-            }
-        }
-
-        @keyframes pulse {
-
-            0%,
-            100% {
-                transform: scale(1);
-                opacity: 0.5;
-            }
-
-            50% {
-                transform: scale(1.3);
-                opacity: 1;
-            }
-        }
-
-        .loading-text {
-            color: #2c3e50;
-            font-size: 18px;
-            margin-top: 20px;
-        }
-
-
-        .footer {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 45px;
-            background-color: var(--primary-color);
-            color: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 20px;
-            font-size: 0.9rem;
-            z-index: 1000;
-            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
-        }
-
-        .footer-left {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .footer-right {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .footer a {
-            color: #fff;
-            text-decoration: none;
-            opacity: 0.8;
-            transition: opacity 0.2s;
-        }
-
-        .footer a:hover {
-            opacity: 1;
-        }
-
-        /* Adjust main content and visualization panel to account for footer */
-        .container {
-            margin-bottom: 80px;
-        }
-
-        #visualizationPanel {
-            bottom: 40px;
-        }
-
-
-        .expansion-controls {
-            position: absolute;
-            top: 1rem;
-            left: 1rem;
-            z-index: 100;
-            /* background: rgba(255, 255, 255, 0.95); */
-            padding: 1rem;
-            /* border-radius: 4px; */
-            /* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); */
-            min-width: 250px;
-        }
-
-        .expansion-controls h6 {
-            margin: 0 0 10px 0;
-            color: #2c3e50;
-            font-size: 0.9rem;
-            font-weight: 600;
-        }
-
-        .control-group {
-            margin-bottom: 1rem;
-            display: inline-block;
-            margin-right: 16px;
-        }
-
-        .control-group:last-child {
-            margin-bottom: 0;
-        }
-
-        .control-label {
-            display: block;
-            margin-bottom: 5px;
-            font-size: 0.8rem;
-            color: #666;
-        }
-
-        .max-neighbours-input {
-            width: 100%;
-            padding: 11px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            margin-bottom: 8px;
-        }
-
-        .neighbour-types-select {
-            width: 100%;
-            min-height: 80px;
-        }
-
-        .control-note {
-            font-size: 0.75rem;
-            color: #666;
-            font-style: italic;
-            /* margin-top: 8px; */
-            padding: 4px;
-            background: #f8f9fa;
-            border-radius: 4px;
-        }
-
-        /* Separator between expansion controls and zoom controls */
-        .controls-separator {
-            margin: 1rem 0;
-            border-top: 1px solid #eee;
-            padding-top: 1rem;
-        }
-
-        .ddropdown-wrapper {
-            position: relative;
-        }
-
-        .ddropdown-trigger {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            background: white;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .sselected-options {
-            max-width: 180px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        .ddropdown-content {
-            display: none;
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            background: white;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            margin-top: 4px;
-            max-height: 200px;
-            overflow-y: auto;
-            z-index: 1000;
-        }
-
-        .ddropdown-content.active {
-            display: block;
-        }
-
-        .ddropdown-item {
-            padding: 8px;
-            cursor: pointer;
-        }
-
-        .ddropdown-item:hover {
-            background: #f5f5f5;
-        }
-
-        .ddropdown-item label {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-        }
-
-        .ddropdown-item input[type="checkbox"] {
-            margin: 0;
-        }
-
-        .publications-container {
-            display: none;
-            position: absolute;
-            top: 70%;
-            /* width: 72%; */
-            font-size: 1.15rem;
-            line-height: 110%;
-            margin: .7666666667rem 0 .46rem 0;
-            color: #2c3e50;
-            border-bottom: 2px solid #3498db;
-            padding-bottom: 0.5rem;
-            margin-bottom: 1rem;
-            background: #f8f9fa;
-        }
-
-        .publications-container h6 {
-            color: #2c3e50;
-            /* border-bottom: 2px solid #3498db; */
-            /* padding-bottom: 0.5rem; */
-            margin-top: 0.5rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .publications-container .publications-header {
-            display: flex;
-        }
-
-        .publications-panel {
-            background: #fff;
-            border-radius: 4px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            margin: 1rem;
-        }
-
-        .publications-list {
-            padding: 1rem;
-        }
-
-        .publication-item {
-            border-bottom: 1px solid #eee;
-            padding: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .publication-item:last-child {
-            border-bottom: none;
-        }
-
-        .node-reference {
-            display: inline-flex;
-            align-items: center;
-            padding: 4px 8px;
-            border-radius: 4px;
-            margin-bottom: 8px;
-            font-size: 0.9rem;
-        }
-
-        .citation-context {
-            font-size: 0.85rem;
-            color: #666;
-            margin: 8px 0;
-            padding-left: 8px;
-            border-left: 3px solid #e0e0e0;
-        }
-
-        .publication-title {
-            font-size: 1.1rem;
-            font-weight: 500;
-            color: #2c3e50;
-            margin: 8px 0;
-        }
-
-        .publication-abstract {
-            font-size: 0.9rem;
-            color: #555;
-            margin: 8px 0;
-            line-height: 1.5;
-        }
-
-        .publication-actions {
-            display: flex;
-            gap: 8px;
-            margin-top: 12px;
-        }
-
-        .node-chip {
-            display: inline-flex;
-            align-items: center;
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-size: 0.8rem;
-            color: white;
-            margin-right: 8px;
-        }
-
-        .publication-meta {
-            font-size: 0.8rem;
-            color: #666;
-            margin: 4px 0;
-        }
-
-        /* .publications-container {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: white;
-    box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
-    z-index: 1000;
-    max-height: 30vh;
-    display: none;
-} */
-
-        .publications-container.active {
-            display: block;
-            margin-left: 1rem;
-            margin-right: 1rem;
-            max-width: 100%;
-            /* display: flex
-        ; */
-            left: 0;
-        }
-
-        .show-more-btn.publicationContent {
-            display: none;
-        }
-
-        .show-more-btn.publicationContent.active {
-            display: block;
-            margin-top: 1rem;
-            position: absolute;
-            text-align: center;
-            margin-right: -2rem;
-            bottom: 2rem;
-            max-width: 98%;
-        }
-
-        .publications-header {
-            padding: 0px 22px;
-            /* background: #f5f5f5;
-            border-bottom: 1px solid #ddd; */
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .publications-header h5 {
-            margin: 0;
-            font-size: 1rem;
-        }
-
-        .close-publications {
-            cursor: pointer;
-            padding: 4px;
-        }
-
-        .publications-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            padding: 12px;
-            overflow-y: auto;
-            max-height: calc(28rem - 40px);
-        }
-
-        .publication-item {
-            flex: 0 0 300px;
-            max-width: 300px;
-            background: #f8f9fa;
-            border-radius: 4px;
-            padding: 12px;
-            border: 1px solid #eee;
-        }
-
-        .node-type-tag {
-            display: inline-block;
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-size: 0.75rem;
-            color: white;
-            margin-bottom: 8px;
-        }
-
-        .publication-title {
-            font-size: 0.9rem;
-            font-weight: 500;
-            margin: 8px 0;
-            color: #2c3e50;
-        }
-
-        .publication-meta {
-            font-size: 0.75rem;
-            color: #666;
-            margin-bottom: 8px;
-        }
-
-        .citation-context {
-            font-size: 0.75rem;
-            color: #666;
-            margin: 8px 0;
-            padding-left: 8px;
-            border-left: 2px solid #e0e0e0;
-        }
-
-        .publication-actions {
-            display: flex;
-            gap: 8px;
-            margin-top: 8px;
-        }
-
-        .action-btn {
-            padding: 4px 8px;
-            font-size: 0.75rem;
-            border-radius: 4px;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            cursor: pointer;
-            border: none;
-            color: white;
-        }
-
-        .view-btn {
-            background: #2ecc71;
-        }
-
-        .cite-btn {
-            background: #3498db;
-        }
-
-        .material-icons {
-            font-size: 16px;
-        }
-    </style>
+    
 </head>
 
-<body>
+<body class="search-page">
+    <div class="site-shell">
     <div class="loading-overlay" id="loadingOverlay">
         <div class="loading-content">
             <div class="loading-spinner"></div>
@@ -1630,190 +25,198 @@
             <div class="loading-text">Building Network Graph...</div>
         </div>
     </div>
-    <nav>
-        <div class="nav-wrapper">
-            <a href="home" class="brand-logo">MedKG</a>
-            <!-- Show info in small : Niper: Department of PharmacoInformatics-->
-            <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
-            <ul id="nav-mobile" class="right">
-                <li><a href="#" onclick="toggleAdvancedSearch()"><i class="material-icons left">tune</i>Advanced
-                        Search</a></li>
-                <!-- <li><a href="#" onclick="exportResults()"><i class="material-icons left">file_download</i>Export</a>
-                </li> -->
-                <li><a href="#" onclick="showHelp()"><i class="material-icons left">help_outline</i>Help</a></li>
+
+        <header class="site-nav">
+            <div class="nav-inner">
+                <a class="brand" href="home">
+                    <span class="brand-pill"><span class="material-icons" aria-hidden="true">hub</span></span>
+                    <span>MedKG Platform</span>
+                </a>
+                <nav class="nav-links">
+                    <a href="home">Home</a>
+                    <a href="search" class="active">Explore</a>
+                    <a href="viz">Network</a>
+                    <a href="docs">Docs</a>
+                    <a href="about-us">About</a>
+                    <a href="contact">Contact</a>
+                </nav>
+                <a class="nav-cta" href="https://github.com/chemplusx/MedKG" target="_blank" rel="noopener">
+                    <span class="material-icons" aria-hidden="true">code</span>
+                    GitHub
+                </a>
+            </div>
+        </header>
+
+        <main class="page-content">
+            <section class="hero">
+                <div class="hero-grid">
+                    <div class="hero-content">
+                        <span class="badge-soft"><span class="material-icons" aria-hidden="true">travel_explore</span>Graph-aware search</span>
+                        <h1>Discover entities, relationships &amp; evidence in MedKG</h1>
+                        <p>
+                            Use the advanced filters, autocomplete, and interactive network explorer to interrogate diseases,
+                            drugs, proteins, and phenotypes. Results stream directly from the production deployment so you
+                            always work with the freshest graph.
+                        </p>
+                    </div>
+                    <div class="glass-panel pad-md">
+                        <h3>How to use</h3>
+                        <ul class="list-soft">
+                            <li>Start typing an entity name – toggle autocomplete to surface curated suggestions.</li>
+                            <li>Refine by entity type, relationship family, and evidence level using the filters panel.</li>
+                            <li>Use the network view to expand neighbourhoods and inspect node metadata in context.</li>
             </ul>
         </div>
-    </nav>
+                </div>
+            </section>
 
-    <div class="container">
-        <div class="row">
-            <div class="col s12">
-                <div class="search-bar">
-                    <div class="input-field">
-                        <input type="text" id="mainSearch"
-                            placeholder="Enter search terms (e.g., drug names, proteins, diseases, or pathways)">
-                        <div class="autocomplete-toggle" style="margin-top: 10px;">
-                            <label>
-                                <input type="checkbox" id="enableAutocomplete">
-                                <span>Enable Autocomplete Suggestions</span>
-                            </label>
+            <section class="page-section tight-top">
+                <div class="page-container">
+                    <div class="search-card">
+                        <div class="search-header">
+                            <div class="search-box">
+                                <input type="text" class="search-input" id="mainSearch"
+                                    placeholder="Search drugs, diseases, proteins, pathways, …" autocomplete="off">
+                                <div id="autocompleteList" class="auto-list"></div>
                         </div>
+                            <div class="search-options">
                         <div class="search-actions">
-                            <button class="btn waves-effect waves-light" onclick="performSearch()">
-                                Search<i class="material-icons right">search</i>
+                                    <button type="button" class="btn waves-effect waves-light" onclick="performSearch()">
+                                        <span class="material-icons" aria-hidden="true">search</span>
+                                        Search
                             </button>
-                            <button class="btn waves-effect waves-light" onclick="clearSearch()">
-                                Clear<i class="material-icons right">clear</i>
+                                    <button type="button" class="btn waves-effect waves-light" onclick="clearSearch()">
+                                        <span class="material-icons" aria-hidden="true">clear</span>
+                                        Clear
                             </button>
-                            <button class="btn waves-effect waves-light blue lighten-1" onclick="runSampleSearch()">
-                                <i class="material-icons">psychology</i>
-                                Sample Search
+                                    <button type="button" class="btn waves-effect waves-light teal lighten-1"
+                                        onclick="runSampleSearch()">
+                                        <span class="material-icons" aria-hidden="true">psychology</span>
+                                        Sample search
                             </button>
                         </div>
+                                <div class="search-chip-group">
+                                    <button class="chip" type="button" onclick="setQuickSearch('Diseases')"><span class="material-icons" aria-hidden="true">healing</span>Diseases</button>
+                                    <button class="chip" type="button" onclick="setQuickSearch('Drugs')"><span class="material-icons" aria-hidden="true">medication</span>Drugs</button>
+                                    <button class="chip" type="button" onclick="setQuickSearch('Proteins')"><span class="material-icons" aria-hidden="true">biotech</span>Proteins</button>
+                                    <button class="chip" type="button" onclick="setQuickSearch('Pathways')"><span class="material-icons" aria-hidden="true">schema</span>Pathways</button>
                     </div>
+                                <div class="search-chip-group">
+                                    <button class="chip" type="button" onclick="setSearchExample('Clonidine')">Clonidine</button>
+                                    <button class="chip" type="button" onclick="setSearchExample('Diabetes')">Diabetes</button>
+                                    <button class="chip" type="button" onclick="setSearchExample('ACE2')">ACE2</button>
+                                </div>
+                                <div class="search-toggle">
+                                    <label>
+                                        <input type="checkbox" id="enableAutocomplete" checked>
+                                        <span>Enable autocomplete suggestions</span>
+                                    </label>
                 </div>
             </div>
         </div>
 
-        <div class="search-results-container">
-            <div class="filters-panel">
+                        <div class="search-layout">
+                            <aside class="filters-panel">
                 <h5>Filters</h5>
-
                 <div id="labelFilterSection" class="label-filter-section">
-                    <div>
-                        <h6>Entity Types</h6>
-                        <button class="btn-small" onclick="selectAllEntities('labels')">Select All</button>
-                        <button class="btn-small" onclick="clearAllEntities('labels')">Clear All</button>
+                                    <div class="filter-buttons">
+                                        <h6>Entity types</h6>
+                                        <span class="spacer"></span>
+                                        <button class="btn-small waves-effect" type="button"
+                                            onclick="selectAllEntities('labels')">Select all</button>
+                                        <button class="btn-small waves-effect" type="button"
+                                            onclick="clearAllEntities('labels')">Clear</button>
                     </div>
                     <label>
-                        <input type="checkbox" class="filled-in" checked="checked" value="drug" />
+                                        <input type="checkbox" class="filled-in" checked value="drug">
                         <span>Drugs</span>
                     </label><br>
                     <label>
-                        <input type="checkbox" class="filled-in" checked="checked" value="protein" />
+                                        <input type="checkbox" class="filled-in" checked value="protein">
                         <span>Proteins</span>
                     </label><br>
                     <label>
-                        <input type="checkbox" class="filled-in" checked="checked" value="disease" />
+                                        <input type="checkbox" class="filled-in" checked value="disease">
                         <span>Diseases</span>
                     </label><br>
                     <label>
-                        <input type="checkbox" class="filled-in" checked="checked" value="gene" />
+                                        <input type="checkbox" class="filled-in" checked value="gene">
                         <span>Genes</span>
                     </label>
                 </div>
 
                 <div id="relationFilterSection" class="relation-filter-section">
-                    <div>
-                        <h6>Relationship Types</h6>
-                        <button class="btn-small" onclick="selectAllEntities('relation')">Select All</button>
-                        <button class="btn-small" onclick="clearAllEntities('relation')">Clear All</button>
+                                    <div class="filter-buttons">
+                                        <h6>Relationship types</h6>
+                                        <span class="spacer"></span>
+                                        <button class="btn-small waves-effect" type="button"
+                                            onclick="selectAllEntities('relation')">Select all</button>
+                                        <button class="btn-small waves-effect" type="button"
+                                            onclick="clearAllEntities('relation')">Clear</button>
                     </div>
                     <label>
-                        <input type="checkbox" class="filled-in" checked="checked" value="treats" />
+                                        <input type="checkbox" class="filled-in" checked value="treats">
                         <span>Treats</span>
                     </label><br>
                     <label>
-                        <input type="checkbox" class="filled-in" checked="checked" value="interacts" />
+                                        <input type="checkbox" class="filled-in" checked value="interacts">
                         <span>Interacts</span>
                     </label><br>
                     <label>
-                        <input type="checkbox" class="filled-in" checked="checked" value="expresses" />
+                                        <input type="checkbox" class="filled-in" checked value="expresses">
                         <span>Expresses</span>
                     </label>
                 </div>
 
-                <div class="studies-filter-section">
-                    <h6>Evidence Level</h6>
-                    <label>
-                        <input type="checkbox" class="filled-in" checked="checked" value="experimental" />
-                        <span>Experimental Evidence</span>
-                    </label><br>
-                    <label>
-                        <input type="checkbox" class="filled-in" checked="checked" value="clinical" />
-                        <span>Clinical Studies</span>
-                    </label><br>
-                    <label>
-                        <input type="checkbox" class="filled-in" checked="checked" value="computational" />
-                        <span>Computational Prediction</span>
-                    </label>
+                <div class="network-stats">
+                    <div>Nodes: <span id="nodeCount">0</span></div>
+                    <div>Edges: <span id="edgeCount">0</span></div>
+                    <div>Connected Components: <span id="componentCount">0</span></div>
                 </div>
 
-                <!-- <div class="filter-section">
-                    <h6>Publication Year</h6>
-                    <div class="input-field">
-                        <input type="number" id="yearFrom" placeholder="From">
-                    </div>
-                    <div class="input-field">
-                        <input type="number" id="yearTo" placeholder="To">
-                    </div>
+                <div class="network-lists">
+                    <h6>Node details</h6>
+                    <div id="nodeList" class="network-list"></div>
+                    <h6>Relationships</h6>
+                    <div id="relationshipList" class="network-list"></div>
                 </div>
-                <div class="search-actions">
-                    <button class="btn waves-effect waves-light" onclick="applyFilters()">
-                        Apply Filters<i class="material-icons right">filter_list</i>
-                    </button>
-                    <button class="btn waves-effect waves-light" onclick="clearFilters()">
-                        Clear Filters<i class="material-icons right">clear_all</i>
-                    </button>
-                </div> -->
-            </div>
+            </aside>
 
             <div class="results-panel">
                 <div class="search-stats">
                     <span hidden>Found <span id="resultCount">0</span> results</span>
-                    <div class="right">
-                        Sort by:
+                                    <div>
+                                        Sort by
                         <select id="sortOrder" onchange="updateSort()">
                             <option value="relevance">Relevance</option>
-                            <option value="recent">Most Recent</option>
-                            <option value="cited">Most Cited</option>
+                                            <option value="recent">Most recent</option>
+                                            <option value="cited">Most cited</option>
                         </select>
                     </div>
                 </div>
 
-                <div id="searchResults">
-                    <!-- Results will be populated here -->
+                                <div id="searchResults"></div>
                 </div>
-
-                <!-- <div class="pagination">
-                    <button class="btn waves-effect waves-light" onclick="previousPage()" id="prevButton" disabled>
-                        Previous
-                    </button>
-                    <span id="pageInfo">Page 1 of 1</span>
-                    <button class="btn waves-effect waves-light" onclick="nextPage()" id="nextButton" disabled>
-                        Next
-                    </button>
-                </div> -->
             </div>
         </div>
     </div>
+            </section>
 
-    <!-- <div id="visualizationPanel">
+            <section class="page-section" style="padding-top:0;">
+                <div class="page-container">
+                    <section id="visualizationPanel" class="visualization-container">
         <i class="material-icons close-panel" onclick="closeVisualization()">close</i>
-        <h5>Network View</h5>
-        <div id="visualizationContent"> -->
-
-    <main id="visualizationPanel" class="visualization-container">
-        <i class="material-icons close-panel" onclick="closeVisualization()">close</i>
-        <!-- <h5 style="position: absolute;">Network View</h5> -->
-
         <div class="expansion-controls">
-            <!-- <h6>Network Expansion Settings</h6> -->
-
             <div class="control-group">
-                <label class="control-label">Max Neighbours</label>
-                <input type="number" class="max-neighbours-input browser-default" id="maxNeighbours" value="5" min="1"
-                    max="200">
+                                <label class="control-label">Max neighbours</label>
+                                <input type="number" class="max-neighbours-input browser-default" id="maxNeighbours" value="5" min="1" max="200">
             </div>
-
             <div class="control-group">
-                <label class="control-label">Max Depth</label>
-                <input type="number" class="max-neighbours-input browser-default" id="maxDepth" value="3" min="1"
-                    max="10">
+                                <label class="control-label">Max depth</label>
+                                <input type="number" class="max-neighbours-input browser-default" id="maxDepth" value="3" min="1" max="10">
             </div>
-
             <div class="control-group">
-                <label class="control-label">Neighbour Types</label>
+                                <label class="control-label">Neighbour types</label>
                 <div class="ddropdown-wrapper">
                     <button class="ddropdown-trigger">
                         <span class="sselected-options">Select types...</span>
@@ -1845,134 +248,20 @@
                                 <input type="checkbox" value="Metabolite"> Metabolite
                             </label>
                         </div>
-                        <div class="ddropdown-item">
-                            <label>
-                                <input type="checkbox" value="Pathway"> Pathway
-                            </label>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="control-note">
-                Note: These filters apply when expanding nodes in the network
-            </div>
-        </div>
-
-        <div class="controls-separator"></div>
-
-        <div class="controls-panel">
-            <button class="btn waves-effect waves-light" onclick="graph.zoomIn()">
-                <i class="material-icons">zoom_in</i>
-            </button>
-            <button class="btn waves-effect waves-light" onclick="graph.zoomOut()">
-                <i class="material-icons">zoom_out</i>
-            </button>
-            <button class="btn waves-effect waves-light" onclick="graph.resetZoom()">
-                <i class="material-icons">center_focus_strong</i>
-            </button>
-            <button class="btn waves-effect waves-light" onclick="graph.fitToView()">
-                <i class="material-icons">fit_screen</i>
-            </button>
-        </div>
-
-        <div id="network-container">
-            <svg width="100%" height="100%"></svg>
-        </div>
-
-
-        <div class="custom-tooltip"></div>
-        <div class="details-sidebar">
-            <div class="details-section network-stats">
-                <h6>Network Statistics</h6>
-                <div class="stat-item">
-                    <span>Nodes:</span>
-                    <span id="nodeCount">0</span>
-                </div>
-                <div class="stat-item">
-                    <span>Relationships:</span>
-                    <span id="edgeCount">0</span>
-                </div>
-            </div>
-
-            <div class="details-section">
-                <h6>Node Types</h6>
-                <div class="legend-container collapsible-list" id="legendListContent">
-                    <div class="legend-item">
-                        <div class="legend-shape">
-                            <div class="shape-circle"></div>
-                        </div>
-                        <span>Drug</span>
-                    </div>
-
-                    <div class="legend-item">
-                        <div class="legend-shape">
-                            <div class="shape-triangle"></div>
-                        </div>
-                        <span>Disease</span>
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-shape">
-                            <div class="shape-square"></div>
-                        </div>
-                        <span>Gene</span>
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-shape">
-                            <div class="shape-diamond"></div>
-                        </div>
-                        <span>Protein</span>
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-shape">
-                            <div class="shape-wye"></div>
-                        </div>
-                        <span>Metabolite</span>
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-shape">
-                            <div class="shape-star"></div>
-                        </div>
-                        <span>Pathway</span>
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-shape">
-                            <div class="shape-cross"></div>
-                        </div>
-                        <span>Peptide</span>
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-shape">
-                            <div class="shape-hexagon"></div>
-                        </div>
-                        <span>Transcript</span>
-                    </div>
-                </div>
-                <button class="show-more-btnn" onclick="toggleList('legendListContent', this)">
-                    Show Full <i class="material-icons">expand_more</i>
-                </button>
-            </div>
-
-            <div class="details-section">
-                <h6>Nodes</h6>
-                <ul id="nodeList" class="node-list">
-                    <!-- Nodes will be populated here -->
-                </ul>
-            </div>
-
-            <div class="details-section">
-                <h6>Relationships</h6>
-                <ul id="relationshipList" class="relationship-list">
-                    <!-- Relationships will be populated here -->
-                </ul>
-            </div>
-        </div>
+                        <div class="visualization-shell">
+                            <div id="network-container"></div>
         <div class="details-panel">
             <div class="details-header">
-                <h5>Node Details</h5>
-                <button class="btn-flat waves-effect waves-light" onclick="hideDetails()">
-                    <i class="material-icons">close</i>
-                </button>
+                                    <div class="details-title">
+                                        <span class="node-name" id="selectedNodeName">Node Details</span>
+                                        <span class="entity-type" id="selectedNodeType">Type</span>
+                                    </div>
+                                    <button class="btn-flat" onclick="hideDetails()"><i class="material-icons">close</i></button>
             </div>
             <div id="details-content"></div>
         </div>
@@ -1984,32 +273,48 @@
                 </button>
             </div>
             <div id="publicationsContent"></div>
-
         </div>
         <button class="show-more-btn publicationContent" id="publicationsContainerToggleButton"
             onclick="showPublicationDetails()">
             Show Publications <i class="material-icons">expand_less</i>
+                            </button>
+                        </div>
+                    </section>
+                </div>
+            </section>
     </main>
 
-    <footer class="footer">
-        <div class="footer-left">
-            <span>© 2024 MedKG</span>
-            <span> NIPER SAS Nagar</span>
-            <span>Department of Pharmacoinformatics</span>
-            <!-- <a href="#">Documentation</a> -->
+    <footer class="site-footer">
+        <div class="footer-grid">
+            <div>
+                <div class="brand">
+                    <span class="brand-pill brand-pill-sm"><span class="material-icons" aria-hidden="true">hub</span></span>
+                    <span>MedKG Platform</span>
         </div>
-        <!-- <div class="footer-right">
-            <a href="#">Terms</a>
-            <a href="#">Privacy</a>
-        </div> -->
+                <p class="footer-description">
+                    Graph-aware search powered by MedKG and maintained by ChemPlusX.
+                </p>
+            </div>
+
+            <div>
+                <h4>Explore</h4>
+                <a href="home">Overview</a><br>
+                <a href="search">Advanced search</a><br>
+                <a href="viz">Network explorer</a>
+            </div>
+            <div>
+                <h4>Resources</h4>
+                <a href="swagger-ui.html">Swagger UI</a><br>
+                <a href="redoc.html">Redoc docs</a><br>
+                <a href="https://github.com/chemplusx/MedKG" target="_blank" rel="noopener">GitHub repository</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2025 MedKG · ChemPlusX. All rights reserved.
+        </div>
     </footer>
-    <!-- <div class="network-stats">
-                <div>Nodes: <span id="nodeCount">0</span></div>
-                <div>Edges: <span id="edgeCount">0</span></div>
-                <div>Connected Components: <span id="componentCount">0</span></div>
-            </div> -->
-    <!-- </div>
-    </div> -->
+
+    </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script src="https://d3js.org/d3.v7.min.js"></script>
@@ -2040,16 +345,10 @@
                 relationshipTypes: Array.from(document.querySelectorAll('input[type="checkbox"][value^="treats"], input[type="checkbox"][value^="interacts"], input[type="checkbox"][value^="expresses"]'))
                     .filter(cb => cb.checked)
                     .map(cb => cb.value),
-                // evidenceLevel: Array.from(document.querySelectorAll('input[type="checkbox"][value^="experimental"], input[type="checkbox"][value^="clinical"], input[type="checkbox"][value^="computational"]'))
-                //     .filter(cb => cb.checked)
-                //     .map(cb => cb.value),
-                // yearFrom: document.getElementById('yearFrom').value,
-                // yearTo: document.getElementById('yearTo').value
             };
 
             const urlParams = new URLSearchParams(window.location.search);
             const q = urlParams.get('q');
-            //decodeURIComponent(q);
 
             if (q) {
                 const decodedQuery = q ? decodeURIComponent(q) : '';
@@ -2057,55 +356,36 @@
 
                 performSearch();
             }
-
-            // performSearch(filters);
         });
 
         function showLoading() {
             document.getElementById('loadingOverlay').classList.add('active');
         }
 
-        // Function to hide loading overlay
         function hideLoading() {
             document.getElementById('loadingOverlay').classList.remove('active');
         }
 
         let allFilterableLabels = [];
-
         let allFilterableRelations = [];
 
         GetAllRelations();
         GetAllLabels();
 
-
-        // Add autocomplete functionality for the search input
-
-
-        // Initialize tooltips and other Materialize components
         document.addEventListener('DOMContentLoaded', function () {
             const tooltips = document.querySelectorAll('.tooltipped');
             M.Tooltip.init(tooltips);
 
             const selects = document.querySelectorAll('select');
             M.FormSelect.init(selects);
-
-            // Set current year as default for yearTo if empty
-            // const yearTo = document.getElementById('yearTo');
-            // if (!yearTo.value) {
-            //     yearTo.value = new Date().getFullYear();
-            // }
         });
 
         M.AutoInit();
-
-        // Initialize search with default parameters
-        // updateResults([]);
 
         function showVisualization(id) {
             const panel = document.getElementById('visualizationPanel');
             const content = document.getElementById('visualizationContent');
 
-            // Simulate fetching relationship data
             const relationships = [
                 { source: 'Drug A', target: 'Protein B', type: 'inhibits' },
                 { source: 'Protein B', target: 'Disease C', type: 'associated_with' }
@@ -2131,7 +411,6 @@
             document.getElementById('visualizationPanel').classList.remove('open');
         }
 
-        // Advanced search modal functionality
         function showAdvancedSearch() {
             const modal = document.getElementById('advancedSearchModal');
             const instance = M.Modal.init(modal);
@@ -2144,11 +423,9 @@
             instance.open();
         }
 
-        // Citation export functionality
         function exportCitation(id, format = 'bibtex') {
             showLoading();
 
-            // Simulate citation export
             setTimeout(() => {
                 const citations = {
                     bibtex: `@article{medkg${id},
@@ -2176,7 +453,6 @@
             }, 500);
         }
 
-        // Batch processing functionality
         function processBatch() {
             const fileInput = document.createElement('input');
             fileInput.type = 'file';
@@ -2192,13 +468,11 @@
                         const content = e.target.result;
                         const items = content.split('\n').filter(line => line.trim());
 
-                        // Process each item
                         Promise.all(items.map(item =>
                             fetch(`/api/search?q=${encodeURIComponent(item.trim())}`)
                                 .then(response => response.json())
                         ))
                             .then(results => {
-                                // Handle batch results
                                 const batchResults = results.flat();
                                 updateResults(batchResults);
                                 hideLoading();
@@ -2217,30 +491,24 @@
             fileInput.click();
         }
 
-        // Download visualization as image
         function downloadVisualization(id) {
             const vizContainer = document.querySelector('.relationship-path');
             if (!vizContainer) return;
 
             showLoading();
 
-            // In a real implementation, you would use a library like html2canvas
-            // This is a simplified simulation
             setTimeout(() => {
                 showNotification('Visualization downloaded');
                 hideLoading();
             }, 1000);
         }
 
-        // Add keyboard shortcuts
         document.addEventListener('keydown', function (e) {
-            // Ctrl/Cmd + / for advanced search
             if ((e.ctrlKey || e.metaKey) && e.key === '/') {
                 e.preventDefault();
                 showAdvancedSearch();
             }
 
-            // Ctrl/Cmd + E for export
             if ((e.ctrlKey || e.metaKey) && e.key === 'e') {
                 e.preventDefault();
                 exportResults();
@@ -2250,30 +518,26 @@
         let globalNetworkValues = [];
         let graph;
         function ShowNetwork(id, name, neighbour, type, depth) {
+            const vizPanel = document.getElementById('visualizationPanel');
+            vizPanel.classList.add('open');
             d3.select("#network-container svg").selectAll("*").remove();
-            // M.AutoInit();
             graph = initD3Graph();
 
             function updateFiltersForNetwork() {
-                // Get selected entity types
                 const selectedEntityTypes = Array.from(document.querySelectorAll('#labelFilterSection input[type="checkbox"]'))
                     .filter(cb => cb.checked)
                     .map(cb => cb.value);
 
-                // Get selected relationship types
                 const selectedRelationTypes = Array.from(document.querySelectorAll('#relationFilterSection input[type="checkbox"]'))
                     .filter(cb => cb.checked)
                     .map(cb => cb.value);
 
-                // Filter nodes based on selected entity types
                 const filteredNodes = globalNetworkValues.nodes.filter(node =>
                     selectedEntityTypes.includes(node.type)
                 );
 
-                // Get the IDs of filtered nodes for link filtering
                 const filteredNodeIds = new Set(filteredNodes.map(node => node.id));
 
-                // Filter links based on selected relationship types and filtered nodes
                 const filteredLinks = globalNetworkValues.links.filter(link => {
                     const sourceExists = filteredNodeIds.has(link.source.id || link.source);
                     const targetExists = filteredNodeIds.has(link.target.id || link.target);
@@ -2282,30 +546,11 @@
                     return sourceExists && targetExists && relationshipMatch;
                 });
 
-                // Update the graph with filtered data
                 graph.updateGraph({
                     nodes: filteredNodes,
                     links: filteredLinks
                 });
-
-                // Update network stats
-                // document.getElementById('nodeCount').textContent = filteredNodes.length;
-                // document.getElementById('edgeCount').textContent = filteredLinks.length;
-
-                // // Update connected components count
-                // const components = findConnectedComponents(filteredNodes, filteredLinks);
-                // document.getElementById('componentCount').textContent = components.length;
             }
-
-            // function fetchNetworkData(entityId, name, neighbours, type, depth) 
-            // fetchNetworkData(id, name, neighbour, type, depth)
-            //     .then(data => {
-            //         // Update the graph with data
-            //         globalNetworkValues = data;
-            //         graph.updateGraph(data);
-
-            //         updateFiltersForNetwork();
-            //     });
 
             showLoading();
             fetchNetworkData(id, name, neighbour, type, depth)
@@ -2316,16 +561,6 @@
                         return;
                     }
 
-                    console.log('Network data:', {
-                        nodes: data.nodes.length,
-                        links: data.links.length,
-                        sampleNode: data.nodes[0],
-                        sampleLink: data.links[0]
-                    });
-
-                    console.log('Updating graph with data:', data);
-
-                    // Ensure nodes have proper properties
                     data.nodes = data.nodes.map(node => ({
                         ...node,
                         id: node.id || node.elementId,
@@ -2333,7 +568,6 @@
                         type: node.type || node.labels?.[0] || 'Default'
                     }));
 
-                    // Ensure links have proper references
                     data.links = data.links.map(link => ({
                         ...link,
                         source: typeof link.source === 'object' ? link.source.id : link.source,
@@ -2342,13 +576,7 @@
                     }));
 
                     globalNetworkValues = data;
-
-                    // Update the graph
                     graph.updateGraph(data);
-
-                    // Update network stats
-                    // document.getElementById('nodeCount').textContent = data.nodes.length;
-                    // document.getElementById('edgeCount').textContent = data.links.length;
                     updatePublications();
                     return data;
                 })
@@ -2429,8 +657,6 @@
         }
 
         function citePaper(paperId) {
-            // Implementation for citation functionality
-            // This could copy citation to clipboard or show citation in different formats
             console.log('Citing paper:', paperId);
         }
 
@@ -2450,11 +676,9 @@
         }
 
         function updateNetworkDetails(data) {
-            // Update statistics
             document.getElementById('nodeCount').textContent = data.nodes.length;
             document.getElementById('edgeCount').textContent = data.links.length;
 
-            // Update node list with pagination
             const nodeList = document.getElementById('nodeList');
             const allNodeItems = data.nodes.map(node => `
                 <li class="node-item">
@@ -2473,41 +697,8 @@
                 </button>
             `;
 
-            //         nodeList.innerHTML = data.nodes.map(node => `
-            //     <li class="node-item">
-            //         <span class="node-type-badge" style="background: ${getNodeColor(node.type)}">
-            //             ${node.type}
-            //         </span>
-            //         ${node.name} - Source: ${node.data_source} ( <a href="${node.publication}" target="_blank">Link</a> )
-            //     </li>
-            // `).join('');
-
-            // Update relationship list with pagination
             const relationshipList = document.getElementById('relationshipList');
-            //maintain a set of unique relationships
             const uniqueRelationships = new Set();
-            //     relationshipList.innerHTML = data.links.map(link => {
-            //         const sourceName = typeof link.source === 'object' ? link.source.name :
-            //             data.nodes.find(n => n.id === link.source)?.name;
-            //         const targetName = typeof link.target === 'object' ? link.target.name :
-            //             data.nodes.find(n => n.id === link.target)?.name;
-
-            //         const relationship = `${sourceName} - ${link.type} - ${targetName}`;
-            //         if (uniqueRelationships.has(relationship)) {
-            //             return '';
-            //         }
-            //         uniqueRelationships.add(relationship);
-
-            //         return `
-            //     <li class="relationship-net-item">
-            //         <span class="relationship-net-type">${link.type}</span>
-            //         <span class="relationship-net-source">Source: ${sourceName}</span>
-            //         <span class="relationship-net-target">Target: ${targetName}</span>
-            //     </li>
-            // `;
-            //     }).join('');
-
-
 
             const allRelationshipItems = data.links.map(link => {
                 const sourceName = typeof link.source === 'object' ? link.source.name :
@@ -2547,39 +738,17 @@
                 ? 'Show Less <i class="material-icons">expand_less</i>'
                 : 'Show More <i class="material-icons">expand_more</i>';
         }
-        //     relationshipList.innerHTML = data.links.map(link => {
-        //         const sourceName = typeof link.source === 'object' ? link.source.name :
-        //             data.nodes.find(n => n.id === link.source)?.name;
-        //         const targetName = typeof link.target === 'object' ? link.target.name :
-        //             data.nodes.find(n => n.id === link.target)?.name;
-
-        //         return `
-        //     <li class="relationship-item">
-        //         <span class="relationship-type">${link.type}</span>
-
-        //     </li>
-        // `;
-        //     }).join('');
-        // }
 
         function runSampleSearch() {
-            // Set the search input value to "Clonidine"
             const searchInput = document.getElementById('mainSearch');
             searchInput.value = 'Clonidine';
-
-            // Perform the search
             performSearch();
-
-            // Optional: Scroll to results
-            // document.querySelector('.results-panel')?.scrollIntoView({ behavior: 'smooth' });
         }
 
         document.addEventListener('DOMContentLoaded', function () {
-            // Initialize Materialize select
             var elems = document.querySelectorAll('select');
             M.FormSelect.init(elems);
 
-            // Add event listeners for the controls
             document.getElementById('maxNeighbours').addEventListener('change', function (e) {
                 const value = parseInt(e.target.value);
                 if (value < 1) this.value = 1;
@@ -2592,27 +761,23 @@
             });
         });
 
-
         document.addEventListener('DOMContentLoaded', function () {
             const dropdownTrigger = document.querySelector('.ddropdown-trigger');
             const dropdownContent = document.querySelector('.ddropdown-content');
             const selectedOptionsText = document.querySelector('.sselected-options');
             const checkboxes = document.querySelectorAll('.ddropdown-item input[type="checkbox"]');
 
-            // Toggle dropdown
             dropdownTrigger.addEventListener('click', (e) => {
                 e.stopPropagation();
                 dropdownContent.classList.toggle('active');
             });
 
-            // Close dropdown when clicking outside
             document.addEventListener('click', (e) => {
                 if (!dropdownContent.contains(e.target) && !dropdownTrigger.contains(e.target)) {
                     dropdownContent.classList.remove('active');
                 }
             });
 
-            // Update selected options text
             function updateSelectedOptions() {
                 const selected = Array.from(checkboxes)
                     .filter(cb => cb.checked)
@@ -2623,12 +788,10 @@
                     : 'Select types...';
             }
 
-            // Handle checkbox changes
             checkboxes.forEach(checkbox => {
                 checkbox.addEventListener('change', updateSelectedOptions);
             });
 
-            // Initial update
             updateSelectedOptions();
         });
 
@@ -2638,7 +801,6 @@
                 .map(cb => cb.value);
         }
 
-        // Function to get current expansion settings
         function getExpansionSettings() {
             const maxNeighbours = parseInt(document.getElementById('maxNeighbours').value);
             const neighbourTypes = getSelectedNeighbourTypes();
@@ -2803,8 +965,7 @@
                             <option value="Gene">Gene</option>
                             <option value="Metabolite">Metabolite</option>
                         </select>
-                        <!-- Add a note below this mentioning this will search for top 10 paths -->
-                        <p class="control-note">This search will be llimited to top 10 paths.</p>
+                        <p class="control-note">This search will be limited to top 10 paths.</p>
                     </div>
                     <div class="category-toggle">
                         <label>
@@ -2812,11 +973,6 @@
                             <span>Search by Category Instead</span>
                         </label>
                     </div>
-
-                    <!-- <div class="input-field-advanced">
-                        <input id="maxHops" type="number" min="-1">
-                        <label for="maxHops">Search Depth</label>
-                    </div> -->
                     <div class="center-align">
                         <button id="pathSearchBtn" class="btn waves-effect waves-light">Find Path
                             <i class="material-icons right">timeline</i>
@@ -2835,8 +991,7 @@
             <div class="modal-content">
                 <h6>How to Use Node Interaction Search</h6>
                 <p>Node Interaction helps you discover connections between two entities within the knowledge graph.
-                    Follow
-                    these steps:</p>
+                    Follow these steps:</p>
                 <ol>
                     <li><strong>Enter Start Node:</strong> Type the name of the starting entity (e.g., Drug, Disease,
                         Protein).</li>
@@ -2909,7 +1064,6 @@
             border-radius: 4px;
             border: 1px solid #eee;
             overflow: hidden;
-            /* Add these properties */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -2919,7 +1073,6 @@
             width: 100%;
             height: 100%;
             display: block;
-            /* Add this to ensure proper positioning */
             position: absolute;
             top: 0;
             left: 0;
@@ -2973,7 +1126,6 @@
             const modal = document.getElementById('advancedSearchModal');
             M.Modal.init(modal);
 
-            // Initialize autocomplete inputs
             setupAutocomplete('pathStartNode');
             setupAutocomplete('pathEndNode');
 
@@ -2984,13 +1136,11 @@
                 if (this.checked) {
                     endNodeInput.style.display = 'none';
                     categorySelect.style.display = 'block';
-                    // Clear the end node value when switching to category
                     document.getElementById('pathEndNode').value = '';
                     document.getElementById('pathEndNode_f_name').value = '';
                 } else {
                     endNodeInput.style.display = 'block';
                     categorySelect.style.display = 'none';
-                    // Clear the category selection when switching to node
                     document.getElementById('nodeCategory').value = '';
                 }
             });
@@ -3002,7 +1152,6 @@
                 this.svg = d3.select(`#${containerId} svg`);
                 this.width = this.svg.node().getBoundingClientRect().width;
                 this.height = this.svg.node().getBoundingClientRect().height;
-                // this.svg = null;
                 this.simulation = null;
                 this.tooltip = null;
                 this.nodeColors = {
@@ -3020,19 +1169,7 @@
                 this.init();
             }
 
-
-
             init() {
-                // Clear any existing content
-                // this.svg.html('');
-
-                // Create SVG with a group for zoom
-                // this.svg = this.container.append('svg')
-                //     .attr('width', '100%')
-                //     .attr('height', '100%')
-                //     .attr('viewBox', [0, 0, this.width, this.height]);
-
-                // Add main group for zoom transformation
                 const defs = this.svg.append("defs");
                 const STYLES = {
                     colors: {
@@ -3079,22 +1216,16 @@
                         .attr("d", "M0,-5L10,0L0,5");
                 });
 
-                // Create container with zoom behavior
                 this.mainGroup = this.svg.append("g");
                 this.zoom = d3.zoom()
                     .scaleExtent([0.2, 4])
                     .on("zoom", (event) => {
                         this.mainGroup.attr("transform", event.transform);
-                        // Update label visibility based on zoom level
                         this.updateLabels(event.transform.k);
                     });
 
                 this.svg.call(this.zoom);
 
-                // Store zoom reference for later use
-                // this.mainGroup.attr('transform', 'translate(0,0)');
-
-                // Create tooltip
                 this.tooltip = this.mainGroup.append('div')
                     .attr('class', 'path-tooltip');
 
@@ -3138,16 +1269,14 @@
                     });
             }
 
-
             handleNodeHover(event, d) {
                 const node = d3.select(this);
                 node.select("path")
                     .transition()
                     .duration(200)
                     .attr("stroke", "#000")
-                    .attr("stroke-width", STYLES.nodes.highlightStrokeWidth);
+                    .attr("stroke-width", 3);
 
-                // Highlight connected nodes and links
                 const linkedNodes = new Set();
                 if (this.mainGroup) {
                     this.mainGroup.selectAll(".link-line")
@@ -3161,7 +1290,7 @@
                         })
                         .transition()
                         .duration(200)
-                        .attr("stroke", STYLES.colors.secondary)
+                        .attr("stroke", '#3498db')
                         .attr("stroke-width", 2)
                         .attr("stroke-opacity", 1);
 
@@ -3196,7 +1325,6 @@
                 showNodeModal(d);
             }
 
-            // Helper functions
             getNodeShape(type) {
                 const size = 150;
                 switch (type) {
@@ -3213,7 +1341,6 @@
                     case 'Pathway':
                         return d3.symbol().type(d3.symbolStar).size(size)();
                     case 'Peptide':
-                        return d3.symbol().type(d3.symbolCross).size(size)();
                     case 'Transcript':
                         return d3.symbol().type(d3.symbolCross).size(size)();
                     default:
@@ -3226,22 +1353,15 @@
             }
 
             updateGraph(data) {
-                // Clear existing elements
                 this.data = data;
-
-                // Extend the node and link data
-                // this.data['nodes'] = [...this.data['nodes'], ...data.nodes];
-                // this.data['links'] = [...this.data['links'], ...data.links];
                 this.mainGroup.selectAll("*").remove();
 
-                // Create link group with multiple line types
                 const links = this.mainGroup.append("g")
                     .attr("class", "links")
                     .selectAll("g")
                     .data(data.links)
                     .join("g");
 
-                // Main link line
                 links.append("line")
                     .attr("class", "link-line")
                     .attr("stroke", "#999")
@@ -3249,38 +1369,26 @@
                     .attr("stroke-opacity", 0.6)
                     .attr("marker-end", d => `url(#arrow-${d.type || 'interacts'})`);
 
-                // Link labels
                 const linkLabels = links.append("text")
                     .attr("class", "link-label")
                     .attr("dy", -4)
-                    .text(d => {
-                        // Shorten long relationship names
-                        const type = d.label || "";
-                        // if (type.includes("IS_A_CONTRAINDICATION_FOR")) {
-                        //     return "contraindication";
-                        // }
-                        // Add more mappings as needed
-                        return type;
-                    })
+                    .text(d => d.label || d.type)
                     .attr("fill", "#666")
-                    .attr("font-size", "6px") // Even smaller font
+                    .attr("font-size", "6px")
                     .style("pointer-events", "none")
-                    .style("opacity", 0.7); // Make labels slightly transparent
+                    .style("opacity", 0.7);
 
-                // Add textPath for edge labels
                 linkLabels.append("textPath")
                     .attr("xlink:href", (d, i) => `#linkPath${i}`)
                     .attr("startOffset", "50%")
                     .style("text-anchor", "middle");
 
-                // Create paths for edge labels
                 links.append("path")
                     .attr("id", (d, i) => `linkPath${i}`)
                     .attr("class", "link-path")
                     .style("fill", "none")
                     .style("stroke", "none");
 
-                // Create nodes with custom shapes
                 const nodes = this.mainGroup.append("g")
                     .attr("class", "nodes")
                     .selectAll("g")
@@ -3289,14 +1397,12 @@
                     .attr("class", "node")
                     .call(this.drag(this.simulation));
 
-                // Node shapes
                 nodes.append("path")
                     .attr("d", d => this.getNodeShape(d.type))
                     .attr("fill", d => STYLES.colors.nodeTypes[d.type] || STYLES.colors.nodeTypes.Default)
                     .attr("stroke", "#fff")
                     .attr("stroke-width", 2);
 
-                // Node labels
                 const labels = nodes.append("text")
                     .attr("class", "node-label")
                     .attr("dy", d => this.getNodeLabelOffset(d.type))
@@ -3306,13 +1412,11 @@
                     .attr("font-size", "10px")
                     .style("pointer-events", "none");
 
-                // Hover interactions
                 nodes
                     .on("mouseover", this.handleNodeHover)
                     .on("mouseout", this.handleNodeUnhover)
                     .on("click", this.handleNodeClick);
 
-                // Then update the event bindings like this:
                 nodes.on("contextmenu", (event, d) => {
                     event.preventDefault();
                     this.handleContextMenu(event, d);
@@ -3320,21 +1424,18 @@
 
                 nodes.on("click", (event, d) => {
                     event.preventDefault();
-                    this.showNodeModal(d);  // This was previously updateDetails(d)
+                    this.showNodeModal(d);
                 });
 
-                // Update simulation
                 this.simulation
                     .nodes(data.nodes)
                     .on("tick", () => {
-                        // Update link lines
                         links.selectAll("line")
                             .attr("x1", d => d.source.x)
                             .attr("y1", d => d.source.y)
                             .attr("x2", d => d.target.x)
                             .attr("y2", d => d.target.y);
 
-                        // Update link paths for labels
                         links.selectAll(".link-path")
                             .attr("d", d => {
                                 const dx = d.target.x - d.source.x;
@@ -3354,12 +1455,10 @@
                 this.simulation.alpha(1).restart();
             }
 
-            // Update the context menu handling function
             handleContextMenu(event, d) {
                 event.preventDefault();
                 event.stopPropagation();
 
-                // Remove any existing context menus
                 document.querySelectorAll('.context-menu').forEach(menu => menu.remove());
 
                 const contextMenu = document.createElement('div');
@@ -3381,7 +1480,6 @@
                     const li = document.createElement('li');
                     li.className = 'menu-item';
 
-                    // For expand action, create a special menu item with sub-menu
                     if (item.action === 'expand') {
                         const itemContent = document.createElement('div');
                         itemContent.style.display = 'flex';
@@ -3395,7 +1493,6 @@
                 `;
                         li.appendChild(itemContent);
 
-                        // Create sub-menu for node types
                         const subMenu = this.createExpandSubMenu(d);
                         li.appendChild(subMenu);
                     } else {
@@ -3404,7 +1501,6 @@
                     <span>${item.text}</span>
                 `;
 
-                        // Add event listener for other actions
                         li.addEventListener('click', () => {
                             this.handleContextMenuAction(item.action, d.id);
                             contextMenu.remove();
@@ -3415,853 +1511,172 @@
                 });
 
                 contextMenu.appendChild(ul);
-
-                // Position the menu
-                contextMenu.style.left = `${event.pageX}px`;
-                contextMenu.style.top = `${event.pageY}px`;
                 document.body.appendChild(contextMenu);
 
-                // Add click outside listener
-                setTimeout(() => {
-                    window.addEventListener('click', function closeMenu(e) {
+                const menuWidth = contextMenu.offsetWidth;
+                const menuHeight = contextMenu.offsetHeight;
+                const x = Math.min(event.clientX, window.innerWidth - menuWidth - 10);
+                const y = Math.min(event.clientY, window.innerHeight - menuHeight - 10);
+                contextMenu.style.left = `${x}px`;
+                contextMenu.style.top = `${y}px`;
+
+                const handleClickOutside = (e) => {
                         if (!contextMenu.contains(e.target)) {
                             contextMenu.remove();
-                            window.removeEventListener('click', closeMenu);
+                        document.removeEventListener('click', handleClickOutside);
                         }
-                    });
-                }, 0);
+                };
 
-                // Close menu if another one is opened
-                window.addEventListener('contextmenu', () => {
-                    contextMenu.remove();
-                });
+                document.addEventListener('click', handleClickOutside);
             }
 
-            createExpandSubMenu(node) {
+            createExpandSubMenu(nodeData) {
                 const subMenu = document.createElement('div');
                 subMenu.className = 'sub-menu';
 
-                const subUl = document.createElement('ul');
-                subUl.className = 'menu-items';
-
-                // Define node types with their icons and colors
-                const nodeTypes = [
-                    { type: 'Publication', icon: 'article', color: '#95a5a6' },
-                    { type: 'Drug', icon: 'local_pharmacy', color: '#ff7675' },
-                    { type: 'Disease', icon: 'healing', color: '#51d6df' },
-                    { type: 'Protein', icon: 'science', color: '#4834d4' },
-                    { type: 'Gene', icon: 'dashboard', color: '#00b894' },
-                    { type: 'Metabolite', icon: 'bubble_chart', color: '#e17055' },
-                    { type: 'Pathway', icon: 'account_tree', color: '#fdcb6e' },
-                    { type: 'Transcript', icon: 'description', color: '#e84393' },
-                    { type: 'Peptide', icon: 'architecture', color: '#fbc531' }
+                const menuItems = [
+                    { label: 'Proteins', type: 'Protein', icon: 'biotech' },
+                    { label: 'Diseases', type: 'Disease', icon: 'healing' },
+                    { label: 'Drugs', type: 'Drug', icon: 'medication' },
+                    { label: 'Pathways', type: 'Pathway', icon: 'schema' },
+                    { label: 'Genes', type: 'Gene', icon: 'science' }
                 ];
 
-                nodeTypes.forEach(nodeType => {
-                    const li = document.createElement('li');
-                    li.className = 'menu-item';
-                    li.innerHTML = `
-                <i class="material-icons" style="color: ${nodeType.color}">${nodeType.icon}</i>
-                <span>Expand ${nodeType.type}</span>
+                menuItems.forEach(item => {
+                    const button = document.createElement('button');
+                    button.innerHTML = `
+                <i class="material-icons">${item.icon}</i>
+                <span>${item.label}</span>
             `;
-
-                    li.addEventListener('click', () => {
-                        this.expandNodeWithType(node.id, nodeType.type);
-                        // Close all menus
-                        document.querySelectorAll('.context-menu').forEach(menu => menu.remove());
+                    button.addEventListener('click', (event) => {
+                        event.stopPropagation();
+                        this.handleContextMenuAction('expand', nodeData.id, item.type);
+                        const contextMenu = document.querySelector('.context-menu');
+                        if (contextMenu) contextMenu.remove();
                     });
-
-                    subUl.appendChild(li);
+                    subMenu.appendChild(button);
                 });
 
-                subMenu.appendChild(subUl);
                 return subMenu;
             }
 
-            expandNodeWithType(nodeId, nodeType) {
-                // Set expansion settings for single node type
-                window.expansionSettings = {
-                    neighbourTypes: [nodeType],
-                    maxNeighbours: 10,  // Default value
-                    maxDepth: 2         // Default value
-                };
+            handleContextMenuAction(action, nodeId, filterType = null) {
+                const centralNode = this.data.nodes.find(node => node.id === nodeId);
+                if (!centralNode) return;
 
-                // Call the existing expand function
-                this.expandNodeForId(nodeId);
-            }
+                switch (action) {
+                    case 'expand':
+                        const expansionSettings = getExpansionSettings();
+                        const neighbourFilters = filterType ? [filterType] : expansionSettings.neighbourTypes;
 
-            // Example implementation of the actions
-            expandNode(nodeId) {
-                console.log('Expanding node:', nodeId);
-                // Add your expand implementation
+                        fetchNetworkData(
+                            nodeId,
+                            centralNode.name,
+                            neighbourFilters.join(','),
+                            centralNode.type,
+                            expansionSettings.maxNeighbours,
+                            expansionSettings.maxDepth
+                        ).then(newData => {
+                            const existingNodeIds = new Set(this.data.nodes.map(n => n.id));
+                            const existingLinkIds = new Set(this.data.links.map(l => `${l.source.id || l.source}-${l.target.id || l.target}-${l.type}`));
 
-                // fetch and add more data to the graph
-                this.expandNodeForId(nodeId);
-
-            }
-
-            getExpansionSettings() {
-                return window.expansionSettings || {
-                    neighbourTypes: ['Drug', 'Disease', 'Protein', 'Gene', 'Metabolite', 'Pathway', 'Transcript', 'Peptide', 'Publication'],
-                    maxNeighbours: 10,
-                    maxDepth: 1
-                };
-            }
-
-            expandNodeForId(nodeId) {
-                // Fetch more data for the given node
-                // First get more details for the nodeid from the globalNetworkValues
-                const node = this.data["nodes"].find(n => n.id === nodeId);
-                if (!node) return;
-
-                //copy the globalNetworkValues
-                const dataCopy = this.data;
-
-                const selectedEntityTypes = Array.from(document.querySelectorAll('#labelFilterSection input[type="checkbox"]'))
-                    .filter(cb => cb.checked)
-                    .map(cb => cb.value);
-
-                // Get selected relationship types
-                const selectedRelationTypes = Array.from(document.querySelectorAll('#relationFilterSection input[type="checkbox"]'))
-                    .filter(cb => cb.checked)
-                    .map(cb => cb.value);
-
-                const expansionSetting = this.getExpansionSettings()
-
-                showLoading();
-                fetch(`nodes/graph`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        id: nodeId,
-                        name: node.name,
-                        type: node.Node_Type,
-                        neighbour: expansionSetting.neighbourTypes.join(",") || selectedEntityTypes.join(","),
-                        existingNodes: dataCopy.nodes.map(n => { if (n !== null) { return n.id } }),
-                        limit: `${expansionSetting.maxNeighbours || 10}`,
-                        depth: `${expansionSetting.maxDepth || 2}`,
-                    })
-                })
-                    .then(response => {
-                        hideLoading();
-                        if (!response.ok) {
-                            throw new Error('Failed to fetch node data');
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        if (data.nodes === null || data.links === null) {
-                            console.log("No data found for the node");
-                            return;
-                        }
-                        // now append the data to the globalNetworkValues, 
-                        dataCopy.nodes = dataCopy.nodes.concat(data.nodes);
-                        dataCopy.links = dataCopy.links.concat(data.links);
-
-                        // remove duplicate nodes and relationshipts
-                        dataCopy.nodes = dataCopy.nodes.filter((node, index, self) =>
-                            index === self.findIndex((t) => (
-                                t.id === node.id
-                            ))
-                        );
-
-                        dataCopy.links = dataCopy.links.filter((link, index, self) =>
-                            index === self.findIndex((t) => (
-                                t.id === link.id
-                            ))
-                        );
-
-                        // Filter nodes based on selected entity types
-                        // const filteredNodes = dataCopy.nodes.filter(node =>
-                        //     selectedEntityTypes.includes(node.type)
-                        // );
-
-                        // // Get the IDs of filtered nodes for link filtering
-                        // const filteredNodeIds = new Set(filteredNodes.map(node => node.id));
-
-                        // // Filter links based on selected relationship types and filtered nodes
-                        // const filteredLinks = dataCopy.links.filter(link => {
-                        //     const sourceExists = filteredNodeIds.has(link.source.id || link.source);
-                        //     const targetExists = filteredNodeIds.has(link.target.id || link.target);
-                        //     const relationshipMatch = selectedRelationTypes.includes(link.type);
-
-                        //     return sourceExists && targetExists && relationshipMatch;
-                        // });
-
-                        // Update the graph with filtered data
-                        this.updateGraph({
-                            nodes: [], links: []
-                        }); // Clear the graph first
-                        this.updateGraph({
-                            nodes: dataCopy.nodes,
-                            links: dataCopy.links
-                        });
-                        //replace the globalNetworkValues with the updated one
-                        this.data = dataCopy;
-
-                        // if (data.publications) {
-                        //     // Update the publication section
-                        //     globalNetworkValues.publications = { ...globalNetworkValues.publications, ...data.publications }
-                        //     // updatePublications();
-                        // }
-                    })
-                    .catch(error => {
-                        hideLoading();
-                        console.error('Error:', error);
-                    });
-            }
-
-            getNodeDetails(nodeId) {
-                // Fetch node details for the given ID
-                return fetch(`api/node-details?id=${nodeId}`)
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Failed to fetch node details');
-                        }
-                        return response.json();
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                    });
-            }
-
-            showNodeModal(node) {
-                this.getNodeDetails(node.id).then(nodeData => {
-                    const modalContent = `
-                    <style>
-                        .modal.open {
-                            max-width: 80%;
-                        }
-                        .modal-content {
-                            background: white;
-                            border-radius: 8px;
-                            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-                            max-width: 900px;
-                            margin: 20px auto;
-                            position: relative;
-                        }
-
-                        .modal-header {
-                            padding: 20px;
-                            border-bottom: 1px solid #eee;
-                            background: #f8f9fa;
-                            border-radius: 8px 8px 0 0;
-                            display: flex;
-                            justify-content: space-between;
-                            align-items: center;
-                        }
-
-                        .modal-header h4 {
-                            margin: 0;
-                            font-size: 1.4rem;
-                            color: #2c3e50;
-                            font-weight: 600;
-                        }
-
-                        .modal-close {
-                            cursor: pointer;
-                            font-size: 1.5rem;
-                            color: #666;
-                        }
-
-                        .entity-badge {
-                            display: inline-block;
-                            padding: 4px 12px;
-                            border-radius: 4px;
-                            font-size: 0.875rem;
-                            font-weight: 500;
-                            color: white;
-                            margin-left: 12px;
-                        }
-
-                        .entity-disease { background: #e74c3c; }
-                        .entity-protein { background: #3498db; }
-                        .entity-drug { background: #2ecc71; }
-
-                        .modal-body {
-                            padding: 20px;
-                        }
-
-                        .info-section {
-                            margin-bottom: 24px;
-                            background: #fff;
-                            border-radius: 8px;
-                            border: 1px solid #e1e4e8;
-                        }
-
-                        .section-header {
-                            padding: 12px 16px;
-                            background: #f8f9fa;
-                            border-bottom: 1px solid #e1e4e8;
-                            font-weight: 600;
-                            color: #2c3e50;
-                            display: flex;
-                            align-items: center;
-                            justify-content: space-between;
-                        }
-
-                        .section-content {
-                            padding: 16px;
-                        }
-
-                        .info-grid {
-                            display: grid;
-                            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-                            gap: 16px;
-                        }
-
-                        .info-item {
-                            background: #f8f9fa;
-                            padding: 12px;
-                            max-height: 300px;
-                            overflow-y: auto;
-                            border-radius: 6px;
-                            border: 1px solid #e1e4e8;
-                        }
-
-                        .info-label {
-                            font-size: 0.875rem;
-                            color: #666;
-                            margin-bottom: 4px;
-                            font-weight: 500;
-                        }
-
-                        .info-value {
-                            font-size: 0.95rem;
-                            color: #2c3e50;
-                            line-height: 1.4;
-                        }
-
-                        .long-text {
-                            white-space: pre-wrap;
-                            max-height: 300px;
-                            overflow-y: auto;
-                            padding: 12px;
-                            background: #f8f9fa;
-                            border-radius: 6px;
-                            border: 1px solid #e1e4e8;
-                            font-size: 0.95rem;
-                            line-height: 1.5;
-                        }
-
-                        .tag-container {
-                            display: flex;
-                            flex-wrap: wrap;
-                            gap: 8px;
-                        }
-
-                        .tag {
-                            background: #e9ecef;
-                            padding: 4px 8px;
-                            border-radius: 4px;
-                            font-size: 0.875rem;
-                            color: #495057;
-                            max-width: 200px;
-                            overflow: hidden;
-                            text-overflow: ellipsis;
-                            white-space: nowrap;
-                        }
-
-                        .copy-button {
-                            padding: 4px 8px;
-                            font-size: 0.8rem;
-                            color: #666;
-                            background: #e9ecef;
-                            border: none;
-                            border-radius: 4px;
-                            cursor: pointer;
-                            margin-left: auto;
-                        }
-
-                        .copy-button:hover {
-                            background: #dee2e6;
-                        }
-
-                        .chemical-formula {
-                            font-family: monospace;
-                            background: #f1f8ff;
-                            padding: 2px 6px;
-                            border-radius: 4px;
-                            color: #0366d6;
-                        }
-
-                        .collapsible-content {
-                            max-height: 0;
-                            overflow: hidden;
-                            transition: max-height 0.3s ease-out;
-                        }
-
-                        .expanded {
-                            max-height: 1000px;
-                        }
-
-                        .toggle-button {
-                            background: none;
-                            border: none;
-                            color: #0366d6;
-                            cursor: pointer;
-                            padding: 0;
-                            font-size: 0.9rem;
-                        }
-                    </style>
-
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <div style="display: flex; align-items: center;">
-                                <h4 id="entityName"></h4>
-                                <span id="entityType" class="entity-badge"></span>
-                            </div>
-                            <span class="modal-close">×</span>
-                        </div>
-                        <div class="modal-body" id="modalBody">
-                            <!-- Content will be dynamically inserted here -->
-                        </div>
-                    </div>
-                    `;
-
-                    function formatData(data, label) {
-                        const modalBody = document.getElementById('modalBody');
-                        const entityName = document.getElementById('entityName');
-                        const entityType = document.getElementById('entityType');
-
-                        // Set entity name and type
-                        entityName.textContent = data.name;
-                        // let type = determineEntityType(data);
-                        entityType.textContent = label;
-                        entityType.className = `entity-badge entity-${label.toLowerCase()}`;
-
-                        modalBody.innerHTML = ''; // Clear existing content
-
-                        // Create sections based on entity type
-                        if (label === 'Disease') {
-                            createDiseaseView(data, modalBody);
-                        } else if (label === 'Protein') {
-                            createProteinView(data, modalBody);
-                        } else if (label === 'Drug') {
-                            createDrugView(data, modalBody);
-                        } else if (label === 'Gene') {
-                            createGeneView(data, modalBody);
-                        } else if (label === 'Metabolite') {
-                            createMetaboliteView(data, modalBody);
-                        } else if (label === 'Pathway') {
-                            createPathwayView(data, modalBody);
-                        } else if (label === 'Transcript') {
-                            createTranscriptView(data, modalBody);
-                        } else if (label === 'Peptide') {
-                            createPeptideView(data, modalBody);
-                        } else if (label === 'Publication') {
-                            createPublicationView(data, modalBody);
-                        }
-                    }
-
-                    function determineEntityType(data) {
-                        if (data.id?.startsWith('DOID:')) return 'Disease';
-                        if (data.molecular_weight && data.organism) return 'Protein';
-                        if (data.drugbank_id) return 'Drug';
-                        return 'Unknown';
-                    }
-
-                    function createSection(title, content) {
-                        const section = document.createElement('div');
-                        section.className = 'info-section';
-
-                        const header = document.createElement('div');
-                        header.className = 'section-header';
-                        header.textContent = title;
-
-                        const sectionContent = document.createElement('div');
-                        sectionContent.className = 'section-content';
-                        sectionContent.appendChild(content);
-
-                        section.appendChild(header);
-                        section.appendChild(sectionContent);
-                        return section;
-                    }
-
-                    function createInfoItem(label, value, isLongText = false) {
-                        const item = document.createElement('div');
-                        isLongText = false;
-                        item.className = isLongText ? 'info-item' : 'info-item';
-
-                        if (!isLongText) {
-                            const labelDiv = document.createElement('div');
-                            labelDiv.className = 'info-label';
-                            labelDiv.textContent = label;
-                            item.appendChild(labelDiv);
-                        } else {
-                            const labelDiv = document.createElement('div');
-                            labelDiv.className = 'info-label';
-                            labelDiv.textContent = label;
-                            item.appendChild(labelDiv);
-                        }
-
-                        const valueDiv = document.createElement('div');
-                        valueDiv.className = isLongText ? 'info-value' : 'info-value';
-
-                        if (Array.isArray(value)) {
-                            const tagContainer = document.createElement('div');
-                            tagContainer.className = 'tag-container';
-                            value.forEach(v => {
-                                const tag = document.createElement('span');
-                                tag.className = 'tag';
-                                tag.textContent = v;
-                                tagContainer.appendChild(tag);
+                            const uniqueNodes = newData.nodes.filter(node => !existingNodeIds.has(node.id));
+                            const uniqueLinks = newData.links.filter(link => {
+                                const linkId = `${link.source.id || link.source}-${link.target.id || link.target}-${link.type}`;
+                                return !existingLinkIds.has(linkId);
                             });
-                            valueDiv.appendChild(tagContainer);
-                        } else {
-                            valueDiv.textContent = value;
-                        }
 
-                        if (!isLongText) {
-                            item.appendChild(valueDiv);
-                        } else {
-                            item.textContent = value;
-                        }
+                            const combinedData = {
+                                nodes: [...this.data.nodes, ...uniqueNodes],
+                                links: [...this.data.links, ...uniqueLinks],
+                                meta: {
+                                    ...this.data.meta,
+                                    expansionHistory: [...(this.data.meta?.expansionHistory || []), {
+                                        nodeId,
+                                        timestamp: new Date().toISOString(),
+                                        addedNodes: uniqueNodes.length,
+                                        addedLinks: uniqueLinks.length,
+                                        filters: neighbourFilters
+                                    }]
+                                }
+                            };
 
-                        return item;
-                    }
+                            this.updateGraph(combinedData);
+                            this.mainGroup.selectAll('.node')
+                                .filter(node => node.id === nodeId)
+                                .classed('expanded-node', true);
 
-                    function createDiseaseView(data, container) {
-                        // Overview section
-                        const overviewGrid = document.createElement('div');
-                        overviewGrid.className = 'info-grid';
-                        overviewGrid.appendChild(createInfoItem('ID', data.id));
-                        overviewGrid.appendChild(createInfoItem('Name', data.name));
-                        if (data.source) overviewGrid.appendChild(createInfoItem('Source', data.source));
-                        if (data.orphanet_definition) overviewGrid.appendChild(createInfoItem('Is Orphanet?', 'Yes'));
-                        container.appendChild(createSection('Overview', overviewGrid));
+                            showNotification(`Expanded ${centralNode.name} with ${uniqueNodes.length} new nodes`);
+                        });
+                        break;
 
-                        // Description section
-                        let descContent = createInfoItem('Full Description', data.full_description, true);
-                        if (!data.full_description) {
-                            descContent = createInfoItem('Description', data.description, true);
-                            if (!data.description) {
-                                descContent = createInfoItem('Description', data.umls_description, true);
-                            }
-                        }
-                        container.appendChild(createSection('Description', descContent));
+                    case 'hide':
+                        this.updateGraph({
+                            nodes: this.data.nodes.filter(node => node.id !== nodeId),
+                            links: this.data.links.filter(link =>
+                                (link.source.id || link.source) !== nodeId &&
+                                (link.target.id || link.target) !== nodeId
+                            )
+                        });
+                        showNotification(`Hidden node ${centralNode.name}`);
+                        break;
 
-                        if (data.orphanet_definition) {
-                            // Orphanet section
-                            const orphanetGrid = document.createElement('div');
-                            orphanetGrid.className = 'info-grid';
-                            orphanetGrid.appendChild(createInfoItem('Orphanet Definition', data.orphanet_definition));
-                            orphanetGrid.appendChild(createInfoItem('Orphanet Epidemiology', data.orphanet_epidemiology));
-                            orphanetGrid.appendChild(createInfoItem('Orphanet Treatment', data.orphanet_management_and_treatment));
-                            container.appendChild(createSection('Orphanet Information', orphanetGrid));
-                        }
-
-                        // Identifiers section
-                        const identifiersGrid = document.createElement('div');
-                        identifiersGrid.className = 'info-grid';
-                        identifiersGrid.appendChild(createInfoItem('Synonyms', data.synonyms));
-                        container.appendChild(createSection('Identifiers', identifiersGrid));
-                    }
-
-                    function createProteinView(data, container) {
-                        // Basic Information
-                        const basicGrid = document.createElement('div');
-                        basicGrid.className = 'info-grid';
-                        basicGrid.appendChild(createInfoItem('Accession', data.accession));
-                        basicGrid.appendChild(createInfoItem('Full Name', data.full_name));
-                        basicGrid.appendChild(createInfoItem('Organism', data.organism));
-                        basicGrid.appendChild(createInfoItem('Molecular Weight', data.molecular_weight));
-                        container.appendChild(createSection('Basic Information', basicGrid));
-
-                        // Function Information
-                        if (data.general_function) {
-                            const functionContent = createInfoItem('General Function', data.general_function, true);
-                            container.appendChild(createSection('Function', functionContent));
-                        }
-
-                        // Technical Details
-                        const techGrid = document.createElement('div');
-                        techGrid.className = 'info-grid';
-                        if (data.isoelectric_point) techGrid.appendChild(createInfoItem('Isoelectric Point', data.isoelectric_point));
-                        if (data.specific_function) techGrid.appendChild(createInfoItem('Specific Function', data.specific_function));
-                        container.appendChild(createSection('Technical Details', techGrid));
-
-                        // Identifiers
-                        const identifiersGrid = document.createElement('div');
-                        identifiersGrid.className = 'info-grid';
-                        identifiersGrid.appendChild(createInfoItem('Synonyms', data.synonyms));
-                        container.appendChild(createSection('Identifiers', identifiersGrid));
-                    }
-
-                    function createDrugView(data, container) {
-                        // Basic Information
-                        const basicGrid = document.createElement('div');
-                        basicGrid.className = 'info-grid';
-                        basicGrid.appendChild(createInfoItem('Name', data.name));
-                        basicGrid.appendChild(createInfoItem('DrugBank ID', data.drugbank_id));
-                        basicGrid.appendChild(createInfoItem('CAS Number', data.cas_number));
-                        container.appendChild(createSection('Basic Information', basicGrid));
-
-                        // Clinical Information
-                        const clinicalContent = document.createElement('div');
-                        clinicalContent.className = 'info-grid';
-                        if (data.indication) clinicalContent.appendChild(createInfoItem('Indication', data.indication));
-                        if (data.mechanism_of_action) {
-                            const mechanismContent = createInfoItem('Mechanism of Action', data.mechanism_of_action, true);
-                            clinicalContent.appendChild(mechanismContent);
-                        }
-                        container.appendChild(createSection('Clinical Information', clinicalContent));
-
-                        // Chemical Properties
-                        const chemGrid = document.createElement('div');
-                        chemGrid.className = 'info-grid';
-                        if (data.chemical_formula) chemGrid.appendChild(createInfoItem('Chemical Formula', data.chemical_formula));
-                        if (data.molecular_weight) chemGrid.appendChild(createInfoItem('Molecular Weight', data.molecular_weight));
-                        if (data.state) chemGrid.appendChild(createInfoItem('State', data.state));
-                        container.appendChild(createSection('Chemical Properties', chemGrid));
-
-                        // Pharmacological Properties
-                        const pharmaGrid = document.createElement('div');
-                        pharmaGrid.className = 'info-grid';
-                        if (data.half_life) pharmaGrid.appendChild(createInfoItem('Half Life', data.half_life));
-                        if (data.protein_binding) pharmaGrid.appendChild(createInfoItem('Protein Binding', data.protein_binding));
-                        if (data.route_of_elimination) pharmaGrid.appendChild(createInfoItem('Route of Elimination', data.route_of_elimination));
-                        container.appendChild(createSection('Pharmacological Properties', pharmaGrid));
-                    }
-
-                    function createPeptideView(data, container) {
-                        const overviewGrid = document.createElement('div');
-                        overviewGrid.className = 'info-grid';
-                        overviewGrid.appendChild(createInfoItem('ID', data.id));
-                        overviewGrid.appendChild(createInfoItem('Type', data.type));
-                        if (data.source) overviewGrid.appendChild(createInfoItem('Unique', data.unique));
-                        container.appendChild(createSection('Overview', overviewGrid));
-
-                        // Identifiers
-                        if (data.synonyms) {
-                            const identifiersGrid = document.createElement('div');
-                            identifiersGrid.className = 'info-grid';
-                            identifiersGrid.appendChild(createInfoItem('Synonyms', data.synonyms));
-                            container.appendChild(createSection('Identifiers', identifiersGrid));
-                        }
-                    }
-
-                    function createTranscriptView(data, container) {
-                        /*
-                        {
-                        "id": "NM_080876.4",
-                        "assembly": "GCF_000001405.39",
-                        "name": "dual specificity phosphatase 19, transcript variant 1",
-                        "embedding": null,
-                        "taxid": "9606"
-                        }
-                        */
-                        const overviewGrid = document.createElement('div');
-                        overviewGrid.className = 'info-grid';
-                        overviewGrid.appendChild(createInfoItem('ID', data.id));
-                        overviewGrid.appendChild(createInfoItem('Name', data.name));
-                        overviewGrid.appendChild(createInfoItem('Assembly', data.assembly));
-                        overviewGrid.appendChild(createInfoItem('Tax ID', data.taxid));
-                        container.appendChild(createSection('Overview', overviewGrid));
-                    }
-
-
-                    function createGeneView(data, container) {
-                        const overviewGrid = document.createElement('div');
-                        overviewGrid.className = 'info-grid';
-                        overviewGrid.appendChild(createInfoItem('ID', data.id));
-                        overviewGrid.appendChild(createInfoItem('Name', data.name));
-                        if (data.source) overviewGrid.appendChild(createInfoItem('Source', data.source));
-                        if (data.family) overviewGrid.appendChild(createInfoItem('Family', data.family));
-                        container.appendChild(createSection('Overview', overviewGrid));
-
-                        // Identifiers
-                        if (data.synonyms) {
-                            const identifiersGrid = document.createElement('div');
-                            identifiersGrid.className = 'info-grid';
-                            identifiersGrid.appendChild(createInfoItem('Synonyms', data.synonyms));
-                            container.appendChild(createSection('Identifiers', identifiersGrid));
-                        }
-                    }
-
-                    function createMetaboliteView(data, container) {
-                        /*
-                        {
-                            "id": "FDB005417",
-                            "biomarker_type": "Chemical",
-                            "name": "Guanidoacetic acid",
-                            "biomarker_normal_state_values": [
-                                "age: Adult,
-                                sex: Both,
-                                biofluid: Blood,
-                                concentration: 16.8 (0.81-32.9) uM,
-                                citation: Gatti, R. & Gioia, M. G. Liquid chromatographic analysis of guanidino compounds using furoin as a new fluorogenic reagent. J Pharm Biomed Anal 48, 754-759 (2008).",
-                                "age: Adult,
-                                sex: Both,
-                            b   iofluid: Blood,
-                            concentration: 16.8 (0.81-32.9) uM,
-                            citation: Salomons, G. S., van Dooren, S. J., Verhoeven, N. M., Cecil, K. M., Ball, W. S., Degrauw, T. J. & Jakobs, C. X-linked creatine-transporter gene (SLC6A8) defect: a new creatine-deficiency syndrome. Am J Hum Genet 68, 1497-1500 (2001)."
-                            ],
-                            "embedding": null
-                        }
-                        */
-                        const overviewGrid = document.createElement('div');
-                        overviewGrid.className = 'info-grid';
-                        overviewGrid.appendChild(createInfoItem('ID', data.id));
-                        overviewGrid.appendChild(createInfoItem('Name', data.name));
-                        overviewGrid.appendChild(createInfoItem('Type', data.biomarker_type));
-                        container.appendChild(createSection('Overview', overviewGrid));
-
-                        // Normal State Values
-                        const normalValuesGrid = document.createElement('div');
-                        normalValuesGrid.className = 'info-grid';
-                        data.biomarker_normal_state_values.forEach((value, index) => {
-                            const valueContent = createInfoItem(`Value ${index + 1}`, value, true);
-                            normalValuesGrid.appendChild(valueContent);
-                        }
+                    case 'focus':
+                        const filteredLinks = this.data.links.filter(link =>
+                            (link.source.id || link.source) === nodeId ||
+                            (link.target.id || link.target) === nodeId
                         );
-                        container.appendChild(createSection('Normal State Values', normalValuesGrid));
-                    }
 
-                    function createPathwayView(data, container) {
-                        /*{
-                            "id": "R-HSA-983168",
-                            "source": "Reactome",
-                            "description": "Antigen processing: Ubiquitination & Proteasome degradation",
-                            "name": "Antigen processing: Ubiquitination & Proteasome degradation",
-                            "linkout": "https://reactome.org/PathwayBrowser/#/R-HSA-983168",
-                            "embedding": null
-                            }*/
-                        const overviewGrid = document.createElement('div');
-                        overviewGrid.className = 'info-grid';
-                        overviewGrid.appendChild(createInfoItem('ID', data.id));
-                        overviewGrid.appendChild(createInfoItem('Name', data.name));
-                        overviewGrid.appendChild(createInfoItem('Source', data.source));
-                        container.appendChild(createSection('Overview', overviewGrid));
+                        const connectedNodeIds = new Set([
+                            nodeId,
+                            ...filteredLinks.map(link => link.source.id || link.source),
+                            ...filteredLinks.map(link => link.target.id || link.target)
+                        ]);
 
-                        // Description
-                        const descContent = createInfoItem('Description', data.description, true);
-                        container.appendChild(createSection('Description', descContent));
+                        const filteredNodes = this.data.nodes.filter(node =>
+                            connectedNodeIds.has(node.id)
+                        );
 
-                        // Linkout, a better view
-                        const linkoutContent = createInfoItem('Linkout', data.linkout);
-                        container.appendChild(createSection('Linkout', linkoutContent));
-                    }
+                        this.updateGraph({
+                            nodes: filteredNodes,
+                            links: filteredLinks
+                        });
+                        showNotification(`Focused on ${centralNode.name}`);
+                        break;
 
-                    function createPublicationView(data, container) {
-                        /*
-                            {
-                                "date": "1993",
-                                "doi": "10.1016/0092-8674(93)90132-a",
-                                "first_page": "431",
-                                "id": "8387891",
-                                "journal": "Cell",
-                                "last_page": "445",
-                                "title": "Crystal structure of the soluble human 55 kd TNF receptor-human TNF beta complex: implications for TNF receptor activation.",
-                                "type": "journal article",
-                                "volume": "73"
+                    case 'path':
+                        document.getElementById('pathStartNode').value = centralNode.name;
+                        document.getElementById('pathStartNode_f_name').value = centralNode.id;
+                        showAdvancedSearch();
+
+                        setTimeout(() => {
+                            const pathSearchSection = document.querySelector('#path-search');
+                            if (pathSearchSection) {
+                                pathSearchSection.scrollIntoView({ behavior: 'smooth' });
                             }
-                        */
-                        const overviewGrid = document.createElement('div');
-                        overviewGrid.className = 'info-grid';
-                        overviewGrid.appendChild(createInfoItem('ID', data.id));
-                        overviewGrid.appendChild(createInfoItem('Title', data.title));
-                        overviewGrid.appendChild(createInfoItem('Journal', data.journal));
-                        overviewGrid.appendChild(createInfoItem('Date', data.date));
-                        container.appendChild(createSection('Overview', overviewGrid));
+                        }, 100);
+                        break;
 
-                        // Details
-                        const detailsGrid = document.createElement('div');
-                        detailsGrid.className = 'info-grid';
-                        detailsGrid.appendChild(createInfoItem('Type', data.type));
-                        detailsGrid.appendChild(createInfoItem('DOI', data.doi || data.DOI));
-                        detailsGrid.appendChild(createInfoItem('Volume', data.volume));
-                        detailsGrid.appendChild(createInfoItem('Pages', data.page || `${data.first_page} - ${data.last_page}`));
-                        container.appendChild(createSection('Details', detailsGrid));
+                    case 'newGraph':
+                        fetchNetworkData(nodeId, centralNode.name, '', centralNode.type, 10)
+                            .then(newData => {
+                                this.updateGraph(newData);
+                                showNotification(`Opened new graph centered on ${centralNode.name}`);
+                            });
+                        break;
 
-                        // Linkout
-                        const linkoutContent = createInfoItem('Linkout', data.linkout);
-                        container.appendChild(createSection('Linkout', linkoutContent));
-                    }
-
-                    // Close button functionality
-                    document.querySelector('.modal-close').addEventListener('click', () => {
-                        // Add your close modal logic here
-                        console.log('Modal closed');
-                    });
-
-                    const modalElement = document.createElement('div');
-                    modalElement.className = 'modal';
-                    modalElement.innerHTML = modalContent;
-                    document.body.appendChild(modalElement);
-
-                    // Initialize modal with specific options
-                    const modal = M.Modal.init(modalElement, {
-                        onOpenEnd: () => {
-                            // formatProperties(nodeData);
-
-                            // const relationships = globalNetworkValues["links"]
-                            //     .filter(link => link.target.id === node.id)
-                            //     .map(link => {
-                            //         const source = link.source.id === node.id ? link.target : link.source;
-                            //         return {
-                            //             id: source.id,
-                            //             name: source.name,
-                            //             type: link.type
-                            //         };
-                            //     });
-                            // formatRelationships(relationships);
-
-                            formatData(nodeData.Properties, nodeData.Type);
-                            // loadNodeRelationships(node.id);
-                        },
-                        onCloseEnd: () => {
-                            modalElement.remove();
-                            // Clean up any event listeners if needed
-                        },
-                        dismissible: true // Allows clicking outside to close
-                    });
-
-                    modal.open();
-                });
+                    default:
+                        console.warn(`Unknown context menu action: ${action}`);
+                }
             }
 
-            // Add a method to center the graph
-            centerGraph() {
-                const initialTransform = d3.zoomIdentity
-                    .translate(this.width / 2, this.height / 2)
-                    .scale(0.8);
-
-                this.svg.call(this.zoom.transform, initialTransform);
-            }
-
-            drag(simulation) {
-                function dragstarted(event) {
-                    if (!event.active) simulation.alphaTarget(0.3).restart();
-                    event.subject.fx = event.subject.x;
-                    event.subject.fy = event.subject.y;
-                }
-
-                function dragged(event) {
-                    event.subject.fx = event.x;
-                    event.subject.fy = event.y;
-                }
-
-                function dragended(event) {
-                    if (!event.active) simulation.alphaTarget(0);
-                    event.subject.fx = null;
-                    event.subject.fy = null;
-                }
-
-                return d3.drag()
-                    .on('start', dragstarted)
-                    .on('drag', dragged)
-                    .on('end', dragended);
+            showNodeModal(nodeData) {
+                showNodeModal(nodeData);
             }
         }
 
-
-        // Initialize path visualization
         let pathGraph;
         document.addEventListener('DOMContentLoaded', () => {
-            // Initialize the path visualization modal
             const pathModal = document.getElementById('pathVisualizationModal');
             M.Modal.init(pathModal, {
                 onOpenStart: () => {
@@ -4281,12 +1696,10 @@
             const input = document.getElementById(inputId);
             const hiddenInput = document.getElementById(`${inputId}_f_name`);
 
-            // Create suggestions container
             const suggestionsContainer = document.createElement('div');
             suggestionsContainer.className = 'suggestions-container';
             input.parentNode.appendChild(suggestionsContainer);
 
-            // Handle input changes
             input.addEventListener('input', debounce(function () {
                 const searchTerm = this.value.toLowerCase();
                 if (searchTerm.length < 2) {
@@ -4296,89 +1709,33 @@
                 fetch(`search_in_graph?limit=10&term=${encodeURIComponent(searchTerm)}`)
                     .then(response => response.json())
                     .then(data => {
-                        console.log(data);
-                        // Update the graph with data
                         const suggestions = [];
 
                         if (data.exactMatches) {
                             data.exactMatches.forEach(item => {
-                                if (item.type === 'Drug') {
+                                const value = item.type === 'Protein' && item.properties?.accession
+                                    ? item.properties.accession
+                                    : item.label || item.properties.name;
                                     suggestions.push({
                                         id: item.id,
                                         text: item.label || item.properties.name,
                                         type: item.type,
-                                        value: item.label || item.properties.name,
-                                    });
-                                } else if (item.type === 'Disease') {
-                                    suggestions.push({
-                                        id: item.id,
-                                        text: item.label || item.properties.name,
-                                        type: item.type,
-                                        value: item.label || item.properties.name,
-                                    });
-                                } else if (item.type === 'Protein') {
-                                    suggestions.push({
-                                        id: item.id,
-                                        text: `${item.properties.accession} (${item.properties.name})` || item.properties.name,
-                                        type: item.type,
-                                        value: item.properties.accession
-                                    });
-                                } else if (item.type === 'Pathway') {
-                                    suggestions.push({
-                                        id: item.id,
-                                        text: item.label || item.properties.name,
-                                        type: item.type,
-                                        value: item.label || item.properties.name,
-                                    });
-                                } else {
-                                    suggestions.push({
-                                        id: item.id,
-                                        text: item.label || item.properties.name,
-                                        type: item.type,
-                                        value: item.label || item.properties.name,
-                                    });
-                                }
+                                    value
+                                });
                             });
                         }
 
                         if (data.partialMatches) {
                             data.partialMatches.forEach(item => {
-                                if (item.type === 'Drug') {
+                                const value = item.type === 'Protein' && item.properties?.accession
+                                    ? item.properties.accession
+                                    : item.label || item.properties.name;
                                     suggestions.push({
                                         id: item.id,
                                         text: item.label || item.properties.name,
                                         type: item.type,
-                                        value: item.label || item.properties.name,
-                                    });
-                                } else if (item.type === 'Disease') {
-                                    suggestions.push({
-                                        id: item.id,
-                                        text: item.label || item.properties.name,
-                                        type: item.type,
-                                        value: item.label || item.properties.name,
-                                    });
-                                } else if (item.type === 'Protein') {
-                                    suggestions.push({
-                                        id: item.id,
-                                        text: `${item.properties.accession} (${item.properties.name})` || item.properties.name,
-                                        type: item.type,
-                                        value: item.properties.accession
-                                    });
-                                } else if (item.type === 'Pathway') {
-                                    suggestions.push({
-                                        id: item.id,
-                                        text: item.label || item.properties.name,
-                                        type: item.type,
-                                        value: item.label || item.properties.name,
-                                    });
-                                } else {
-                                    suggestions.push({
-                                        id: item.id,
-                                        text: item.label || item.properties.name,
-                                        type: item.type,
-                                        value: item.label || item.properties.name,
-                                    });
-                                }
+                                    value
+                                });
                             });
                         }
                         updateSuggestions(suggestions, suggestionsContainer, input, hiddenInput);
@@ -4386,7 +1743,6 @@
 
             }, 300));
 
-            // Close suggestions when clicking outside
             document.addEventListener('click', function (e) {
                 if (!input.contains(e.target) && !suggestionsContainer.contains(e.target)) {
                     suggestionsContainer.classList.remove('active');
@@ -4409,7 +1765,6 @@
 
             container.classList.add('active');
 
-            // Add click handlers to suggestions
             container.querySelectorAll('.suggestion-item').forEach(item => {
                 item.addEventListener('click', function () {
                     input.value = this.dataset.name;
@@ -4419,7 +1774,6 @@
             });
         }
 
-        // Debounce function to limit API calls
         function debounce(func, wait) {
             let timeout;
             return function (...args) {
@@ -4428,7 +1782,6 @@
             };
         }
 
-        // Handle path search
         function performAdvancedSearch() {
             const startNode = document.getElementById('pathStartNode_f_name').value;
             const useCategory = document.getElementById('useCategory').checked;
@@ -4448,10 +1801,8 @@
                 }
             }
 
-            // Show loading state
             document.getElementById('loadingOverlay').classList.add('active');
 
-            // Simulate API call with category support
             fetch('api/path-search', {
                 method: 'POST',
                 headers: {
@@ -4470,18 +1821,11 @@
                 }
                 return response.json();
             }).then(data => {
-                console.log('Path search result:', data);
-                // Format the data
-                // Update the visualization with the path
-                // Close the advanced search modal
                 if (data.paths.length === 0) {
                     M.toast({ html: 'No path found' });
                     return;
                 }
-                const searchModal = M.Modal.getInstance(document.getElementById('advancedSearchModal'));
-                // searchModal.close();
 
-                // Open the path visualization modal and update the graph
                 const pathModal = M.Modal.getInstance(document.getElementById('pathVisualizationModal'));
                 pathModal.open();
 
@@ -4490,7 +1834,6 @@
                         paths = data.paths;
                         nodes = [];
                         links = [];
-                        //iterate through each path and update the graph
                         pathGraph.updateGraph({
                             nodes: [],
                             links: []
@@ -4498,12 +1841,8 @@
                         paths.forEach(path => {
                             nodes.push(...path.nodes);
                             links.push(...path.relationships);
-
-
                         });
 
-
-                        // remove duplicate nodes and relationshipts
                         nodes = nodes.filter((node, index, self) =>
                             index === self.findIndex((t) => (
                                 t.id === node.id
@@ -4528,29 +1867,14 @@
             });
         }
 
-        // Add event listener to search button
         document.getElementById('pathSearchBtn').addEventListener('click', performAdvancedSearch);
 
-        // Initialize maxHops input with default value and validation
-        // document.getElementById('maxHops').addEventListener('input', function () {
-        //     const value = parseInt(this.value);
-        //     if (value < 1) this.value = 1;
-        //     if (value > 10) this.value = 10;
-        // });
-
-
-        // Function to download the path graph as SVG
         function downloadPathGraph() {
             const svgElement = document.querySelector('#pathGraph svg');
-
-            // Clone it to avoid modifying the original
             const svgClone = svgElement.cloneNode(true);
-
-            // Add the missing xlink namespace
             svgClone.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink');
             svgClone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
 
-            // Get the modified SVG as a string
             const svgData = svgClone.outerHTML;
             const blob = new Blob([svgData], { type: 'image/svg+xml' });
             const url = window.URL.createObjectURL(blob);
@@ -4566,25 +1890,18 @@
         function downloadPathAsCSV() {
             const headers = ['Start Node', 'Relationship', 'End Node', 'Publication'];
             const rows = paths[0].relationships.map(rel => {
-                // find the node from the nodes array
                 const row = [];
                 paths[0].nodes.forEach(node => {
                     if (node.id === rel.source.id) {
                         row.push(node.name);
                     }
                 });
-
-
-                // row.push(path.nodes[rel.source].name);
                 row.push(rel.label);
-
-                // find the node from the nodes array
                 paths[0].nodes.forEach(node => {
                     if (node.id === rel.target.id) {
                         row.push(node.name);
                     }
                 });
-                // row.push(path.nodes[rel.target].name);
                 row.push(rel.publication);
                 return row;
             });
@@ -4599,27 +1916,6 @@
             a.click();
             document.body.removeChild(a);
             window.URL.revokeObjectURL(url);
-
-
-
-
-
-
-            // const csvData = paths.map(path => {
-            //     const nodes = path.nodes.map(node => node.name).join(' -> ');
-            //     const relationships = path.relationships.map(rel => rel.type).join(' -> ');
-            //     return `${nodes},${relationships}`;
-            // }).join('\n');
-
-            // const blob = new Blob([csvData], { type: 'text/csv' });
-            // const url = window.URL.createObjectURL(blob);
-            // const a = document.createElement('a');
-            // a.href = url;
-            // a.download = 'path_data.csv';
-            // document.body.appendChild(a);
-            // a.click();
-            // document.body.removeChild(a);
-            // window.URL.revokeObjectURL(url);
         }
 
     </script>
@@ -4645,8 +1941,6 @@
                 <h5>Keyboard Shortcuts</h5>
                 <ul>
                     <li><kbd>Ctrl</kbd>/<kbd>⌘</kbd> + <kbd>/</kbd> - Open Advanced Search</li>
-
-                    <!-- <li><kbd>Ctrl</kbd>/<kbd>⌘</kbd> + <kbd>E</kbd> - Export Results</li> -->
                 </ul>
             </div>
         </div>

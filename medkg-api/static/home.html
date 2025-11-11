@@ -5,608 +5,252 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MedKG - Medical Knowledge Graph</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <style>
-        :root {
-            --primary-color: #2c3e50;
-            --secondary-color: #3498db;
-            --accent-color: #e74c3c;
-            --text-color: #333;
-            --background-color: #f8f9fa;
-        }
-
-        body {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            background-color: var(--background-color);
-            font-family: 'Roboto', sans-serif;
-        }
-
-        .main-content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 2rem;
-        }
-
-        .logo-container {
-            text-align: center;
-            margin-bottom: 2rem;
-            animation: fadeIn 1s ease-out;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 1rem;
-        }
-
-        .logo-container svg {
-            width: 10rem;
-            height: 10rem;
-            animation: fadeIn 1s ease-out, pulse 2s ease-in-out infinite;
-        }
-
-        .logo-text-wrapper {
-            text-align: left;
-        }
-
-        .logo-text {
-            font-size: 3.5rem;
-            color: var(--primary-color);
-            font-weight: 700;
-            margin: 0;
-            line-height: 1;
-        }
-
-        .logo-subtext {
-            color: var(--secondary-color);
-            font-size: 1.2rem;
-            margin-top: 0.5rem;
-        }
-
-        @keyframes pulse {
-
-            0%,
-            100% {
-                transform: scale(1);
-            }
-
-            50% {
-                transform: scale(1.05);
-            }
-        }
-
-        .logo-nodes {
-            fill: var(--secondary-color);
-            animation: fadeNodes 1.5s ease-in-out infinite alternate;
-        }
-
-        .logo-lines {
-            stroke: var(--primary-color);
-            stroke-width: 2;
-            stroke-linecap: round;
-            animation: drawLines 2s ease-in-out forwards;
-            stroke-dasharray: 100;
-            stroke-dashoffset: 100;
-        }
-
-        @keyframes fadeNodes {
-            from {
-                opacity: 0.6;
-            }
-
-            to {
-                opacity: 1;
-            }
-        }
-
-        @keyframes drawLines {
-            to {
-                stroke-dashoffset: 0;
-            }
-        }
-
-        .search-container {
-            width: 100%;
-            max-width: 75%;
-            margin: 0 auto 3rem;
-            padding: 0 1rem;
-        }
-
-        .search-box {
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            padding: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .search-input {
-            width: 100%;
-            padding: 0.8rem 1rem;
-            border: none;
-            font-size: 1.2rem;
-            outline: none;
-            text-align: center;
-        }
-
-        .category-filters {
-            display: flex;
-            gap: 0.5rem;
-            margin: 1rem 0;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .category-filter {
-            background-color: rgba(52, 152, 219, 0.1);
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            color: var(--secondary-color);
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            gap: 0.3rem;
-        }
-
-        .category-filter:hover {
-            background-color: var(--secondary-color);
-            color: white;
-        }
-
-        .category-filter i {
-            font-size: 1rem;
-        }
-
-        .stats-section {
-            width: 100%;
-            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
-            padding: 2rem 0;
-            margin: 2rem 0;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 1rem;
-            padding: 0 2rem;
-            text-align: center;
-            color: white;
-        }
-
-        .stat-number {
-            font-size: 2rem;
-            font-weight: bold;
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-label {
-            font-size: 0.9rem;
-            opacity: 0.9;
-        }
-
-        .features-section {
-            padding: 3rem 0;
-            width: 100%;
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 2rem;
-            padding: 0 1rem;
-        }
-
-        .feature-card {
-            background: white;
-            border-radius: 8px;
-            padding: 2rem;
-            text-align: center;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .feature-icon {
-            color: var(--secondary-color);
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .feature-title {
-            color: var(--primary-color);
-            font-size: 1.2rem;
-            margin-bottom: 1rem;
-        }
-
-        .feature-description {
-            color: #666;
-            font-size: 0.9rem;
-            line-height: 1.5;
-        }
-
-        .example-chips {
-            display: flex;
-            gap: 0.5rem;
-            margin: 1rem 0;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .example-chip {
-            background-color: rgba(52, 152, 219, 0.1);
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            color: #836dda;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .example-chip:hover {
-            background-color: rgb(238, 238, 177);
-            color: gray;
-        }
-
-        .footer {
-            position: fixed;
-            width: 100%;
-            bottom: 0;
-            background-color: var(--primary-color);
-            color: white;
-            padding: 1rem;
-            text-align: center;
-            margin-top: 0rem;
-        }
-
-        @media (max-width: 768px) {
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .features-grid {
-                grid-template-columns: 1fr;
-                gap: 1rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .autocomplete-items {
-            max-height: 300px;
-            overflow-y: auto;
-            background: white;
-            border-radius: 0 0 8px 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            z-index: 1000;
-            display: none;
-        }
-
-        .autocomplete-item {
-            padding: 0.8rem 1rem;
-            cursor: pointer;
-            transition: background-color 0.2s ease;
-        }
-
-        .autocomplete-item:hover {
-            background-color: rgba(52, 152, 219, 0.1);
-        }
-
-        .autocomplete-type {
-            color: #666;
-            font-size: 0.8rem;
-            margin-left: 0.5rem;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .autocomplete-toggle {
-            margin-top: 1rem;
-            text-align: center;
-            color: #666;
-        }
-    </style>
+    <link rel="stylesheet" href="css/app.css">
 </head>
 
 <body>
-    <div class="main-content">
-        <!-- Original logo and search container remain unchanged -->
-        <div class="logo-container">
-            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                <!-- Medical Cross -->
-                <g class="logo-lines">
-                    <line x1="50" y1="30" x2="50" y2="70" />
-                    <line x1="30" y1="50" x2="70" y2="50" />
-                </g>
-                <!-- Network Nodes -->
-                <g class="logo-nodes">
-                    <circle cx="50" cy="30" r="6" />
-                    <circle cx="30" cy="50" r="6" />
-                    <circle cx="70" cy="50" r="6" />
-                    <circle cx="50" cy="70" r="6" />
-                </g>
-                <!-- Connecting Lines -->
-                <g class="logo-lines">
-                    <line x1="30" y1="50" x2="50" y2="30" />
-                    <line x1="50" y1="30" x2="70" y2="50" />
-                    <line x1="30" y1="50" x2="50" y2="70" />
-                    <line x1="70" y1="50" x2="50" y2="70" />
-                </g>
-            </svg>
-            <div class="logo-text-wrapper">
-                <h1 class="logo-text">MedKG</h1>
-                <p class="logo-subtext">Explore the Medical Knowledge Graph</p>
+    <div class="site-shell">
+        <header class="site-nav">
+            <div class="nav-inner">
+                <a class="brand" href="home">
+                    <span class="brand-pill"><span class="material-icons">hub</span></span>
+                    <span>MedKG Platform</span>
+                </a>
+                <nav class="nav-links">
+                    <a href="home" class="active">Home</a>
+                    <a href="search">Explore</a>
+                    <a href="viz">Network</a>
+                    <a href="docs">Docs</a>
+                    <a href="about-us">About</a>
+                    <a href="contact">Contact</a>
+                </nav>
+                <a class="nav-cta" href="https://github.com/chemplusx/MedKG" target="_blank" rel="noopener">
+                    <span class="material-icons" aria-hidden="true">code</span>
+                    GitHub
+                </a>
             </div>
-        </div>
+        </header>
 
-        <div class="search-container">
-            <div class="search-box">
-                <input type="text" class="search-input browser-default"
-                    placeholder="Search drugs, diseases, proteins, or pathways..." 
-                    id="mainSearch" 
-                    autocomplete="off">
-            </div>
-            <div id="autocompleteList" class="autocomplete-items"></div>
-            <div class="category-filters">
-                <button class="category-filter" onclick="setQuickSearch('Diseases')">
-                    <i class="material-icons tiny">healing</i>Diseases
-                </button>
-                <button class="category-filter" onclick="setQuickSearch('Drugs')">
-                    <i class="material-icons tiny">medication</i>Drugs
-                </button>
-                <button class="category-filter" onclick="setQuickSearch('Proteins')">
-                    <i class="material-icons tiny">biotech</i>Proteins
-                </button>
-                <button class="category-filter" onclick="setQuickSearch('Pathways')">
-                    <i class="material-icons tiny">schema</i>Pathways
-                </button>
-            </div>
+        <main class="page-content">
+            <section class="hero">
+                <div class="hero-grid">
+                    <div class="hero-content">
+                        <span class="badge-soft"><span class="material-icons" aria-hidden="true">verified</span>Biomedical Knowledge Graph</span>
+                        <h1>Unified intelligence for drug discovery teams</h1>
+                        <p>
+                            MedKG combines curated biomedical sources, CI/CU pipelines, and graph-native APIs so you can
+                            interrogate therapeutics, biomarkers, and clinical evidence from a single interface. Launch the
+                            live platform, explore the API-ready search, or jump into the interactive network explorer.
+                        </p>
+                        <div class="hero-actions">
+                            <a class="btn-primary" href="search">
+                                <span class="material-icons" aria-hidden="true">travel_explore</span>
+                                Advanced Search
+                            </a>
+                            <a class="btn-outline" href="viz">
+                                <span class="material-icons" aria-hidden="true">share</span>
+                                Knowledge Graph Viewer
+                            </a>
+                        </div>
+                        <div class="pill-grid" style="margin-top:1.5rem;">
+                            <span><span class="material-icons" aria-hidden="true">sync</span>Continuous updates (CI/CU)</span>
+                            <span><span class="material-icons" aria-hidden="true">hive</span>35 sources · 34 node types</span>
+                            <span><span class="material-icons" aria-hidden="true">adb</span>MedLINK graph learning ready</span>
+                        </div>
+                    </div>
+                    <div class="glass-panel metrics-showcase">
+                        <div class="metrics-hero">
+                            <div class="metrics-ring">
+                                <span class="material-icons" aria-hidden="true">timeline</span>
+                            </div>
+                            <div>
+                                <h3>Graph snapshot</h3>
+                                <p>The CI/CU pipeline keeps MedKG node and relation totals current for every analysis.
+                                </p>
+                            </div>
+                        </div>
 
-            <div class="search-examples example-chips">
-                <div class="example-chip" onclick="setSearchExample('Clonidine')">Example 1</div>
-                <div class="example-chip" onclick="setSearchExample('Diabetes')">Example 2</div>
-                <div class="example-chip" onclick="setSearchExample('ACE2')">Example 3</div>
-            </div>
-            <div class="autocomplete-toggle">
-                <label>
-                    <input type="checkbox" id="enableAutocomplete" checked>
-                    <span>Enable search suggestions</span>
-                </label>
-            </div>
+                        <div class="metrics-grid metrics-grid-lg">
+                            <div class="metric-card highlight">
+                                <div class="metric-icon">
+                                    <span class="material-icons" aria-hidden="true">science</span>
+                                </div>
+                                <div>
+                                    <h3>50K+</h3>
+                                    <p>Drugs &amp; indications</p>
+                                </div>
+                            </div>
+                            <div class="metric-card highlight">
+                                <div class="metric-icon">
+                                    <span class="material-icons" aria-hidden="true">healing</span>
+                                </div>
+                                <div>
+                                    <h3>35K+</h3>
+                                    <p>Diseases &amp; phenotypes</p>
+                                </div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-icon subtle">
+                                    <span class="material-icons" aria-hidden="true">biotech</span>
+                                </div>
+                                <div>
+                                    <h3>250K+</h3>
+                                    <p>Proteins &amp; targets</p>
+                                </div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-icon subtle">
+                                    <span class="material-icons" aria-hidden="true">hub</span>
+                                </div>
+                                <div>
+                                    <h3>120M+</h3>
+                                    <p>High-confidence relations</p>
+                                </div>
+                            </div>
+                        </div>
 
-        <div class="stats-section">
-            <div class="stats-grid">
-                <div class="stat-item">
-                    <div class="stat-number">50K+</div>
-                    <div class="stat-label">Drugs</div>
+                        <div class="metrics-footnote">
+                            <span class="material-icons" aria-hidden="true">update</span>
+                            Latest CI/CU refresh · <strong>Nov 2025 dataset</strong>
+                        </div>
+                    </div>
                 </div>
-                <div class="stat-item">
-                    <div class="stat-number">35K+</div>
-                    <div class="stat-label">Diseases</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">250K+</div>
-                    <div class="stat-label">Proteins</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">120M+</div>
-                    <div class="stat-label">Relations</div>
-                </div>
-            </div>
-        </div>
+            </section>
 
-        <div class="features-section">
-            <div class="features-grid">
-                <div class="feature-card">
-                    <i class="material-icons feature-icon">search</i>
-                    <h3 class="feature-title">Smart Search</h3>
-                    <p class="feature-description">Advanced search capabilities with auto-suggestions and filters.</p>
+            <section class="page-section" style="padding-top:0;">
+                <div class="page-container card-grid">
+                    <article class="feature-card">
+                        <span class="material-icons" aria-hidden="true" style="font-size:2rem;color:var(--brand-teal);">search</span>
+                        <h3>Smart semantic search</h3>
+                        <p>Autocomplete across curated ontologies, graph nodes, and molecular entities. Filter results by
+                            entity type, provenance, and relationship strength in real time.</p>
+                    </article>
+                    <article class="feature-card">
+                        <span class="material-icons" aria-hidden="true" style="font-size:2rem;color:var(--brand-teal);">device_hub</span>
+                        <h3>Interactive graph explorer</h3>
+                        <p>Visualise neighbourhoods, expand multi-hop connections, and export node details directly from the
+                            Cytoscape-powered explorer.</p>
+                    </article>
+                    <article class="feature-card">
+                        <span class="material-icons" aria-hidden="true" style="font-size:2rem;color:var(--brand-teal);">dataset_linked</span>
+                        <h3>API & documentation</h3>
+                        <p>Swagger, Redoc, and reference docs are bundled to help developers embed MedKG insights within
+                            downstream workflows.</p>
+                    </article>
                 </div>
-                <div class="feature-card">
-                    <i class="material-icons feature-icon">hub</i>
-                    <h3 class="feature-title">Network Analysis</h3>
-                    <p class="feature-description">Visualize relationships between drugs, diseases, and proteins.</p>
+            </section>
+
+            <section class="page-section" style="padding-top:0;">
+                <div class="page-container">
+                    <div class="glass-panel search-module">
+                        <div class="two-column" style="align-items:center;">
+                            <div>
+                                <h2 class="section-title" style="font-size:2rem;">Quick entity lookup</h2>
+                                <p class="section-subtitle">Start typing to explore drugs, diseases, proteins, or
+                                    pathways. Use the quick filters or toggle suggestions to tailor your experience.</p>
+                            </div>
+                            <div class="badge-soft" style="justify-self:end;"><span class="material-icons" aria-hidden="true">public</span>Live data from MedKG</div>
+                        </div>
+
+                        <div class="search-box" style="margin-top:1.75rem;">
+                            <input type="text" class="search-input" placeholder="Search drugs, diseases, proteins, or pathways..." id="mainSearch" autocomplete="off">
+                            <div id="autocompleteList" class="auto-list"></div>
+                            <div class="chip-group" style="margin-top:1.25rem;">
+                                <button class="chip" type="button" onclick="setQuickSearch('Diseases')"><span class="material-icons" aria-hidden="true">healing</span>Diseases</button>
+                                <button class="chip" type="button" onclick="setQuickSearch('Drugs')"><span class="material-icons" aria-hidden="true">medication</span>Drugs</button>
+                                <button class="chip" type="button" onclick="setQuickSearch('Proteins')"><span class="material-icons" aria-hidden="true">biotech</span>Proteins</button>
+                                <button class="chip" type="button" onclick="setQuickSearch('Pathways')"><span class="material-icons" aria-hidden="true">schema</span>Pathways</button>
+                            </div>
+                            <div class="chip-group">
+                                <button class="chip" type="button" onclick="setSearchExample('Clonidine')">Clonidine</button>
+                                <button class="chip" type="button" onclick="setSearchExample('Diabetes')">Diabetes</button>
+                                <button class="chip" type="button" onclick="setSearchExample('ACE2')">ACE2</button>
+                            </div>
+                            <div class="autocomplete-toggle">
+                                <label style="display:flex;align-items:center;gap:0.45rem;justify-content:center;color:var(--brand-muted);font-weight:600;">
+                                    <input type="checkbox" id="enableAutocomplete" checked style="width:auto;"> Enable search suggestions
+                                </label>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="feature-card">
-                    <i class="material-icons feature-icon">api</i>
-                    <h3 class="feature-title">API Access</h3>
-                    <p class="feature-description">Integrate MedKG data with our comprehensive API.</p>
+            </section>
+
+            <section class="page-section" style="padding-top:0;">
+                <div class="page-container two-column">
+                    <div class="data-card">
+                        <h3 style="margin-top:0;">Production deployment</h3>
+                        <p class="section-subtitle">The production instance is maintained by ChemPlusX. Access the full
+                            application via the public URL or deploy locally with the Go/Neo4j stack.</p>
+                        <div class="pill-grid" style="margin-top:1.25rem;">
+                            <a href="http://pitools.niper.ac.in/medkg/home" target="_blank" rel="noopener" class="btn-outline" style="justify-content:center;">
+                                <span class="material-icons" aria-hidden="true">open_in_new</span>Open live MedKG
+                            </a>
+                            <a href="swagger-ui.html" class="btn-outline" style="justify-content:center;">
+                                <span class="material-icons" aria-hidden="true">api</span>Swagger UI
+                            </a>
+                            <a href="docs" class="btn-outline" style="justify-content:center;">
+                                <span class="material-icons" aria-hidden="true">menu_book</span>Documentation
+                            </a>
+                        </div>
+                    </div>
+                    <div class="glass-panel" style="padding:2rem;">
+                        <h3 style="margin-top:0;">What&apos;s inside</h3>
+                        <ul style="margin:1.1rem 0 0; padding-left:1.25rem; color:var(--brand-muted); line-height:1.65;">
+                            <li>CI/CU pipeline that harmonises 35 biomedical sources across 34 node types.</li>
+                            <li>Production-ready API layer with WebSocket streaming and autocomplete endpoints.</li>
+                            <li>MedLINK hybrid RGCN + GAT + GCN architecture for drug–disease link prediction.</li>
+                            <li>Interactive dashboards and figures reflecting peer-reviewed benchmarks.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="site-footer">
+            <div class="footer-grid">
+                <div>
+                    <div class="brand" style="color:white;">
+                        <span class="brand-pill" style="width:2.4rem;height:2.4rem;"><span class="material-icons" aria-hidden="true">hub</span></span>
+                        <span>MedKG Platform</span>
+                    </div>
+                    <p style="margin-top:1rem; font-size:0.9rem; color:rgba(226,232,240,0.75);">
+                        MedKG is maintained by ChemPlusX, providing biomedical knowledge infrastructure for research teams.
+                    </p>
+                </div>
+                <div>
+                    <h4>Explore</h4>
+                    <a href="search">Advanced search</a><br>
+                    <a href="viz">Network explorer</a><br>
+                    <a href="docs">Documentation</a>
+                </div>
+                <div>
+                    <h4>Resources</h4>
+                    <a href="swagger-ui.html">Swagger UI</a><br>
+                    <a href="redoc.html">Redoc reference</a><br>
+                    <a href="https://github.com/chemplusx/MedKG" target="_blank" rel="noopener">GitHub repository</a>
                 </div>
             </div>
-        </div>
+            <div class="footer-bottom">
+                &copy; 2025 MedKG · ChemPlusX. All rights reserved.
+            </div>
+        </footer>
     </div>
 
-    <footer class="footer">
-        <p>© 2024 MedKG - NIPER SAS Nagar | Department of Pharmacoinformatics</p>
-    </footer>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const searchInput = document.getElementById('mainSearch');
-            const autocompleteList = document.getElementById('autocompleteList');
-            const enableAutocompleteCheckbox = document.getElementById('enableAutocomplete');
-
-            function debounce(func, wait) {
-                let timeout;
-                return function (...args) {
-                    clearTimeout(timeout);
-                    timeout = setTimeout(() => func.apply(this, args), wait);
-                };
-            }
-
-            function performSearch() {
-                const searchQuery = searchInput.value.trim();
-                if (searchQuery) {
-                    window.location.href = `search?q=${encodeURIComponent(searchQuery)}`;
-                }
-            }
-
-            function showAutocomplete(items) {
-                autocompleteList.innerHTML = items.map(item => {
-                    item.value = item.value.replace('\'', "\\'");
-                return `
-                    <div class="autocomplete-item" onclick="selectAutocomplete('${item.value}')">
-                        ${item.text}
-                        <span class="autocomplete-type">${item.type}</span>
-                    </div>
-                `}).join('');
-                autocompleteList.style.display = 'block';
-            }
-
-            function hideAutocomplete() {
-                autocompleteList.style.display = 'none';
-            }
-
-            const handleInputChange = debounce((query) => {
-                if (query.length >= 2 && enableAutocompleteCheckbox.checked) {
-                    fetch(`search_in_graph?limit=10&term=${encodeURIComponent(query)}`)
-                        .then(response => response.json())
-                        .then(data => {
-                            const suggestions = [];
-
-                            if (data.exactMatches) {
-                                data.exactMatches.forEach(item => {
-                                    if (item.type === 'Drug') {
-                                        suggestions.push({
-                                            text: item.label || item.properties.name,
-                                            type: item.type,
-                                            value: item.label || item.properties.name,
-                                        });
-                                    } else if (item.type === 'Disease') {
-                                        suggestions.push({
-                                            text: item.label || item.properties.name,
-                                            type: item.type,
-                                            value: item.label || item.properties.name,
-                                        });
-                                    } else if (item.type === 'Protein') {
-                                        suggestions.push({
-                                            text: `${item.properties.accession} (${item.properties.name})` || item.properties.name,
-                                            type: item.type,
-                                            value: item.properties.accession
-                                        });
-                                    } else if (item.type === 'Pathway') {
-                                        suggestions.push({
-                                            text: item.label || item.properties.name,
-                                            type: item.type,
-                                            value: item.label || item.properties.name,
-                                        });
-                                    }else {
-                                    suggestions.push({
-                                        text: item.label || item.properties.name,
-                                        type: item.type,
-                                        value: item.label || item.properties.name,
-                                    });
-                                }
-                                });
-                            }
-
-                            if (data.partialMatches) {
-                                data.partialMatches.forEach(item => {
-                                    if (item.type === 'Drug') {
-                                        suggestions.push({
-                                            text: item.label || item.properties.name,
-                                            type: item.type,
-                                            value: item.label || item.properties.name,
-                                        });
-                                    } else if (item.type === 'Disease') {
-                                        suggestions.push({
-                                            text: item.label || item.properties.name,
-                                            type: item.type,
-                                            value: item.label || item.properties.name,
-                                        });
-                                    } else if (item.type === 'Protein') {
-                                        suggestions.push({
-                                            text: `${item.properties.accession} (${item.properties.name})` || item.properties.name,
-                                            type: item.type,
-                                            value: item.properties.accession
-                                        });
-                                    } else if (item.type === 'Pathway') {
-                                        suggestions.push({
-                                            text: item.label || item.properties.name,
-                                            type: item.type,
-                                            value: item.label || item.properties.name,
-                                        });
-                                    }else {
-                                    suggestions.push({
-                                        text: item.label || item.properties.name,
-                                        type: item.type,
-                                        value: item.label || item.properties.name,
-                                    });
-                                }
-                                });
-                            }
-
-                            if (suggestions.length > 0) {
-                                showAutocomplete(suggestions);
-                            } else {
-                                hideAutocomplete();
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Search error:', error);
-                            hideAutocomplete();
-                        });
-                } else {
-                    hideAutocomplete();
-                }
-            }, 300);
-
-            // Handle search input
-            searchInput.addEventListener('input', (e) => {
-                handleInputChange(e.target.value);
-            });
-
-            // Handle Enter key
-            searchInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    performSearch();
-                }
-            });
-
-            // Handle click outside
-            document.addEventListener('click', (e) => {
-                if (!searchInput.contains(e.target) && !autocompleteList.contains(e.target)) {
-                    hideAutocomplete();
-                }
-            });
-
-            // Handle autocomplete toggle
-            enableAutocompleteCheckbox.addEventListener('change', function () {
-                if (!this.checked) {
-                    hideAutocomplete();
-                } else if (searchInput.value.length >= 2) {
-                    handleInputChange(searchInput.value);
-                }
-            });
-        });
+        function setQuickSearch(text) {
+            document.getElementById('mainSearch').value = text;
+            document.getElementById('mainSearch').focus();
+            triggerInput();
+        }
 
         function setSearchExample(text) {
-            const searchInput = document.getElementById('mainSearch');
-            searchInput.value = text;
-            searchInput.focus();
-
-            // Trigger input event
-            const inputEvent = new Event('input', {
-                bubbles: true,
-                cancelable: true,
-            });
-            searchInput.dispatchEvent(inputEvent);
+            document.getElementById('mainSearch').value = text;
+            document.getElementById('mainSearch').focus();
+            triggerInput();
         }
 
         function selectAutocomplete(text) {
@@ -616,12 +260,94 @@
             performSearch();
         }
 
+        function triggerInput() {
+            const searchInput = document.getElementById('mainSearch');
+            const inputEvent = new Event('input', { bubbles: true, cancelable: true });
+            searchInput.dispatchEvent(inputEvent);
+        }
+
         function performSearch() {
             const searchQuery = document.getElementById('mainSearch').value.trim();
             if (searchQuery) {
                 window.location.href = `search?q=${encodeURIComponent(searchQuery)}`;
             }
         }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const enableAutocomplete = document.getElementById('enableAutocomplete');
+            const searchInput = document.getElementById('mainSearch');
+            const autocompleteList = document.getElementById('autocompleteList');
+
+            function debounce(func, wait) {
+                let timeout;
+                return function (...args) {
+                    clearTimeout(timeout);
+                    timeout = setTimeout(() => func.apply(this, args), wait);
+                };
+            }
+
+            const handleInputChange = debounce((query) => {
+                if (query.length >= 2 && enableAutocomplete.checked) {
+                    fetch(`search_in_graph?limit=10&term=${encodeURIComponent(query)}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            const suggestions = [];
+
+                            function pushItem(item) {
+                                if (!item) return;
+                                let text = item.label || item.properties?.name || item.properties?.accession || '';
+                                let value = text;
+                                if (item.type === 'Protein' && item.properties?.accession) {
+                                    text = `${item.properties.accession} (${item.properties.name || 'Protein'})`;
+                                    value = item.properties.accession;
+                                }
+                                suggestions.push({ text, type: item.type, value });
+                            }
+
+                            (data.exactMatches || []).forEach(pushItem);
+                            (data.partialMatches || []).forEach(pushItem);
+
+                            if (suggestions.length > 0) {
+                                autocompleteList.innerHTML = suggestions.map(item => `
+                                    <div class="auto-item" onclick="selectAutocomplete('${item.value.replace(/'/g, "\\'")}')">
+                                        <span>${item.text}</span>
+                                        <span style="font-size:0.75rem;color:var(--brand-muted);text-transform:uppercase;">${item.type}</span>
+                                    </div>
+                                `).join('');
+                                autocompleteList.style.display = 'block';
+                            } else {
+                                autocompleteList.style.display = 'none';
+                            }
+                        })
+                        .catch(() => {
+                            autocompleteList.style.display = 'none';
+                        });
+                } else {
+                    autocompleteList.style.display = 'none';
+                }
+            }, 280);
+
+            searchInput.addEventListener('input', (e) => handleInputChange(e.target.value));
+            searchInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    performSearch();
+                }
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!autocompleteList.contains(e.target) && e.target !== searchInput) {
+                    autocompleteList.style.display = 'none';
+                }
+            });
+
+            enableAutocomplete.addEventListener('change', function () {
+                if (!this.checked) {
+                    autocompleteList.style.display = 'none';
+                } else if (searchInput.value.length >= 2) {
+                    handleInputChange(searchInput.value);
+                }
+            });
+        });
     </script>
 </body>
 

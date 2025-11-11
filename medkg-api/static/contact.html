@@ -4,281 +4,118 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact Us - MedKG</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+    <title>Contact MedKG</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link rel="stylesheet" href="css/app.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="css/custom.css">
-    <style>
-        /* Existing styles from the original page */
-        :root {
-            --primary-color: #1c4966;
-            --primary-light: #3e6b8a;
-            --primary-dark: #0d2b3e;
-            --secondary-color: #ff4081;
-            --text-color: #333;
-            --background-color: #f5f5f5;
-        }
-
-        body {
-            display: flex;
-            min-height: 100vh;
-            flex-direction: column;
-            background-color: var(--background-color);
-            color: var(--text-color);
-        }
-
-        main {
-            flex: 1 0 auto;
-        }
-
-        nav {
-            background-color: var(--primary-color);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            height: 150px;
-        }
-
-        nav .brand-logo {
-            display: flex;
-            align-items: center;
-            padding: 0;
-            height: 100%;
-        }
-
-        nav .brand-logo .logo-container {
-            background-color: white;
-            border-radius: 0 50% 50% 0;
-            padding: 3px 0px 0px 0px;
-            height: 100%;
-            position: relative;
-            align-items: center;
-        }
-
-        nav .brand-logo img {
-            height: 140px;
-        }
-
-        nav .brand-logo span {
-            color: var(--primary-color);
-            font-weight: bold;
-        }
-
-        nav ul {
-            padding-right: 2rem;
-        }
-
-        nav ul a {
-            color: white;
-            margin-top: 2rem;
-            font-size: large;
-        }
-
-        footer {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 10px 0;
-        }
-
-        footer .container {
-            max-width: -webkit-fill-available;
-            width: 100%;
-            margin: 1px;
-        }
-
-        footer .logo-container {
-            height: 100%;
-            position: relative;
-            align-items: center;
-            padding: 0px 20px 0px 20px !important;
-        }
-
-        footer .logo-container img {
-            height: 140px;
-        }
-
-        /* New styles for the Contact page */
-        .contact-container {
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            padding: 2rem;
-            margin-top: 2rem;
-        }
-
-        .contact-form .input-field input:focus,
-        .contact-form .input-field textarea:focus {
-            border-bottom: 1px solid var(--primary-color);
-            box-shadow: 0 1px 0 0 var(--primary-color);
-        }
-
-        .contact-form .input-field input:focus+label,
-        .contact-form .input-field textarea:focus+label {
-            color: var(--primary-color);
-        }
-
-        .contact-info {
-            background-color: var(--primary-light);
-            color: white;
-            padding: 2rem;
-            border-radius: 8px;
-        }
-
-        .contact-info i {
-            margin-right: 10px;
-        }
-
-        #map {
-            height: 300px;
-            border-radius: 8px;
-            margin-top: 1rem;
-        }
-
-        .chat-bot {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background-color: var(--primary-color);
-            color: white;
-            padding: 10px 20px;
-            border-radius: 50px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            transition: all 0.3s ease;
-        }
-
-        .chat-bot:hover {
-            background-color: var(--primary-light);
-        }
-
-        .chat-bot i {
-            margin-right: 10px;
-        }
-    </style>
 </head>
 
 <body>
-    <header>
-        <nav>
-            <div class="nav-wrapper">
-                <a href="#" class="brand-logo">
-                    <div class="logo-container">
-                        <img src="images/logo-3.png" alt="MedKG Logo">
-                    </div>
+    <div class="site-shell">
+        <header class="site-nav">
+            <div class="nav-inner">
+                <a class="brand" href="home">
+                    <span class="brand-pill"><span class="material-icons" aria-hidden="true">hub</span></span>
+                    <span>MedKG Platform</span>
                 </a>
-                <ul id="nav-mobile" class="right hide-on-med-and-down">
-                    <li><a href="search">Search</a></li>
-                    <li><a href="documentation">Tutorials</a></li>
-                    <li><a href="api-docs">API Docs</a></li>
-                    <li><a href="swagger">Swagger Docs</a></li>
-                    <li><a href="https://github.com/chemplusx/MedKG" target="_blank">Github</a></li>
-                    <li><a href="about-us">Project/Team</a></li>
-                </ul>
+                <nav class="nav-links">
+                    <a href="home">Home</a>
+                    <a href="search">Explore</a>
+                    <a href="viz">Network</a>
+                    <a href="docs">Docs</a>
+                    <a href="about-us">About</a>
+                    <a href="contact" class="active">Contact</a>
+                </nav>
+                <a class="nav-cta" href="https://github.com/chemplusx/MedKG" target="_blank" rel="noopener">
+                    <span class="material-icons" aria-hidden="true">code</span>
+                    GitHub
+                </a>
             </div>
-        </nav>
-    </header>
+        </header>
 
-    <main class="container">
-        <h2 class="center-align">Contact Us</h2>
-        <div class="row contact-container">
-            <div class="col s12 m6">
-                <h4>Get in Touch</h4>
-                <form class="contact-form">
-                    <div class="input-field">
-                        <input id="name" type="text" required>
-                        <label for="name">Name</label>
-                    </div>
-                    <div class="input-field">
-                        <input id="email" type="email" required>
-                        <label for="email">Email</label>
-                    </div>
-                    <div class="input-field">
-                        <textarea id="message" class="materialize-textarea" required></textarea>
-                        <label for="message">Message</label>
-                    </div>
-                    <button class="btn waves-effect waves-light" type="submit">Send
-                        <i class="material-icons right">send</i>
-                    </button>
-                </form>
-            </div>
-            <div class="col s12 m6">
-                <div class="contact-info">
-                    <h4>Contact Information</h4>
-                    <p><i class="material-icons">location_on</i> National Institute of Pharmaceutical Education and
-                        Research, S.A.S. Nagar (Mohali), Punjab - 160062</p>
-                    <p><i class="material-icons">phone</i> +91(172)-2292000 Extn: 2016</p>
-                    <p><i class="material-icons">email</i> prabhagarg@niper.ac.in</p>
-                </div>
-                <div id="map" style="position: relative; overflow: hidden;">
-                    <div
-                        style="height: 100%; width: 100%; position: absolute; top: 0px; left: 0px; background-color: rgb(229, 227, 223);">
-                        <div id="map" class="mapouter">
-                            <div class="gmap_canvas"
-                                style="/* margin-left: 100px; *//* margin-top:20px; */height: -webkit-fill-available;margin-top: -1rem;">
-                                <iframe class="gmap_iframe" frameborder="0" scrolling="no" marginheight="0"
-                                    marginwidth="0"
-                                    src="https://maps.google.com/maps?width=600&amp;height=400&amp;hl=en&amp;q=NIPER,Mohali&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"
-                                    style="
-                        width: -webkit-fill-available;
-                        height: -webkit-fill-available;
-                    "></iframe>
-
-                            </div>
+        <main class="page-content">
+            <section class="hero">
+                <div class="hero-grid">
+                    <div class="hero-content">
+                        <span class="badge-soft"><span class="material-icons" aria-hidden="true">support_agent</span>Contact</span>
+                        <h1>Partner with the MedKG team</h1>
+                        <p>
+                            We collaborate with research labs, clinical teams, and industry partners to extend MedKG.
+                            Reach out for dataset integrations, analytics support, or deployment discussions.
+                        </p>
+                        <div class="hero-actions">
+                            <a class="btn-primary" href="https://github.com/chemplusx/MedKG/issues" target="_blank" rel="noopener">
+                                <span class="material-icons" aria-hidden="true">bug_report</span>Open an issue
+                            </a>
+                            <a class="btn-outline" href="mailto:pharmacoinfo@niper.ac.in">
+                                <span class="material-icons" aria-hidden="true">mail</span>Email the team
+                            </a>
                         </div>
                     </div>
+                    <div class="glass-panel" style="padding:2rem;">
+                        <h3 style="margin-top:0;">Live application</h3>
+                        <p style="color:var(--brand-muted); line-height:1.7;">
+                            Production MedKG is hosted at <a href="http://pitools.niper.ac.in/medkg/home" target="_blank" rel="noopener">pitools.niper.ac.in/medkg/home</a>.
+                            Share feedback or request guided walkthroughs via the channels below.
+                        </p>
+                    </div>
                 </div>
-            </div>
-        </div>
-    </main>
+            </section>
 
-    <footer class="page-footer">
-        <div class="container">
-            <div class="row">
-                <div class="logo-container col">
-                    <img src="images/logo-3.png" alt="MedKG Logo">
+            <section class="page-section" style="padding-top:0;">
+                <div class="page-container two-column">
+                    <div class="glass-panel">
+                        <h3 style="margin-top:0;">General enquiries</h3>
+                        <p class="section-subtitle">Use the following channels for support, collaborations, or media outreach.</p>
+                        <div class="pill-grid" style="margin-top:1.25rem;">
+                            <span><span class="material-icons" aria-hidden="true">alternate_email</span>pharmacoinfo@niper.ac.in</span>
+                            <span><span class="material-icons" aria-hidden="true">public</span><a href="http://pitools.niper.ac.in/medkg/home" target="_blank" rel="noopener">Live deployment</a></span>
+                            <span><span class="material-icons" aria-hidden="true">code</span><a href="https://github.com/chemplusx/MedKG" target="_blank" rel="noopener">GitHub repository</a></span>
+                        </div>
+                    </div>
+                    <div class="glass-panel">
+                        <h3 style="margin-top:0;">Collaboration focus</h3>
+                        <ul style="margin:1rem 0 0; padding-left:1.2rem; color:var(--brand-muted); line-height:1.7;">
+                            <li>Integrating new biomedical datasets or ontologies</li>
+                            <li>Deploying MedKG in research or clinical environments</li>
+                            <li>Extending MedLINK graph learning or analytics tooling</li>
+                        </ul>
+                    </div>
                 </div>
-                <div class="col l5 s12">
-                    <h5 class="white-text" style="width: inherit;text-align: justify;"><strong>MedKG</strong></h5>
-                    <p class="grey-text text-lighten-4" style="width: inherit;text-align: justify;">
-                        <b>Department of Pharmacoinformatics</b>
+            </section>
+        </main>
+
+        <footer class="site-footer">
+            <div class="footer-grid">
+                <div>
+                    <div class="brand" style="color:white;">
+                        <span class="brand-pill" style="width:2.4rem;height:2.4rem;"><span class="material-icons" aria-hidden="true">hub</span></span>
+                        <span>MedKG Platform</span>
+                    </div>
+                    <p style="margin-top:1rem; font-size:0.9rem; color:rgba(226,232,240,0.75);">
+                        ChemPlusX maintains MedKG and partners with researchers to advance biomedical knowledge graphs.
                     </p>
-                    <p class="grey-text text-lighten-4" style="width: inherit;text-align: justify;">
-                        National Institute of Pharmaceutical
-                        Education and Research,
-                        S.A.S. Nagar (Mohali)
-                    </p>
                 </div>
-
-                <div class="col offset-l2">
-                    <h5 class="white-text">Links</h5>
-                    <ul>
-                        <li><a class="grey-text text-lighten-3" href="about-us">About Us</a></li>
-                        <li><a class="grey-text text-lighten-3" href="contact">Contact</a></li>
-                    </ul>
+                <div>
+                    <h4>Explore</h4>
+                    <a href="home">Overview</a><br>
+                    <a href="search">Advanced search</a><br>
+                    <a href="viz">Network explorer</a>
+                </div>
+                <div>
+                    <h4>Resources</h4>
+                    <a href="docs">Documentation</a><br>
+                    <a href="swagger-ui.html">Swagger UI</a><br>
+                    <a href="https://github.com/chemplusx/MedKG" target="_blank" rel="noopener">GitHub repository</a>
                 </div>
             </div>
-        </div>
-        <div class="footer-copyright">
-            <div class="container">
-                © 2024 ChemPlusX. All rights reserved.
+            <div class="footer-bottom">
+                &copy; 2025 MedKG · ChemPlusX. All rights reserved.
             </div>
-        </div>
-    </footer>
-
-    <div class="chat-bot">
-        <i class="material-icons">chat</i>
-        <span>Chat with us</span>
+        </footer>
     </div>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-    <script>
-
-        document.addEventListener('DOMContentLoaded', function () {
-            const chatBot = document.querySelector('.chat-bot');
-            chatBot.addEventListener('click', function () {
-                alert('Chat functionality coming soon!');
-            });
-        });
-    </script>
 </body>
 
 </html>

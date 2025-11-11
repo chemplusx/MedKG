@@ -12,7 +12,11 @@ This repository contains scripts for ETL (Extract, Transform, Load) pipelines de
 
 MedKG is peer-reviewed and published as:
 
-> Kumari, M., Chauhan, R. (2025). MedKG: enabling drug discovery through a unified biomedical knowledge graph. *Molecular Diversity*, 29, 3465–3483. [https://doi.org/10.1007/s11030-025-11164-z](https://doi.org/10.1007/s11030-025-11164-z)
+> Kumari, M., Chauhan, R., & Garg, P. (2025). MedKG: enabling drug discovery through a unified biomedical knowledge graph. *Molecular Diversity*, 29, 3465–3483. [https://doi.org/10.1007/s11030-025-11164-z](https://doi.org/10.1007/s11030-025-11164-z)
+
+## Live Deployment
+
+The production MedKG web application is accessible at [http://pitools.niper.ac.in/medkg/home](http://pitools.niper.ac.in/medkg/home). This instance mirrors the latest CI/CU graph refresh and exposes the search, network visualisation, and API documentation interfaces.
 
 ## Table of Contents
 
@@ -106,6 +110,13 @@ Each folder contains all necessary datafiles and ETL scripts for its respective 
 - Each ETL script may require specific configuration. Refer to the comments within each script for details.
 - Modify the scripts as needed to match your database configuration and schema requirements.
 
+## Publication
+
+> Kumari, M., Chauhan, R. & Garg, P. (2025). MedKG: enabling drug discovery through a unified biomedical knowledge graph. *Molecular Diversity*, 29, 3465–3483. [https://doi.org/10.1007/s11030-025-11164-z](https://doi.org/10.1007/s11030-025-11164-z)
+
+## Live Deployment
+
+Access the MedKG production instance at [http://pitools.niper.ac.in/medkg/home](http://pitools.niper.ac.in/medkg/home). The deployment mirrors the latest CI/CU graph refresh and exposes search, network visualisation, and API documentation interfaces.
 
 ## Contributing
 

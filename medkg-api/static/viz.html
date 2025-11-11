@@ -5,432 +5,187 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MedKG Network Explorer</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link rel="stylesheet" href="css/app.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <style>
-        :root {
-            --primary-color: #2c3e50;
-            --secondary-color: #3498db;
-            --accent-color: #e74c3c;
-            --background-color: #f8f9fa;
-            --card-background: #ffffff;
-        }
-
-        body {
-            background-color: var(--background-color);
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            margin: 0;
-            padding: 0;
-        }
-
-        nav {
-            background-color: var(--primary-color);
-            padding: 0 20px;
-        }
-
-        nav .brand-logo {
-            font-size: 1.8rem;
-            padding-left: 1rem;
-        }
-
-        .main-content {
-            display: flex;
-            flex: 1;
-            height: calc(100vh - 64px);
-        }
-
-        .sidebar {
-            width: 300px;
-            background: var(--card-background);
-            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-            padding: 1rem;
-            overflow-y: auto;
-        }
-
-        .visualization-container {
-            flex: 1;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .controls-panel {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            z-index: 100;
-            background: rgba(255, 255, 255, 0.9);
-            padding: 0.5rem;
-            border-radius: 4px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-
-        .controls-panel button {
-            margin: 0.2rem;
-            background-color: var(--secondary-color);
-        }
-
-        .controls-panel button:hover {
-            background-color: var(--primary-color);
-        }
-
-        #network-container {
-            width: 100%;
-            height: 100%;
-        }
-
-        .details-panel {
-            position: absolute;
-            bottom: 0;
-            left: 300px;
-            right: 0;
-            background: var(--card-background);
-            padding: 1rem;
-            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
-            transform: translateY(100%);
-            transition: transform 0.3s ease;
-        }
-
-        .details-panel.visible {
-            transform: translateY(0);
-        }
-
-        .search-section {
-            margin-bottom: 1.5rem;
-        }
-
-        .filter-section {
-            margin-bottom: 1rem;
-        }
-
-        .filter-section h6 {
-            color: var(--primary-color);
-            font-weight: 500;
-            margin: 1rem 0 0.5rem;
-        }
-
-        .entity-type {
-            display: inline-block;
-            padding: 2px 8px;
-            border-radius: 4px;
-            color: white;
-            font-size: 0.8rem;
-            margin-right: 0.5rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .entity-drug {
-            background-color: #ff7675;
-        }
-
-        .entity-protein {
-            background-color: #4834d4;
-        }
-
-        .entity-disease {
-            background-color: #6c5ce7;
-        }
-
-        .entity-gene {
-            background-color: #00b894;
-        }
-
-        .entity-metabolite {
-            background-color: #e17055;
-        }
-
-        .network-stats {
-            font-size: 0.9rem;
-            color: #666;
-            margin-bottom: 1rem;
-            padding: 0.5rem;
-            background: #f5f5f5;
-            border-radius: 4px;
-        }
-
-        .custom-tooltip {
-            position: absolute;
-            background: white;
-            padding: 8px;
-            border-radius: 4px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-            pointer-events: none;
-            display: none;
-            z-index: 1000;
-        }
-
-
-
-
-        .context-menu {
-            position: fixed;
-            background: white;
-            min-width: 200px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-            border-radius: 4px;
-            padding: 5px 0;
-            z-index: 1000;
-        }
-
-        .context-menu .menu-items {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-        }
-
-        .context-menu .menu-items li {
-            padding: 8px 15px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-
-        .context-menu .menu-items li:hover {
-            background-color: #f5f5f5;
-        }
-
-        .context-menu .material-icons {
-            font-size: 18px;
-            color: #666;
-        }
-
-        .context-menu span {
-            font-size: 14px;
-            color: #333;
-        }
-
-        /* Node Modal Styles */
-        .modal {
-            max-width: 600px;
-            border-radius: 8px;
-        }
-
-        .modal .entity-type {
-            display: inline-block;
-            padding: 4px 8px;
-            border-radius: 4px;
-            margin: 8px 0;
-            color: white;
-            font-size: 0.9rem;
-        }
-
-        .modal-body {
-            margin: 16px 0;
-        }
-
-        .relationships-section {
-            margin-top: 24px;
-            padding-top: 16px;
-            border-top: 1px solid #eee;
-        }
-
-        /* Edge Label Styles */
-        .link-label {
-            font-family: Arial, sans-serif;
-            pointer-events: none;
-        }
-
-        /* Add to your existing CSS */
-        .modal {
-            max-height: 85vh !important;
-            /* Ensure modal isn't too tall */
-            overflow-y: auto;
-        }
-
-        .modal .modal-close:hover {
-            color: var(--accent-color);
-        }
-
-        .link-label {
-            opacity: 0;
-            transition: opacity 0.2s;
-        }
-
-        /* Only show edge labels on hover */
-        .link:hover .link-label {
-            opacity: 0.7;
-        }
-
-        .show-more-btn {
-            width: 100%;
-            padding: 8px;
-            background: #f5f5f5;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            margin-top: 10px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 5px;
-            transition: background-color 0.2s;
-        }
-
-        .show-more-btn:hover {
-            background: #eeeeee;
-        }
-
-        .show-more-btn i {
-            transition: transform 0.3s;
-        }
-
-        .show-more-btn.expanded i {
-            transform: rotate(180deg);
-        }
-    </style>
+    
 </head>
 
-<body>
-    <nav>
-        <div class="nav-wrapper">
-            <a href="#" class="brand-logo">MedKG Network Explorer</a>
-            <ul class="right">
-                <li><a href="#" onclick="toggleSearch()"><i class="material-icons left">search</i>Search</a></li>
-                <li><a href="#" onclick="exportNetwork()"><i class="material-icons left">file_download</i>Export</a>
-                </li>
-                <li><a href="#" onclick="showHelp()"><i class="material-icons left">help</i>Help</a></li>
-            </ul>
-        </div>
-    </nav>
+<body class="viz-page">
+    <div class="site-shell">
+        <header class="site-nav">
+            <div class="nav-inner">
+                <a class="brand" href="home">
+                    <span class="brand-pill"><span class="material-icons" aria-hidden="true">hub</span></span>
+                    <span>MedKG Platform</span>
+                </a>
+                <nav class="nav-links">
+                    <a href="home">Home</a>
+                    <a href="search">Explore</a>
+                    <a href="viz" class="active">Network</a>
+                    <a href="docs">Docs</a>
+                    <a href="about-us">About</a>
+                    <a href="contact">Contact</a>
+                </nav>
+                <a class="nav-cta" href="https://github.com/chemplusx/MedKG" target="_blank" rel="noopener">
+                    <span class="material-icons" aria-hidden="true">code</span>
+                    GitHub
+                </a>
+            </div>
+        </header>
 
-    <div class="main-content">
-        <aside class="sidebar">
-            <div class="search-section">
-                <div class="input-field">
-                    <input type="text" id="nodeSearch" placeholder="Search nodes...">
+        <main class="page-content">
+            <section class="hero hero-compact">
+                <div class="hero-grid gap-lg">
+                    <div class="hero-content">
+                        <span class="badge-soft"><span class="material-icons" aria-hidden="true">share</span>Network explorer</span>
+                        <h1>Interact with the MedKG knowledge graph</h1>
+                        <p>Visualise multi-hop neighbourhoods, filter relationship types, and inspect node metadata in
+                            real time. Use the controls to tune expansion depth, highlight node classes, and export
+                            snapshots.</p>
+                    </div>
+                    <div class="glass-panel pad-md">
+                        <h3>Quick tips</h3>
+                        <ul class="list-soft">
+                            <li>Search for a node using the query box, then expand neighbours to explore the network.</li>
+                            <li>Use the controls panel to change neighbour limits, depth, and entity types.</li>
+                            <li>Inspect node details, publications, and evidence directly from the sidebar.</li>
+                        </ul>
+                    </div>
                 </div>
-            </div>
+            </section>
 
-            <!-- <div class="filter-section">
-                <h6>Entity Types</h6>
-                <div class="entity-filters">
-                    <label>
-                        <input type="checkbox" class="filled-in" checked="checked" value="drug" />
-                        <span>Drugs</span>
-                    </label><br>
-                    <label>
-                        <input type="checkbox" class="filled-in" checked="checked" value="protein" />
-                        <span>Proteins</span>
-                    </label><br>
-                    <label>
-                        <input type="checkbox" class="filled-in" checked="checked" value="disease" />
-                        <span>Diseases</span>
-                    </label><br>
-                    <label>
-                        <input type="checkbox" class="filled-in" checked="checked" value="gene" />
-                        <span>Genes</span>
-                    </label>
+            <section class="page-section tight-top">
+                <div class="page-container">
+                    <div class="network-layout">
+                        <aside class="network-sidebar glass-panel pad-md">
+                            <div class="search-section">
+                                <div class="input-field">
+                                    <input type="text" id="nodeSearch" placeholder="Search nodes...">
+                                </div>
+                            </div>
+
+                            <div id="labelFilterSection" class="label-filter-section">
+                                <div class="filter-buttons">
+                                    <h6>Entity Types</h6>
+                                    <span class="spacer"></span>
+                                    <button class="btn-small" onclick="selectAllEntities('labels')">Select All</button>
+                                    <button class="btn-small" onclick="clearAllEntities('labels')">Clear All</button>
+                                </div>
+                                <label>
+                                    <input type="checkbox" class="filled-in" checked="checked" value="drug" />
+                                    <span>Drugs</span>
+                                </label><br>
+                                <label>
+                                    <input type="checkbox" class="filled-in" checked="checked" value="protein" />
+                                    <span>Proteins</span>
+                                </label><br>
+                                <label>
+                                    <input type="checkbox" class="filled-in" checked="checked" value="disease" />
+                                    <span>Diseases</span>
+                                </label><br>
+                                <label>
+                                    <input type="checkbox" class="filled-in" checked="checked" value="gene" />
+                                    <span>Genes</span>
+                                </label>
+                            </div>
+
+                            <div id="relationFilterSection" class="relation-filter-section">
+                                <div class="filter-buttons">
+                                    <h6>Relationship Types</h6>
+                                    <span class="spacer"></span>
+                                    <button class="btn-small" onclick="selectAllEntities('relation')">Select All</button>
+                                    <button class="btn-small" onclick="clearAllEntities('relation')">Clear All</button>
+                                </div>
+                                <label>
+                                    <input type="checkbox" class="filled-in" checked="checked" value="treats" />
+                                    <span>Treats</span>
+                                </label><br>
+                                <label>
+                                    <input type="checkbox" class="filled-in" checked="checked" value="interacts" />
+                                    <span>Interacts</span>
+                                </label><br>
+                                <label>
+                                    <input type="checkbox" class="filled-in" checked="checked" value="expresses" />
+                                    <span>Expresses</span>
+                                </label>
+                            </div>
+
+                            <div class="network-stats">
+                                <div>Nodes: <span id="nodeCount">0</span></div>
+                                <div>Edges: <span id="edgeCount">0</span></div>
+                                <div>Connected Components: <span id="componentCount">0</span></div>
+                            </div>
+                        </aside>
+
+                        <div class="network-stage glass-panel pad-lg">
+                            <div class="controls-panel">
+                                <button class="btn waves-effect waves-light" onclick="graph.zoomIn()">
+                                    <i class="material-icons">zoom_in</i>
+                                </button>
+                                <button class="btn waves-effect waves-light" onclick="graph.zoomOut()">
+                                    <i class="material-icons">zoom_out</i>
+                                </button>
+                                <button class="btn waves-effect waves-light" onclick="graph.resetZoom()">
+                                    <i class="material-icons">center_focus_strong</i>
+                                </button>
+                                <button class="btn waves-effect waves-light" onclick="graph.fitToView()">
+                                    <i class="material-icons">fit_screen</i>
+                                </button>
+                            </div>
+
+                            <div id="network-container">
+                                <svg width="100%" height="100%"></svg>
+                            </div>
+
+                            <div class="custom-tooltip"></div>
+
+                            <div class="details-panel">
+                                <div class="details-header">
+                                    <h5>Node Details</h5>
+                                    <button class="btn-flat waves-effect waves-light" onclick="hideDetails()">
+                                        <i class="material-icons">close</i>
+                                    </button>
+                                </div>
+                                <div id="details-content"></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-
-            <div class="filter-section">
-                <h6>Relationship Types</h6>
-                <div class="relationship-filters">
-                    <label>
-                        <input type="checkbox" class="filled-in" checked="checked" value="inhibits" />
-                        <span>Inhibits</span>
-                    </label><br>
-                    <label>
-                        <input type="checkbox" class="filled-in" checked="checked" value="activates" />
-                        <span>Activates</span>
-                    </label><br>
-                    <label>
-                        <input type="checkbox" class="filled-in" checked="checked" value="interacts" />
-                        <span>Interacts</span>
-                    </label>
-                </div>
-            </div> -->
-
-            <div id="labelFilterSection" class="label-filter-section">
-                <div>
-                    <h6>Entity Types</h6>
-                    <button class="btn-small" onclick="selectAllEntities('labels')">Select All</button>
-                    <button class="btn-small" onclick="clearAllEntities('labels')">Clear All</button>
-                </div>
-                <label>
-                    <input type="checkbox" class="filled-in" checked="checked" value="drug" />
-                    <span>Drugs</span>
-                </label><br>
-                <label>
-                    <input type="checkbox" class="filled-in" checked="checked" value="protein" />
-                    <span>Proteins</span>
-                </label><br>
-                <label>
-                    <input type="checkbox" class="filled-in" checked="checked" value="disease" />
-                    <span>Diseases</span>
-                </label><br>
-                <label>
-                    <input type="checkbox" class="filled-in" checked="checked" value="gene" />
-                    <span>Genes</span>
-                </label>
-            </div>
-
-            <div id="relationFilterSection" class="relation-filter-section">
-                <div>
-                    <h6>Relationship Types</h6>
-                    <button class="btn-small" onclick="selectAllEntities('relation')">Select All</button>
-                    <button class="btn-small" onclick="clearAllEntities('relation')">Clear All</button>
-                </div>
-                <label>
-                    <input type="checkbox" class="filled-in" checked="checked" value="treats" />
-                    <span>Treats</span>
-                </label><br>
-                <label>
-                    <input type="checkbox" class="filled-in" checked="checked" value="interacts" />
-                    <span>Interacts</span>
-                </label><br>
-                <label>
-                    <input type="checkbox" class="filled-in" checked="checked" value="expresses" />
-                    <span>Expresses</span>
-                </label>
-            </div>
-
-            <div class="network-stats">
-                <div>Nodes: <span id="nodeCount">0</span></div>
-                <div>Edges: <span id="edgeCount">0</span></div>
-                <div>Connected Components: <span id="componentCount">0</span></div>
-            </div>
-        </aside>
-
-        <main class="visualization-container" >
-            <div class="controls-panel">
-                <button class="btn waves-effect waves-light" onclick="graph.zoomIn()">
-                    <i class="material-icons">zoom_in</i>
-                </button>
-                <button class="btn waves-effect waves-light" onclick="graph.zoomOut()">
-                    <i class="material-icons">zoom_out</i>
-                </button>
-                <button class="btn waves-effect waves-light" onclick="graph.resetZoom()">
-                    <i class="material-icons">center_focus_strong</i>
-                </button>
-                <button class="btn waves-effect waves-light" onclick="graph.fitToView()">
-                    <i class="material-icons">fit_screen</i>
-                </button>
-            </div>
-
-            <div id="network-container">
-                <svg width="100%" height="100%"></svg>
-            </div>
-
-            <div class="custom-tooltip"></div>
-
-            <div class="details-panel">
-                <div class="details-header">
-                    <h5>Node Details</h5>
-                    <button class="btn-flat waves-effect waves-light" onclick="hideDetails()">
-                        <i class="material-icons">close</i>
-                    </button>
-                </div>
-                <div id="details-content"></div>
-            </div>
+            </section>
         </main>
-    </div>
 
+        <footer class="site-footer">
+            <div class="footer-grid">
+                <div>
+                    <div class="brand">
+                        <span class="brand-pill brand-pill-sm"><span class="material-icons" aria-hidden="true">hub</span></span>
+                        <span>MedKG Platform</span>
+                    </div>
+                    <p class="footer-description">
+                        Interactive graph exploration maintained by ChemPlusX.</p>
+                </div>
+                <div>
+                    <h4>Explore</h4>
+                    <a href="home">Overview</a><br>
+                    <a href="search">Advanced search</a><br>
+                    <a href="viz">Network explorer</a>
+                </div>
+                <div>
+                    <h4>Resources</h4>
+                    <a href="docs.html">Documentation</a><br>
+                    <a href="swagger-ui.html">Swagger UI</a><br>
+                    <a href="https://github.com/chemplusx/MedKG" target="_blank" rel="noopener">GitHub repository</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                &copy; 2025 MedKG · ChemPlusX. All rights reserved.
+            </div>
+        </footer>
+    </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.19.1/cytoscape.min.js"></script>
     <script src="js/network/network_utils.js"></script>
     <script src="js/search/search_utils.js"></script>
     <!-- Include your network visualization JS here -->
