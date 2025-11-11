@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedKG – Biomedical Knowledge Graph Platform</title>
+    <meta name="description"
+        content="MedKG is a large-scale biomedical knowledge graph with ETL pipelines, graph API, and graph ML analytics for translational research.">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js" defer></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/site.css">
+</head>
+
+<body>
+    <header class="site-nav">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between py-4">
+                <a href="index.html" class="flex items-center gap-3">
+                    <span class="hero-logo">
+                        <img src="assets/images/medkg-logo.png" alt="MedKG logo">
+                    </span>
+                    <div>
+                        <p class="text-sm font-semibold text-slate-500 uppercase tracking-wide">MedKG</p>
+                        <h1 class="text-xl font-bold text-slate-900">Biomedical Knowledge Graph</h1>
+                    </div>
+                </a>
+
+                <nav class="hidden md:flex items-center gap-2 desktop-nav">
+                    <a href="index.html" class="nav-link active">Home</a>
+                    <a href="pipeline.html" class="nav-link">Pipeline</a>
+                    <a href="analysis.html" class="nav-link">Link Prediction</a>
+                    <a href="sources.html" class="nav-link">Sources</a>
+                    <a href="about.html" class="nav-link">About</a>
+                    <a href="https://github.com/chemplusx/MedKG" target="_blank" class="nav-link">
+                        <i class="fab fa-github mr-1"></i> GitHub
+                    </a>
+                </nav>
+
+                <button class="md:hidden text-slate-600" data-nav-toggle>
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+
+            <div class="mobile-nav hidden pb-4" data-mobile-nav>
+                <nav class="glass-panel rounded-2xl p-4 grid gap-2">
+                    <a href="index.html" class="nav-link active">Home</a>
+                    <a href="pipeline.html" class="nav-link">Pipeline</a>
+                    <a href="analysis.html" class="nav-link">Link Prediction</a>
+                    <a href="sources.html" class="nav-link">Sources</a>
+                    <a href="about.html" class="nav-link">About</a>
+                    <a href="https://github.com/chemplusx/MedKG" target="_blank" class="nav-link">
+                        <i class="fab fa-github mr-1"></i> GitHub
+                    </a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero -->
+        <section class="relative overflow-hidden pt-16 pb-16 px-4 sm:px-6 lg:px-8">
+            <div class="pattern-dot -top-20 -left-10 opacity-80"></div>
+            <div class="pattern-dot alt bottom-4 right-0 opacity-50"></div>
+
+            <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center relative z-10">
+                <div class="space-y-8">
+                    <div class="flex flex-wrap gap-2 items-center">
+                        <span class="badge-soft brand"><i class="fas fa-dna"></i> Biomedical graph</span>
+                        <span class="badge-soft neutral"><i class="fas fa-sync"></i> Continuous updates (CI/CU)</span>
+                        <a href="https://link.springer.com/article/10.1007/s11030-025-11164-z" target="_blank" class="badge-soft accent">
+                            <i class="fas fa-award"></i> Molecular Diversity (2025)
+                        </a>
+                        <a href="pipeline.html" class="badge-soft neutral"><i class="fas fa-route"></i> Explore the ETL pipeline</a>
+                    </div>
+                    <h2 class="section-title leading-tight">Actionable biomedical knowledge with graph-native APIs</h2>
+                    <p class="text-lg text-slate-600 leading-relaxed">
+                        MedKG unifies ontologies, clinical evidence, drug interactions, and molecular embeddings into a
+                        continuously updated Neo4j-powered knowledge graph. ETL pipelines, Go-based APIs, and graph ML workflows make
+                        it easier to build translational applications and evaluate link prediction models.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <a href="https://github.com/chemplusx/MedKG" target="_blank" class="btn-primary-gradient">
+                            <i class="fab fa-github"></i> View repository
+                        </a>
+                        <a href="https://github.com/chemplusx/MedKG/tree/master/medkg-api/static" class="btn-outline" target="_blank">
+                            <i class="fas fa-globe"></i> Web client assets
+                        </a>
+                    </div>
+
+                    <div class="grid sm:grid-cols-3 gap-4">
+                        <div class="glass-panel rounded-2xl p-5 text-center metric-card">
+                            <p class="text-3xl font-extrabold text-slate-900">35</p>
+                            <p class="text-xs uppercase tracking-wide text-slate-500">Curated data sources</p>
+                        </div>
+                        <div class="glass-panel rounded-2xl p-5 text-center metric-card">
+                            <p class="text-3xl font-extrabold text-slate-900">34</p>
+                            <p class="text-xs uppercase tracking-wide text-slate-500">Distinct node types</p>
+                        </div>
+                        <div class="glass-panel rounded-2xl p-5 text-center metric-card">
+                            <p class="text-3xl font-extrabold text-slate-900">79</p>
+                            <p class="text-xs uppercase tracking-wide text-slate-500">Relationship templates</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-panel rounded-3xl p-8 space-y-8">
+                    <div class="flex items-center gap-3">
+                        <div class="pill-icon"><i class="fas fa-network-wired text-xl"></i></div>
+                        <div>
+                            <p class="text-sm uppercase tracking-wider text-slate-500 font-semibold">Platform pillars</p>
+                            <h3 class="text-2xl font-semibold text-slate-900">From ingestion to inference</h3>
+                        </div>
+                    </div>
+                    <ul class="space-y-4 text-slate-600">
+                        <li class="flex gap-3">
+                            <span class="pill-icon w-10 h-10 text-base"><i class="fas fa-database"></i></span>
+                            <div>
+                                <p class="font-semibold text-slate-900">ETL coverage</p>
+                                <p class="text-sm">Automated pipelines for DrugBank, ChEBI, IntAct, GWAS catalog,
+                                    Human Phenotype Ontology, FoodOn, and more.</p>
+                            </div>
+                        </li>
+                        <li class="flex gap-3">
+                            <span class="pill-icon w-10 h-10 text-base"><i class="fas fa-code"></i></span>
+                            <div>
+                                <p class="font-semibold text-slate-900">Graph API</p>
+                                <p class="text-sm">Production-grade Go service with Neo4j search, path exploration, and
+                                    streaming websocket endpoints.</p>
+                            </div>
+                        </li>
+                        <li class="flex gap-3">
+                            <span class="pill-icon w-10 h-10 text-base"><i class="fas fa-project-diagram"></i></span>
+                            <div>
+                                <p class="font-semibold text-slate-900">Graph ML</p>
+                                <p class="text-sm">MedLINK link prediction models with RGCN/GAT hybrid encoders and
+                                    reproducible training artefacts.</p>
+                            </div>
+                        </li>
+                    </ul>
+                    <div class="pill-grid">
+                        <span><i class="fas fa-check-circle"></i> Neo4j + Nebula exports</span>
+                        <span><i class="fas fa-chart-line"></i> Metrics & dashboards</span>
+                        <span><i class="fas fa-layer-group"></i> Ontology harmonisation helpers</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="px-4 sm:px-6 lg:px-8 pb-8">
+            <div class="max-w-7xl mx-auto glass-panel rounded-2xl p-6 flex flex-col lg:flex-row gap-6 items-start lg:items-center">
+                <div class="flex-1 space-y-3">
+                    <span class="badge-soft brand"><i class="fas fa-award"></i> Peer-reviewed</span>
+                    <h3 class="text-2xl font-semibold text-slate-900">MedKG in Molecular Diversity</h3>
+                    <p class="text-slate-600 text-sm leading-relaxed">Kumari, Chauhan, and Garg present MedKG as a continuously updated biomedical knowledge graph in <em>Molecular Diversity</em> (Vol. 29, 2025), covering 35 data sources, 34 node types, and 79 relationship families while powering the MedLINK hybrid RGCN for disease&ndash;drug link prediction.</p>
+                    <p class="text-xs text-slate-500">Source: <a href="https://link.springer.com/article/10.1007/s11030-025-11164-z" target="_blank" class="text-teal-600 font-semibold">Molecular Diversity, Springer Nature</a></p>
+                </div>
+                <div class="flex flex-col gap-3 w-full lg:w-auto">
+                    <a href="https://link.springer.com/article/10.1007/s11030-025-11164-z" target="_blank" class="btn-primary-gradient text-sm justify-center"><i class="fas fa-external-link-alt"></i> Read the journal article</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Coverage -->
+        <section class="py-16 px-4 sm:px-6 lg:px-8 bg-white/60">
+            <div class="max-w-7xl mx-auto space-y-12">
+                <div class="text-center space-y-3">
+                    <h2 class="section-title">Unified biomedical coverage</h2>
+                    <p class="section-subtitle">
+                        MedKG combines curated ontologies, experimental results, drug–disease evidence, and molecular
+                        embeddings to serve translational and discovery workflows.
+                    </p>
+                </div>
+
+                <div class="grid lg:grid-cols-3 gap-6">
+                    <div class="glass-panel rounded-3xl p-8 metric-card flex flex-col gap-5">
+                        <div class="pill-icon w-12 h-12 text-lg"><i class="fas fa-sitemap"></i></div>
+                        <h3 class="text-xl font-semibold text-slate-900">Ontology alignment</h3>
+                        <p class="text-slate-600 text-sm">
+                            Harmonised identifiers across Human Phenotype, Disease Ontology, Uberon, FoodOn, ChEBI, and
+                            OpenTargets with consistent synonyms and cross-references.
+                        </p>
+                        <div class="pill-grid">
+                            <span><i class="fas fa-link"></i> Synonym merging</span>
+                            <span><i class="fas fa-arrows-rotate"></i> ID normalisation</span>
+                        </div>
+                    </div>
+                    <div class="glass-panel rounded-3xl p-8 metric-card flex flex-col gap-5">
+                        <div class="pill-icon w-12 h-12 text-lg"><i class="fas fa-vials"></i></div>
+                        <h3 class="text-xl font-semibold text-slate-900">Clinical evidence</h3>
+                        <p class="text-slate-600 text-sm">
+                            Integrates biomarkers, clinical trials, target–disease associations, and curated drug
+                            indications to support hypothesis generation.
+                        </p>
+                        <div class="pill-grid">
+                            <span><i class="fas fa-prescription-bottle-medical"></i> DrugBank & TTD</span>
+                            <span><i class="fas fa-heartbeat"></i> Biomarker panels</span>
+                        </div>
+                    </div>
+                    <div class="glass-panel rounded-3xl p-8 metric-card flex flex-col gap-5">
+                        <div class="pill-icon w-12 h-12 text-lg"><i class="fas fa-brain"></i></div>
+                        <h3 class="text-xl font-semibold text-slate-900">Molecular ML</h3>
+                        <p class="text-slate-600 text-sm">
+                            Molecular embeddings, graph feature stores, and hybrid GNN link prediction models accelerate
+                            discovery use-cases.
+                        </p>
+                        <div class="pill-grid">
+                            <span><i class="fas fa-cubes"></i> Mol2Vec embeddings</span>
+                            <span><i class="fas fa-chart-area"></i> RGCN + GAT ensemble</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quick actions -->
+        <section class="py-16 px-4 sm:px-6 lg:px-8">
+            <div class="max-w-7xl mx-auto space-y-10">
+                <div class="flex flex-wrap gap-3 items-center justify-between">
+                    <div>
+                        <h2 class="text-3xl font-bold text-slate-900">Start exploring MedKG</h2>
+                        <p class="text-slate-600 text-sm">Pick a workflow to dive straight into ingestion, exploration,
+                            or analytics.</p>
+                    </div>
+                    <a href="pipeline.html" class="btn-outline text-sm"><i class="fas fa-arrow-right"></i> View full
+                        pipeline</a>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="glass-panel rounded-2xl p-6 flex flex-col gap-4">
+                        <div class="pill-icon w-12 h-12 text-lg"><i class="fas fa-plug"></i></div>
+                        <h3 class="text-lg font-semibold text-slate-900">Ingest data sources</h3>
+                        <p class="text-sm text-slate-600 flex-1">Run ETL jobs per domain folder, backed by shared helpers
+                            and environment-controlled data paths.</p>
+                        <pre class="code-block"><code>export MEDKG_DATA=/path/to/data
+python drugbank_data/etl_drugbank.py</code></pre>
+                    </div>
+                    <div class="glass-panel rounded-2xl p-6 flex flex-col gap-4">
+                        <div class="pill-icon w-12 h-12 text-lg"><i class="fas fa-server"></i></div>
+                        <h3 class="text-lg font-semibold text-slate-900">Launch the Go API</h3>
+                        <p class="text-sm text-slate-600 flex-1">Serve graph search, open API documentation, and network
+                            visualisation from the `medkg-api` module.</p>
+                        <pre class="code-block"><code>cd medkg-api
+go run main.go</code></pre>
+                    </div>
+                    <div class="glass-panel rounded-2xl p-6 flex flex-col gap-4">
+                        <div class="pill-icon w-12 h-12 text-lg"><i class="fas fa-project-diagram"></i></div>
+                        <h3 class="text-lg font-semibold text-slate-900">Train MedLINK models</h3>
+                        <p class="text-sm text-slate-600 flex-1">Reproduce link prediction benchmarks with tracked AUC
+                            and MRR metrics.</p>
+                        <pre class="code-block"><code>cd medlink
+python link_prediction.py</code></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Featured initiatives -->
+        <section class="py-16 px-4 sm:px-6 lg:px-8 bg-white/60">
+            <div class="max-w-7xl mx-auto space-y-8">
+                <div class="text-center space-y-3">
+                    <h2 class="section-title">Featured initiatives</h2>
+                    <p class="section-subtitle">Open-source modules that extend MedKG into production APIs, integration
+                        pipelines, and graph machine learning.</p>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="glass-panel rounded-3xl p-8 space-y-4 highlight-card">
+                        <span class="chip"><i class="fas fa-plug"></i> medkg-api</span>
+                        <h3 class="text-xl font-semibold text-slate-900">Graph-first Go application server</h3>
+                        <p class="text-slate-600 text-sm">Provides Swagger/OpenAPI documentation, full-text search, path
+                            exploration, websocket streaming, and responsive UI templates for graph exploration.</p>
+                        <ul class="space-y-2 text-sm text-slate-600">
+                            <li><i class="fas fa-check text-emerald-500 mr-2"></i> Neo4j driver with context-aware
+                                sessions</li>
+                            <li><i class="fas fa-check text-emerald-500 mr-2"></i> Search, autocompletion, and network
+                                graph endpoints</li>
+                            <li><i class="fas fa-check text-emerald-500 mr-2"></i> Deployed HTML templates for home,
+                                docs, and search</li>
+                        </ul>
+                        <a href="pipeline.html#graph-api" class="text-sm font-semibold text-teal-600 inline-flex items-center gap-2">
+                            Graph API details <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+
+                    <div class="glass-panel rounded-3xl p-8 space-y-4 highlight-card">
+                        <span class="chip accent"><i class="fas fa-chart-line"></i> MedLINK</span>
+                        <h3 class="text-xl font-semibold text-slate-900">Hybrid GNN link prediction</h3>
+                        <p class="text-slate-600 text-sm">Trains a hybrid encoder (GCN, GAT, RGCN) to recover
+                            drug–disease relationships with reproducible metrics and W&B logging hooks.</p>
+                        <ul class="space-y-2 text-sm text-slate-600">
+                            <li><i class="fas fa-check text-amber-500 mr-2"></i> 51K nodes, 46K curated edges</li>
+                            <li><i class="fas fa-check text-amber-500 mr-2"></i> Test AUC up to 0.987 on Med-LINK</li>
+                            <li><i class="fas fa-check text-amber-500 mr-2"></i> CSV exports for Nebula & Neo4j loaders</li>
+                        </ul>
+                        <a href="analysis.html" class="text-sm font-semibold text-amber-600 inline-flex items-center gap-2">
+                            Review benchmarking <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="glass-panel rounded-3xl p-8 grid md:grid-cols-3 gap-6">
+                    <div>
+                        <p class="text-sm uppercase tracking-widest font-semibold text-slate-500">PrimeKG connectors</p>
+                        <p class="text-slate-600 text-sm">Automated transformations for Nebula Graph and Neo4j, allowing
+                            ingestion of open PrimeKG datasets.</p>
+                    </div>
+                    <div>
+                        <p class="text-sm uppercase tracking-widest font-semibold text-slate-500">Embedding utilities</p>
+                        <p class="text-slate-600 text-sm">`embed/` module generates Mol2Vec embeddings and prepares
+                            features for graph ML workloads.</p>
+                    </div>
+                    <div>
+                        <p class="text-sm uppercase tracking-widest font-semibold text-slate-500">Visual analytics</p>
+                        <p class="text-slate-600 text-sm">`visualize/` scripts and metrics dashboards track training
+                            performance, loss curves, and evaluation statistics.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Call to action -->
+        <section class="px-4 sm:px-6 lg:px-8 pb-20">
+            <div class="max-w-6xl mx-auto cta-section p-12 md:p-16">
+                <div class="relative z-10 grid md:grid-cols-2 gap-10 items-center">
+                    <div class="space-y-4">
+                        <p class="badge-soft brand bg-white/10 text-white border border-white/30 uppercase text-xs tracking-widest">
+                            Collaborate</p>
+                        <h2 class="text-3xl md:text-4xl font-bold">Bring MedKG into your research stack</h2>
+                        <p class="text-base text-white/85">Clone the repository, deploy the Go API, or plug the graph
+                            exports into your analytics workflow. MedKG was built to accelerate data integration for
+                            biomedical AI projects.</p>
+                        <div class="flex flex-wrap gap-3">
+                            <a href="https://github.com/chemplusx/MedKG" target="_blank"
+                                class="bg-white text-teal-700 px-6 py-3 rounded-xl font-semibold flex items-center gap-2 shadow-lg">
+                                <i class="fab fa-github"></i> GitHub repository
+                            </a>
+                            <a href="pipeline.html" class="border border-white/50 px-6 py-3 rounded-xl font-semibold flex items-center gap-2 text-white hover:bg-white/10">
+                                <i class="fas fa-layer-group"></i> Review architecture
+                            </a>
+                        </div>
+                    </div>
+                    <div class="bg-white/15 rounded-3xl p-8 text-slate-700 space-y-4">
+                        <h3 class="text-2xl font-semibold text-white mb-2">Share your builds</h3>
+                        <p class="text-sm text-white/80">
+                            We welcome pull requests that add new ontologies, improve Neo4j queries, or extend graph ML
+                            notebooks. Reach out if you would like a walkthrough or dataset alignment help.
+                        </p>
+                        <ul class="space-y-3 text-white/85 text-sm">
+                            <li><i class="fas fa-circle text-xs text-emerald-300 mr-2"></i> Docker- and Neo4j-ready
+                                exports</li>
+                            <li><i class="fas fa-circle text-xs text-emerald-300 mr-2"></i> Supports llama.cpp for
+                                offline inference experiments</li>
+                            <li><i class="fas fa-circle text-xs text-emerald-300 mr-2"></i> Built with reproducible
+                                scripts and tracked metrics</li>
+                        </ul>
+                        <p class="text-xs text-white/70 mt-6">Want to highlight your deployment? Open an issue or share
+                            a case study in the repository.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto grid lg:grid-cols-4 gap-8">
+            <div class="lg:col-span-2 space-y-4">
+                <div class="flex items-center gap-3">
+                    <span class="brand-pill"><i class="fas fa-dna text-lg"></i></span>
+                    <div>
+                        <p class="text-sm uppercase tracking-wide text-slate-200/80">MedKG Platform</p>
+                        <h3 class="text-lg font-semibold text-white">Biomedical knowledge for translational AI</h3>
+                    </div>
+                </div>
+                <p class="text-sm text-slate-200/80 leading-relaxed">
+                    The MedKG repository packages ETL pipelines, graph services, and graph machine learning to make
+                    biomedical data integration faster and more reproducible.
+                </p>
+                <a href="https://github.com/chemplusx/MedKG" target="_blank"
+                    class="inline-flex items-center gap-2 text-sm font-semibold">
+                    <i class="fab fa-github text-lg"></i> GitHub repository
+                </a>
+            </div>
+            <div>
+                <h4 class="font-semibold text-white mb-3">Explore</h4>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="pipeline.html">Graph pipeline</a></li>
+                    <li><a href="analysis.html">Link prediction</a></li>
+                    <li><a href="sources.html">Knowledge sources</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-semibold text-white mb-3">Resources</h4>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="https://github.com/chemplusx/MedKG/tree/master/medkg-api/static" target="_blank">Demo interface assets</a></li>
+                    <li><a href="https://github.com/chemplusx/MedKG/issues" target="_blank">Open issues</a></li>
+                    <li><a href="about.html">Team & acknowledgements</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="border-t border-white/10 mt-10 pt-6 text-center text-xs text-slate-200/60">
+            &copy; 2025 MedKG. Open research infrastructure for biomedical knowledge graphs.
+        </div>
+    </footer>
+
+    <script src="assets/js/site.js"></script>
+</body>
+
+</html>
+
+

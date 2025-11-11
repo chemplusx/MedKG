@@ -12,12 +12,14 @@ This repository contains scripts for ETL (Extract, Transform, Load) pipelines de
 
 1. [Data Sources](#data-sources)
 2. [Data Structure](#data-structure)
-3. [Requirements](#requirements)
-4. [Installation](#installation)
-5. [Usage](#usage)
-6. [Configuration](#configuration)
-7. [Contributing](#contributing)
-8. [License](#license)
+3. [Publication](#publication)
+4. [Requirements](#requirements)
+5. [Installation](#installation)
+6. [Usage](#usage)
+7. [Configuration](#configuration)
+8. [Contributing](#contributing)
+9. [Documentation Site & GitHub Pages](#documentation-site--github-pages)
+10. [License](#license)
 
 ## Data Sources
 
@@ -98,6 +100,12 @@ Each folder contains all necessary datafiles and ETL scripts for its respective 
 - Each ETL script may require specific configuration. Refer to the comments within each script for details.
 - Modify the scripts as needed to match your database configuration and schema requirements.
 
+## Publication
+
+MedKG is peer-reviewed and published as:
+
+> Kumari, M., Chauhan, R., & Garg, P. (2025). MedKG: enabling drug discovery through a unified biomedical knowledge graph. *Molecular Diversity*, 29, 3465–3483. [https://doi.org/10.1007/s11030-025-11164-z](https://doi.org/10.1007/s11030-025-11164-z)
+
 ## Contributing
 
 We welcome contributions to improve the ETL pipelines or add support for new data sources. To contribute:
@@ -109,6 +117,39 @@ We welcome contributions to improve the ETL pipelines or add support for new dat
 5. Create a new Pull Request
 
 Please ensure your code adheres to our coding standards and includes appropriate documentation.
+
+## Documentation Site & GitHub Pages
+
+MedKG ships a polished documentation site inside the `docs/` directory (mirroring the BioMed-KAI showcase). You can preview it locally or publish it through GitHub Pages.
+
+### Local preview
+
+```bash
+# From the repository root
+python -m http.server --directory docs 4100
+# or
+npx serve docs
+```
+
+Then open `http://localhost:4100/index.html` in your browser.
+
+### Publish with GitHub Pages
+
+1. Commit and push the repository to GitHub.
+2. Navigate to **Settings → Pages**.
+3. Set **Source** to "Deploy from a branch".
+4. Choose your default branch (e.g., `main`) and set the folder to `/docs`.
+5. Save—GitHub Pages will deploy to `https://<username>.github.io/MedKG/`.
+
+The documentation includes:
+
+- `index.html`: overview, stats, and quick-start workflows.
+- `pipeline.html`: ETL orchestration, API deployment notes, and operations tips.
+- `analysis.html`: MedLINK dataset snapshots, metrics, and training guidance.
+- `sources.html`: upstream dataset catalog.
+- `about.html`: project background, team, and collaboration guidelines.
+
+Static assets (CSS, JS, figures, branding) are located under `docs/assets/`. Update these when modifying styling or charts.
 
 ## License
 

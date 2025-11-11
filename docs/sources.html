@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sources – MedKG Knowledge Assets</title>
+    <meta name="description"
+        content="Catalog of biomedical data sources, ontologies, and connectors that populate the MedKG knowledge graph.">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js" defer></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/site.css">
+</head>
+
+<body>
+    <header class="site-nav">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between py-4">
+                <a href="index.html" class="flex items-center gap-3">
+                    <span class="hero-logo">
+                        <img src="assets/images/medkg-logo.png" alt="MedKG logo">
+                    </span>
+                    <div>
+                        <p class="text-sm font-semibold text-slate-500 uppercase tracking-wide">MedKG</p>
+                        <h1 class="text-xl font-bold text-slate-900">Knowledge Sources</h1>
+                    </div>
+                </a>
+
+                <nav class="hidden md:flex items-center gap-2 desktop-nav">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="pipeline.html" class="nav-link">Pipeline</a>
+                    <a href="analysis.html" class="nav-link">Link Prediction</a>
+                    <a href="sources.html" class="nav-link active">Sources</a>
+                    <a href="about.html" class="nav-link">About</a>
+                    <a href="https://github.com/chemplusx/MedKG" target="_blank" class="nav-link">
+                        <i class="fab fa-github mr-1"></i> GitHub
+                    </a>
+                </nav>
+
+                <button class="md:hidden text-slate-600" data-nav-toggle>
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+
+            <div class="mobile-nav hidden pb-4" data-mobile-nav>
+                <nav class="glass-panel rounded-2xl p-4 grid gap-2">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="pipeline.html" class="nav-link">Pipeline</a>
+                    <a href="analysis.html" class="nav-link">Link Prediction</a>
+                    <a href="sources.html" class="nav-link active">Sources</a>
+                    <a href="about.html" class="nav-link">About</a>
+                    <a href="https://github.com/chemplusx/MedKG" target="_blank" class="nav-link">
+                        <i class="fab fa-github mr-1"></i> GitHub
+                    </a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero -->
+        <section class="relative overflow-hidden pt-16 pb-16 px-4 sm:px-6 lg:px-8">
+            <div class="pattern-dot -top-12 left-16 opacity-70"></div>
+            <div class="pattern-dot alt bottom-0 right-0 opacity-50"></div>
+
+            <div class="max-w-7xl mx-auto relative z-10 space-y-10">
+                <div class="flex flex-wrap items-center gap-3">
+                    <span class="badge-soft brand"><i class="fas fa-database"></i> Curated datasets</span>
+                    <span class="badge-soft neutral"><i class="fas fa-book-open"></i> Ontologies</span>
+                    <a href="#catalog" class="badge-soft accent">View catalog</a>
+                </div>
+
+                <div class="glass-panel rounded-3xl p-8 space-y-6">
+                    <h2 class="section-title leading-tight">Integrated biomedical knowledge sources</h2>
+                    <p class="text-lg text-slate-600 leading-relaxed">
+                        MedKG harmonises clinical datasets, ontologies, and molecular knowledge into a single graph. Published findings in <em>Molecular Diversity</em> report a total of 35 curated sources spanning 34 node types and 79 edge families, ensuring drug discovery workloads have comprehensive coverage.
+                    </p>
+                    <div class="pill-grid">
+                        <span><i class="fas fa-certificate"></i> Respect upstream licences</span>
+                        <span><i class="fas fa-link"></i> Maintain provenance metadata</span>
+                        <span><i class="fas fa-sync-alt"></i> Refresh scripts as sources update</span>
+                    </div>
+                    <div class="glass-panel rounded-2xl p-4 sm:flex sm:items-center sm:justify-between sm:gap-6">
+                        <div class="space-y-1">
+                            <span class="badge-soft brand"><i class="fas fa-award"></i> Peer-reviewed</span>
+                            <p class="text-sm text-slate-600">Kumari, Chauhan, and Garg highlight the 35-source integration in <em>Molecular Diversity</em>, validating MedKG&apos;s breadth for precision medicine.</p>
+                        </div>
+                        <div class="flex gap-2 mt-3 sm:mt-0">
+                            <a href="https://link.springer.com/article/10.1007/s11030-025-11164-z" target="_blank" class="btn-outline text-xs"><i class="fas fa-external-link-alt"></i> Journal page</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Catalog -->
+        <section id="catalog" class="py-16 px-4 sm:px-6 lg:px-8 bg-white/70">
+            <div class="max-w-7xl mx-auto space-y-8">
+                <div class="text-center space-y-3">
+                    <h2 class="section-title">Source catalog</h2>
+                    <p class="section-subtitle">Descriptions are derived from ETL scripts and data files checked into the repository. The full knowledge graph comprises 35 sources as detailed in <a href="https://link.springer.com/article/10.1007/s11030-025-11164-z" target="_blank" class="text-teal-600 font-semibold">Kumari et&nbsp;al., 2025</a>.</p>
+                </div>
+
+                <div class="table-card glass-panel">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Source</th>
+                                <th>Folder</th>
+                                <th>What it adds</th>
+                                <th>Key entities & relations</th>
+                                <th>Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>DrugBank</strong></td>
+                                <td><code>drugbank_data/</code></td>
+                                <td>Drug metadata, pharmacology, transporter/enzyme interactions, indications and contraindications.</td>
+                                <td>Nodes: `Drug`, `Protein`<br>Relations: `IS_AN_INDICATION_FOR`, `IS_A_CONTRAINDICATION_FOR`, `TARGETS`, `HAS_TRANSPORTER`, `HAS_ENZYME`</td>
+                                <td>Requires DrugBank licence; ETL scripts expect JSON exports under <code>data/</code>.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Target Discovery (TTD)</strong></td>
+                                <td><code>tdd_data/</code></td>
+                                <td>Associates drugs, targets, and diseases using curated therapeutic annotations.</td>
+                                <td>Relations: `TARGET_DISEASE`, `TDD_DRUGS`, `TDD_TARGETS`</td>
+                                <td>Scripts generate Neo4j loads via custom Cypher queries.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>ChEBI</strong></td>
+                                <td><code>chebi/</code></td>
+                                <td>Chemical entities of biological interest with roles, definitions, and hierarchies.</td>
+                                <td>Nodes: `Compound`<br>Relations: `HAS_ROLE`, `IS_A`, `HAS_PARENT_HYDRIDE`, `IS_SUBSTITUENT_GROUP_FROM`</td>
+                                <td>ETL handles XML/TSV inputs, resolves synonyms, and maintains ChEBI accessions.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Human Phenotype Ontology</strong></td>
+                                <td><code>human_phenotype/</code></td>
+                                <td>Phenotypic abnormalities with mappings to diseases and experiment factors.</td>
+                                <td>Nodes: `Phenotype`<br>Relations: `HAS_PARENT`, `MAPS_TO`</td>
+                                <td>Uses OBO/JSON exports located in <code>data/hp.json</code>.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Uber-anatomy ontology (UBERON)</strong></td>
+                                <td><code>uberon/</code></td>
+                                <td>Anatomical structures, tissues, and organ systems.</td>
+                                <td>Nodes: `Tissue`<br>Relations: `HAS_PARENT`</td>
+                                <td>Enables tissue-level stratification of biomarkers and diseases.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>FoodOn</strong></td>
+                                <td><code>foodon/</code></td>
+                                <td>Food ontology terms to link dietary factors with health outcomes.</td>
+                                <td>Nodes: `Food`<br>Relations: `IS_A`, `HAS_PARENT`</td>
+                                <td>XML samples included under <code>data/foodon-sample.xml</code>.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>GWAS Catalog</strong></td>
+                                <td><code>gwas-catalog/</code></td>
+                                <td>Genome-wide association studies connecting traits, variants, and diseases.</td>
+                                <td>Nodes: `GWAS_study`, `Experimental_factor`<br>Relations: `STUDIES_TRAIT`, `MAPS_TO`</td>
+                                <td>Integrates with experimental factors for trait-driven exploration.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Open Targets Platform</strong></td>
+                                <td><code>opentargets/</code></td>
+                                <td>Prioritised disease associations for therapeutics.</td>
+                                <td>Nodes: `Disease`<br>Relations: `ASSOCIATED_WITH`, `STUDIES_DISEASE`</td>
+                                <td>Processed via <code>process_diseases.py</code> with CSV inputs.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Biomarker collections</strong></td>
+                                <td><code>biomarkers_data/</code>, <code>metabolite_data/</code></td>
+                                <td>Links metabolites and proteins to disease biomarkers; includes COVID-19 markers.</td>
+                                <td>Relations: `IS_A_BIOMARKER_OF`, `METABOLITE_ASSOCIATED_WITH`</td>
+                                <td>Scripts rely on `covid_markers.txt` and curated CSVs.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>IntAct</strong></td>
+                                <td><code>intact/</code></td>
+                                <td>Protein-protein interactions with curated vs compiled distinction.</td>
+                                <td>Relations: `CURATED_INTERACTS_WITH`, `COMPILED_INTERACTS_WITH`, `ACTS_ON`</td>
+                                <td>Supports exploration of interaction evidence strength.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Clinical Trials (completed + failed)</strong></td>
+                                <td><code>data/ClinicalTrials_*.csv</code></td>
+                                <td>Outcomes and metadata for Phase I–III trials to augment indication evidence.</td>
+                                <td>Available for analytics or to extend ETL scripts.</td>
+                                <td>CSV-based; not yet fully integrated into Neo4j by default scripts.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Mol2Vec embeddings</strong></td>
+                                <td><code>embed/</code></td>
+                                <td>Generates molecular embeddings (e.g., 300-dim vectors) for feature enrichment.</td>
+                                <td>Outputs pickled models under <code>data/model_300dim.pkl</code>.</td>
+                                <td>Useful for graph ML tasks or bag-of-features creation.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>PrimeKG connectors</strong></td>
+                                <td><code>prime_kg/</code></td>
+                                <td>Conversion utilities to ingest PrimeKG datasets into Neo4j or Nebula Graph.</td>
+                                <td>CSV outputs with ID remapping helpers.</td>
+                                <td>Supports custom expansions beyond default MedKG scope.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Visual analytics scripts</strong></td>
+                                <td><code>visualize/</code></td>
+                                <td>Plotting utilities for training/validation metrics.</td>
+                                <td>Produces figures under <code>metrics/</code>.</td>
+                                <td>Use alongside <code>metrics/*.csv</code> for dashboard generation.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Guidance -->
+        <section class="py-16 px-4 sm:px-6 lg:px-8">
+            <div class="max-w-7xl mx-auto glass-panel rounded-3xl p-8 space-y-6">
+                <h2 class="text-2xl font-bold text-slate-900">Stewardship guidelines</h2>
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="glass-panel rounded-2xl p-6 space-y-3">
+                        <div class="pill-icon w-12 h-12 text-lg"><i class="fas fa-id-card"></i></div>
+                        <h3 class="text-lg font-semibold text-slate-900">Licensing</h3>
+                        <p class="text-sm text-slate-600">Respect licensing terms for proprietary datasets (DrugBank, TTD). Scripts assume you have legal access to required exports.</p>
+                    </div>
+                    <div class="glass-panel rounded-2xl p-6 space-y-3">
+                        <div class="pill-icon w-12 h-12 text-lg"><i class="fas fa-map-marker-alt"></i></div>
+                        <h3 class="text-lg font-semibold text-slate-900">Provenance</h3>
+                        <p class="text-sm text-slate-600">Source metadata (IDs, definitions, citations) is preserved inside node properties to retain attribution.</p>
+                    </div>
+                    <div class="glass-panel rounded-2xl p-6 space-y-3">
+                        <div class="pill-icon w-12 h-12 text-lg"><i class="fas fa-sync"></i></div>
+                        <h3 class="text-lg font-semibold text-slate-900">Refresh cadence</h3>
+                        <p class="text-sm text-slate-600">Schedule ETL refreshes when upstream datasets release new versions. Many scripts can be adapted for incremental updates.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto grid lg:grid-cols-4 gap-8">
+            <div class="lg:col-span-2 space-y-4">
+                <div class="flex items-center gap-3">
+                    <span class="brand-pill"><i class="fas fa-database text-lg"></i></span>
+                    <div>
+                        <p class="text-sm uppercase tracking-wide text-slate-200/80">MedKG Sources</p>
+                        <h3 class="text-lg font-semibold text-white">Curated biomedical knowledge assets</h3>
+                    </div>
+                </div>
+                <p class="text-sm text-slate-200/80 leading-relaxed">
+                    MedKG integrates ontologies, curated datasets, and research exports. Contributions are welcome—submit pull requests with new ETL modules or fixes.
+                </p>
+                <a href="https://github.com/chemplusx/MedKG" target="_blank" class="inline-flex items-center gap-2 text-sm font-semibold">
+                    <i class="fab fa-github text-lg"></i> GitHub repository
+                </a>
+            </div>
+            <div>
+                <h4 class="font-semibold text-white mb-3">Sections</h4>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="#catalog">Source catalog</a></li>
+                    <li><a href="#catalog">Ontology integrations</a></li>
+                    <li><a href="#catalog">Clinical datasets</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-semibold text-white mb-3">Next steps</h4>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="pipeline.html">See ETL pipeline</a></li>
+                    <li><a href="analysis.html">Review MedLINK metrics</a></li>
+                    <li><a href="about.html">Project credits</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="border-t border-white/10 mt-10 pt-6 text-center text-xs text-slate-200/60">
+            &copy; 2025 MedKG. Open research infrastructure for biomedical knowledge graphs.
+        </div>
+    </footer>
+
+    <script src="assets/js/site.js"></script>
+</body>
+
+</html>
+
+

@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About – MedKG Project</title>
+    <meta name="description"
+        content="Background, team, and acknowledgements for the MedKG biomedical knowledge graph project.">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js" defer></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/site.css">
+</head>
+
+<body>
+    <header class="site-nav">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between py-4">
+                <a href="index.html" class="flex items-center gap-3">
+                    <span class="hero-logo">
+                        <img src="assets/images/medkg-logo.png" alt="MedKG logo">
+                    </span>
+                    <div>
+                        <p class="text-sm font-semibold text-slate-500 uppercase tracking-wide">MedKG</p>
+                        <h1 class="text-xl font-bold text-slate-900">Project & Team</h1>
+                    </div>
+                </a>
+
+                <nav class="hidden md:flex items-center gap-2 desktop-nav">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="pipeline.html" class="nav-link">Pipeline</a>
+                    <a href="analysis.html" class="nav-link">Link Prediction</a>
+                    <a href="sources.html" class="nav-link">Sources</a>
+                    <a href="about.html" class="nav-link active">About</a>
+                    <a href="https://github.com/chemplusx/MedKG" target="_blank" class="nav-link">
+                        <i class="fab fa-github mr-1"></i> GitHub
+                    </a>
+                </nav>
+
+                <button class="md:hidden text-slate-600" data-nav-toggle>
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+
+            <div class="mobile-nav hidden pb-4" data-mobile-nav>
+                <nav class="glass-panel rounded-2xl p-4 grid gap-2">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="pipeline.html" class="nav-link">Pipeline</a>
+                    <a href="analysis.html" class="nav-link">Link Prediction</a>
+                    <a href="sources.html" class="nav-link">Sources</a>
+                    <a href="about.html" class="nav-link active">About</a>
+                    <a href="https://github.com/chemplusx/MedKG" target="_blank" class="nav-link">
+                        <i class="fab fa-github mr-1"></i> GitHub
+                    </a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero -->
+        <section class="relative overflow-hidden pt-16 pb-16 px-4 sm:px-6 lg:px-8">
+            <div class="pattern-dot -top-12 right-12 opacity-70"></div>
+            <div class="pattern-dot alt bottom-0 left-0 opacity-45"></div>
+
+            <div class="max-w-6xl mx-auto glass-panel rounded-3xl p-10 space-y-6 relative z-10">
+                <div class="flex flex-wrap gap-2">
+                    <span class="badge-soft brand"><i class="fas fa-dna"></i> Translational informatics</span>
+                    <a href="https://link.springer.com/article/10.1007/s11030-025-11164-z" target="_blank" class="badge-soft accent"><i class="fas fa-award"></i> Molecular Diversity (2025)</a>
+                </div>
+                <h2 class="section-title leading-tight">Advancing biomedical research with graph-native infrastructure</h2>
+                <p class="text-lg text-slate-600 leading-relaxed">
+                    MedKG is an applied research project led by the Department of Pharmacoinformatics at the National Institute
+                    of Pharmaceutical Education and Research (NIPER), S.A.S. Nagar. The initiative builds open tooling that lowers
+                    the barrier to constructing biomedical knowledge graphs, running graph machine learning, and delivering
+                    trustworthy analytics through modern APIs. The peer-reviewed study in <em>Molecular Diversity</em> details MedKG&apos;s 35-source integration, CI/CU pipeline, and MedLINK benchmarks.
+                </p>
+                <div class="pill-grid">
+                    <span><i class="fas fa-dna"></i> Graph-powered pharmacology</span>
+                    <span><i class="fas fa-flask"></i> Evidence-backed ETL workflows</span>
+                    <span><i class="fas fa-brain"></i> Applied graph learning</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="px-4 sm:px-6 lg:px-8 pb-10">
+            <div class="max-w-6xl mx-auto glass-panel rounded-3xl p-8 flex flex-col lg:flex-row gap-6 items-start lg:items-center">
+                <div class="flex-1 space-y-3">
+                    <span class="badge-soft brand"><i class="fas fa-award"></i> Publication</span>
+                    <h3 class="text-2xl font-semibold text-slate-900">MedKG in <em>Molecular Diversity</em></h3>
+                    <p class="text-sm text-slate-600 leading-relaxed">The article “MedKG: enabling drug discovery through a unified biomedical knowledge graph” (Vol. 29, 2025) documents the CI/CU workflow, 35-source integration, and MedLINK link prediction results.</p>
+                    <p class="text-xs text-slate-500">Authors: Madhavi Kumari, Rohit Chauhan, and Prabha Garg</p>
+                </div>
+                <div class="flex flex-col gap-2 w-full lg:w-auto">
+                    <a href="https://link.springer.com/article/10.1007/s11030-025-11164-z" target="_blank" class="btn-primary-gradient text-sm justify-center"><i class="fas fa-external-link-alt"></i> View on Springer</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Timeline -->
+        <section class="py-16 px-4 sm:px-6 lg:px-8 bg-white/70">
+            <div class="max-w-6xl mx-auto space-y-10">
+                <div class="text-center space-y-3">
+                    <h2 class="section-title">Project milestones</h2>
+                    <p class="section-subtitle">Adapted from the public project timeline (2023–2024).</p>
+                </div>
+
+                <div class="glass-panel rounded-3xl p-8">
+                    <div class="grid md:grid-cols-5 gap-6 text-center">
+                        <div class="space-y-2">
+                            <div class="timeline-dot mx-auto"></div>
+                            <p class="font-semibold text-slate-900">Jun 2023</p>
+                            <p class="text-sm text-slate-600">Initial research & ontology survey</p>
+                        </div>
+                        <div class="space-y-2">
+                            <div class="timeline-dot mx-auto"></div>
+                            <p class="font-semibold text-slate-900">Dec 2023</p>
+                            <p class="text-sm text-slate-600">Core MedKG schema & data model</p>
+                        </div>
+                        <div class="space-y-2">
+                            <div class="timeline-dot mx-auto"></div>
+                            <p class="font-semibold text-slate-900">Feb 2024</p>
+                            <p class="text-sm text-slate-600">Graph ML prototypes (MedLINK)</p>
+                        </div>
+                        <div class="space-y-2">
+                            <div class="timeline-dot mx-auto"></div>
+                            <p class="font-semibold text-slate-900">Jun 2024</p>
+                            <p class="text-sm text-slate-600">Go-based API + web client launch</p>
+                        </div>
+                        <div class="space-y-2">
+                            <div class="timeline-dot mx-auto"></div>
+                            <p class="font-semibold text-slate-900">Aug 2024</p>
+                            <p class="text-sm text-slate-600">Expanded data coverage & integrations</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Team -->
+        <section class="py-16 px-4 sm:px-6 lg:px-8">
+            <div class="max-w-6xl mx-auto space-y-10">
+                <div class="text-center space-y-3">
+                    <h2 class="section-title">Core team</h2>
+                    <p class="section-subtitle">Project leadership and day-to-day research contributors.</p>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="glass-panel rounded-3xl p-8 flex items-center gap-6">
+                        <div class="team-photo" style="background-image: url('assets/images/scholar_mk.jpg');"></div>
+                        <div>
+                            <h3 class="text-xl font-semibold text-slate-900">Madhavi Kumari</h3>
+                            <p class="text-sm text-slate-600">Research Scholar, Department of Pharmacoinformatics (NIPER SAS Nagar)</p>
+                            <p class="text-sm text-slate-500 mt-3">Leads daily development across ETL modules, MedLINK graph learning, and the public-facing documentation.</p>
+                        </div>
+                    </div>
+                    <div class="glass-panel rounded-3xl p-8 flex items-center gap-6">
+                        <div class="team-photo" style="background-image: url('assets/images/prof_pg.jpg');"></div>
+                        <div>
+                            <h3 class="text-xl font-semibold text-slate-900">Prof. Prabha Garg</h3>
+                            <p class="text-sm text-slate-600">Project Guide & Faculty, Department of Pharmacoinformatics (NIPER SAS Nagar)</p>
+                            <p class="text-sm text-slate-500 mt-3">Provides strategic direction, supervises integration with institutional research, and ensures scientific rigour.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-panel rounded-3xl p-8 space-y-4">
+                    <h3 class="text-lg font-semibold text-slate-900">Community stewardship</h3>
+                    <p class="text-sm text-slate-600">The repository is open for collaboration. Contributions spanning new ontologies, improved Cypher queries, performance tuning, or analytical notebooks are welcome via pull requests. Please reference relevant datasets and include reproducible scripts with each submission.</p>
+                    <a href="https://github.com/chemplusx/MedKG/issues" target="_blank" class="btn-outline text-sm">
+                        <i class="fas fa-handshake"></i> Start a conversation
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Mission blocks -->
+        <section class="py-16 px-4 sm:px-6 lg:px-8 bg-white/70">
+            <div class="max-w-6xl mx-auto grid md:grid-cols-3 gap-6">
+                <div class="glass-panel rounded-3xl p-8 space-y-3">
+                    <div class="pill-icon w-12 h-12 text-lg"><i class="fas fa-seedling"></i></div>
+                    <h3 class="text-lg font-semibold text-slate-900">Open research</h3>
+                    <p class="text-sm text-slate-600">The project emphasises transparent pipelines, open metrics, and scripts that can be reproduced on academic or industrial infrastructure.</p>
+                </div>
+                <div class="glass-panel rounded-3xl p-8 space-y-3">
+                    <div class="pill-icon w-12 h-12 text-lg"><i class="fas fa-users"></i></div>
+                    <h3 class="text-lg font-semibold text-slate-900">Collaborative ecosystem</h3>
+                    <p class="text-sm text-slate-600">MedKG is designed for integration with clinical partners, academic labs, and AI research groups exploring multimodal reasoning.</p>
+                </div>
+                <div class="glass-panel rounded-3xl p-8 space-y-3">
+                    <div class="pill-icon w-12 h-12 text-lg"><i class="fas fa-shield-alt"></i></div>
+                    <h3 class="text-lg font-semibold text-slate-900">Responsible usage</h3>
+                    <p class="text-sm text-slate-600">Respect data licences, maintain provenance, and communicate limitations when deploying graph-derived insights.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Acknowledgements -->
+        <section class="py-16 px-4 sm:px-6 lg:px-8">
+            <div class="max-w-6xl mx-auto glass-panel rounded-3xl p-8 space-y-6">
+                <h2 class="text-2xl font-bold text-slate-900">Acknowledgements & license</h2>
+                <ul class="space-y-3 text-slate-600">
+                    <li><i class="fas fa-university text-emerald-500 mr-2"></i> Department of Pharmacoinformatics, NIPER SAS Nagar for institutional support.</li>
+                    <li><i class="fas fa-project-diagram text-emerald-500 mr-2"></i> Neo4j, PyTorch Geometric, and the broader open-source community for the foundational tooling.</li>
+                    <li><i class="fas fa-certificate text-emerald-500 mr-2"></i> Proprietary datasets (e.g., DrugBank, TTD) retained under their respective licences—obtain access before running ETL.</li>
+                </ul>
+                <p class="text-sm text-slate-600">Unless otherwise noted, MedKG code is released under the <a href="https://github.com/chemplusx/MedKG/blob/master/LICENSE" target="_blank" class="text-teal-600 font-semibold">MIT License</a>.</p>
+            </div>
+        </section>
+
+        <!-- Contact -->
+        <section class="py-16 px-4 sm:px-6 lg:px-8 bg-white/70">
+            <div class="max-w-5xl mx-auto glass-panel rounded-3xl p-8 space-y-5 text-center">
+                <h2 class="text-2xl font-bold text-slate-900">Staying in touch</h2>
+                <p class="text-sm text-slate-600">Open an issue for feature requests, bug reports, or collaboration proposals. For institutional outreach, reference the project guide.</p>
+                <div class="flex flex-wrap justify-center gap-3">
+                    <a href="https://github.com/chemplusx/MedKG/issues" target="_blank" class="btn-primary-gradient text-sm">
+                        <i class="fab fa-github"></i> GitHub issues
+                    </a>
+                    <a href="https://github.com/chemplusx/MedKG/blob/master/medkg-api/static/contact.html" class="btn-outline text-sm" target="_blank">
+                        <i class="fas fa-envelope"></i> Contact template
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto grid lg:grid-cols-4 gap-8">
+            <div class="lg:col-span-2 space-y-4">
+                <div class="flex items-center gap-3">
+                    <span class="brand-pill"><i class="fas fa-heartbeat text-lg"></i></span>
+                    <div>
+                        <p class="text-sm uppercase tracking-wide text-slate-200/80">MedKG Project</p>
+                        <h3 class="text-lg font-semibold text-white">Biomedical knowledge graph research</h3>
+                    </div>
+                </div>
+                <p class="text-sm text-slate-200/80 leading-relaxed">
+                    Built by the Department of Pharmacoinformatics, NIPER SAS Nagar (Mohali), MedKG combines curated knowledge, graph tooling, and machine learning workflows for translational medicine.
+                </p>
+                <a href="https://github.com/chemplusx/MedKG" target="_blank" class="inline-flex items-center gap-2 text-sm font-semibold">
+                    <i class="fab fa-github text-lg"></i> GitHub repository
+                </a>
+            </div>
+            <div>
+                <h4 class="font-semibold text-white mb-3">Explore</h4>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="pipeline.html">Graph pipeline</a></li>
+                    <li><a href="analysis.html">MedLINK benchmarks</a></li>
+                    <li><a href="sources.html">Knowledge sources</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-semibold text-white mb-3">Connect</h4>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="https://github.com/chemplusx/MedKG/issues" target="_blank">GitHub issues</a></li>
+                    <li><a href="https://github.com/chemplusx/MedKG/tree/master/medkg-api/static" target="_blank">Demo interface assets</a></li>
+                    <li><a href="https://github.com/chemplusx/MedKG/blob/master/medkg-api/static/about-us.html" target="_blank">Legacy about page</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="border-t border-white/10 mt-10 pt-6 text-center text-xs text-slate-200/60">
+            &copy; 2025 MedKG. Open research infrastructure for biomedical knowledge graphs.
+        </div>
+    </footer>
+
+    <script src="assets/js/site.js"></script>
+</body>
+
+</html>
+
+

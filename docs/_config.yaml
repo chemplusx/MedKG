@@ -1,0 +1,69 @@
+# GitHub Pages configuration for MedKG showcase
+
+# Site metadata
+title: "MedKG"
+description: "Biomedical Knowledge Graph research platform from ChemPlusX"
+url: "https://chemplusx.github.io"
+baseurl: "/MedKG"
+
+# Repository
+repository: "chemplusx/MedKG"
+
+# Theme & plugins
+theme: minima
+plugins:
+  - jekyll-sitemap
+  - jekyll-feed
+  - jekyll-seo-tag
+
+# SEO
+author: "MedKG Research Team"
+twitter:
+  username: medkg
+  card: summary_large_image
+
+logo: /assets/images/medkg-logo.png
+
+# Social
+github_username: chemplusx
+
+# Build settings
+markdown: kramdown
+highlighter: rouge
+
+# Include / exclude
+include:
+  - assets
+  - .nojekyll
+
+exclude:
+  - vendor
+  - .bundle
+  - .sass-cache
+  - .jekyll-cache
+  - .jekyll-metadata
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - README.md
+
+# Collections
+collections:
+  pages:
+    output: true
+    permalink: /:name/
+
+liquid:
+  error_mode: warn
+  strict_filters: false
+  strict_variables: false
+
+# Defaults
+defaults:
+  - scope:
+      path: ""
+      type: "pages"
+    values:
+      layout: "default"
+
+

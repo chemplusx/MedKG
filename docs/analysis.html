@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Link Prediction – MedKG MedLINK Benchmarks</title>
+    <meta name="description"
+        content="Evaluate MedLINK graph learning benchmarks on the MedKG biomedical knowledge graph, including dataset composition and performance metrics.">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js" defer></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/site.css">
+</head>
+
+<body>
+    <header class="site-nav">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between py-4">
+                <a href="index.html" class="flex items-center gap-3">
+                    <span class="hero-logo">
+                        <img src="assets/images/medkg-logo.png" alt="MedKG logo">
+                    </span>
+                    <div>
+                        <p class="text-sm font-semibold text-slate-500 uppercase tracking-wide">MedKG</p>
+                        <h1 class="text-xl font-bold text-slate-900">MedLINK Benchmarks</h1>
+                    </div>
+                </a>
+
+                <nav class="hidden md:flex items-center gap-2 desktop-nav">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="pipeline.html" class="nav-link">Pipeline</a>
+                    <a href="analysis.html" class="nav-link active">Link Prediction</a>
+                    <a href="sources.html" class="nav-link">Sources</a>
+                    <a href="about.html" class="nav-link">About</a>
+                    <a href="https://github.com/chemplusx/MedKG" target="_blank" class="nav-link">
+                        <i class="fab fa-github mr-1"></i> GitHub
+                    </a>
+                </nav>
+
+                <button class="md:hidden text-slate-600" data-nav-toggle>
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+
+            <div class="mobile-nav hidden pb-4" data-mobile-nav>
+                <nav class="glass-panel rounded-2xl p-4 grid gap-2">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="pipeline.html" class="nav-link">Pipeline</a>
+                    <a href="analysis.html" class="nav-link active">Link Prediction</a>
+                    <a href="sources.html" class="nav-link">Sources</a>
+                    <a href="about.html" class="nav-link">About</a>
+                    <a href="https://github.com/chemplusx/MedKG" target="_blank" class="nav-link">
+                        <i class="fab fa-github mr-1"></i> GitHub
+                    </a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero -->
+        <section class="relative overflow-hidden pt-16 pb-16 px-4 sm:px-6 lg:px-8">
+            <div class="pattern-dot -top-16 right-10 opacity-70"></div>
+            <div class="pattern-dot alt bottom-0 left-0 opacity-50"></div>
+
+            <div class="max-w-7xl mx-auto relative z-10 space-y-10">
+                <div class="flex flex-wrap items-center gap-3">
+                    <span class="badge-soft brand"><i class="fas fa-project-diagram"></i> Graph ML</span>
+                    <span class="badge-soft neutral"><i class="fas fa-chart-line"></i> MedLINK benchmarks</span>
+                    <a href="https://link.springer.com/article/10.1007/s11030-025-11164-z" target="_blank" class="badge-soft accent"><i class="fas fa-award"></i> Molecular Diversity (2025)</a>
+                    <a href="#metrics" class="badge-soft neutral"><i class="fas fa-arrow-down"></i> Jump to metrics</a>
+                </div>
+
+                <div class="grid lg:grid-cols-2 gap-12 items-start">
+                    <div class="space-y-6">
+                        <h2 class="section-title leading-tight">Hybrid RGCN/GAT link prediction for drug–disease discovery</h2>
+                        <p class="text-lg text-slate-600 leading-relaxed">
+                            The published MedKG study in <em>Molecular Diversity</em> details how the MedLINK hybrid encoder (RGCN + GCN + GAT) recovers disease&ndash;drug relations using the curated exports provided here, with reproducible scripts and metrics tracked under <code>metrics/</code>.
+                        </p>
+                        <div class="glass-panel rounded-2xl p-6 grid sm:grid-cols-3 gap-4">
+                            <div>
+                                <p class="text-xs uppercase tracking-widest font-semibold text-slate-500">Nodes</p>
+                                <p class="text-2xl font-bold text-slate-900">51,236</p>
+                                <p class="text-xs text-slate-500">Drug + Disease</p>
+                            </div>
+                            <div>
+                                <p class="text-xs uppercase tracking-widest font-semibold text-slate-500">Edges</p>
+                                <p class="text-2xl font-bold text-slate-900">46,804</p>
+                                <p class="text-xs text-slate-500">Indications & contraindications</p>
+                            </div>
+                            <div>
+                                <p class="text-xs uppercase tracking-widest font-semibold text-slate-500">Relations</p>
+                                <p class="text-2xl font-bold text-slate-900">3 types</p>
+                                <p class="text-xs text-slate-500">Indication, off-label, contraindication</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="glass-panel rounded-3xl p-8 space-y-5">
+                        <div class="pill-icon"><i class="fas fa-lightbulb text-xl"></i></div>
+                        <h3 class="text-xl font-semibold text-slate-900">Why MedLINK?</h3>
+                        <ul class="space-y-3 text-slate-600">
+                            <li><i class="fas fa-check text-emerald-500 mr-2"></i> Reproducible CSV exports and training scripts.</li>
+                            <li><i class="fas fa-check text-emerald-500 mr-2"></i> Comparisons against vanilla RGCN baseline.</li>
+                            <li><i class="fas fa-check text-emerald-500 mr-2"></i> Metrics logged to `metrics/` (CSV + PNG charts).</li>
+                        </ul>
+                        <a href="https://github.com/chemplusx/MedKG/tree/master/medlink" target="_blank"
+                            class="btn-primary-gradient text-sm"><i class="fab fa-github"></i> Browse MedLINK module</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Dataset composition -->
+        <section class="py-16 px-4 sm:px-6 lg:px-8 bg-white/70">
+            <div class="max-w-7xl mx-auto glass-panel rounded-3xl p-8 space-y-6">
+                <h2 class="text-2xl font-bold text-slate-900">Dataset snapshot</h2>
+                <p class="text-slate-600 text-sm">Summary derived from <code>data/nodes_dd.csv</code> and <code>data/edges_dd.csv</code>, matching the MedLINK dataset described by Kumari et&nbsp;al. in <a href="https://link.springer.com/article/10.1007/s11030-025-11164-z" target="_blank" class="text-teal-600 font-semibold">Molecular Diversity (2025)</a>.</p>
+
+                <div class="stat-grid">
+                    <div class="stat-card">
+                        <p>Unique node labels</p>
+                        <h3>2</h3>
+                        <p class="mt-2 text-xs text-slate-500">`Drug`, `Disease`</p>
+                    </div>
+                    <div class="stat-card">
+                        <p>Unique relation types</p>
+                        <h3>3</h3>
+                        <p class="mt-2 text-xs text-slate-500">`IS_AN_INDICATION_FOR`, `AN_OFF_LABEL_USE_FOR`, `IS_A_CONTRAINDICATION_FOR`</p>
+                    </div>
+                    <div class="stat-card">
+                        <p>Largest relation</p>
+                        <h3>33,984</h3>
+                        <p class="mt-2 text-xs text-slate-500">`IS_A_CONTRAINDICATION_FOR` edges</p>
+                    </div>
+                    <div class="stat-card">
+                        <p>Metadata richness</p>
+                        <h3>JSON props</h3>
+                        <p class="mt-2 text-xs text-slate-500">Drug nodes embed DrugBank annotations</p>
+                    </div>
+                </div>
+
+                <p class="text-sm text-slate-600">Exports use Latin-1 encoding and embed rich JSON properties for downstream feature engineering.</p>
+            </div>
+        </section>
+
+        <!-- Metrics -->
+        <section id="metrics" class="py-16 px-4 sm:px-6 lg:px-8">
+            <div class="max-w-7xl mx-auto space-y-8">
+                <div class="text-center space-y-3">
+                    <h2 class="section-title">Benchmark results</h2>
+                    <p class="section-subtitle">Performance comparisons are captured under <code>metrics/</code> as CSV logs and publication-ready images.</p>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="glass-panel rounded-3xl overflow-hidden">
+                        <img src="assets/images/test-auc.png" alt="Test AUC evolution for MedLINK vs baseline" class="w-full">
+                    </div>
+                    <div class="glass-panel rounded-3xl overflow-hidden">
+                        <img src="assets/images/test-mrr.png" alt="Test MRR evolution for MedLINK vs baseline" class="w-full">
+                    </div>
+                    <div class="glass-panel rounded-3xl overflow-hidden">
+                        <img src="assets/images/train-auc.png" alt="Training AUC progression" class="w-full">
+                    </div>
+                    <div class="glass-panel rounded-3xl overflow-hidden">
+                        <img src="assets/images/train-loss.png" alt="Training loss curves" class="w-full">
+                    </div>
+                </div>
+
+                <div class="table-card glass-panel">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Model</th>
+                                <th>Best Test AUC</th>
+                                <th>Best Test MRR</th>
+                                <th>Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Med-LINK hybrid (GCN + GAT + RGCN)</strong></td>
+                                <td>0.9873</td>
+                                <td>0.0154</td>
+                                <td>Significant AUC uplift with hybrid encoder as reported in <em>Molecular Diversity</em>; MRR remains low due to class imbalance.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Conventional RGCN baseline</strong></td>
+                                <td>0.7610</td>
+                                <td>0.0532</td>
+                                <td>Higher rank-based MRR but substantially lower AUC.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="glass-panel rounded-2xl p-6 flex flex-col lg:flex-row gap-6 items-start lg:items-center">
+                    <div class="flex-1 space-y-2">
+                        <span class="badge-soft brand"><i class="fas fa-award"></i> Peer-reviewed</span>
+                        <h3 class="text-lg font-semibold text-slate-900">MedLINK results in print</h3>
+                        <p class="text-sm text-slate-600">The hybrid model, dataset design, and evaluation protocol are documented in <em>Molecular Diversity</em>, providing an auditable benchmark for future graph learning research.</p>
+                    </div>
+                    <div class="flex gap-2">
+                        <a href="https://link.springer.com/article/10.1007/s11030-025-11164-z" target="_blank" class="btn-outline text-xs"><i class="fas fa-external-link-alt"></i> Journal article</a>
+                    </div>
+                </div>
+
+                <p class="text-sm text-slate-500 text-center">AUC values pulled from <code>metrics/test_auc.csv</code>; MRR values from <code>metrics/test_mrr.csv</code>.</p>
+            </div>
+        </section>
+
+        <!-- How to run -->
+        <section class="py-16 px-4 sm:px-6 lg:px-8 bg-white/70">
+            <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-8">
+                <div class="glass-panel rounded-3xl p-8 space-y-5">
+                    <span class="chip"><i class="fas fa-terminal"></i> Training</span>
+                    <h3 class="text-xl font-semibold text-slate-900">Run the experiment</h3>
+                    <pre class="code-block"><code>cd medlink
+python link_prediction.py \
+  --epochs 1000 \
+  --use_wandb 0 \
+  --batch_size 1024</code></pre>
+                    <p class="text-sm text-slate-600">Override arguments inside <code>link_prediction.py</code> (e.g., number of layers, hidden size, dropout) to reproduce experiments.</p>
+                </div>
+                <div class="glass-panel rounded-3xl p-8 space-y-5">
+                    <span class="chip neutral"><i class="fas fa-lightbulb"></i> Tips</span>
+                    <ul class="space-y-3 text-slate-600">
+                        <li><i class="fas fa-check text-emerald-500 mr-2"></i> Use <code>MEDKG_DATA</code> to point at the folder containing <code>nodes_dd.csv</code> and <code>edges_dd.csv</code>.</li>
+                        <li><i class="fas fa-check text-emerald-500 mr-2"></i> Enable Weights & Biases logging by setting <code>use_wandb</code> to <code>1</code>.</li>
+                        <li><i class="fas fa-check text-emerald-500 mr-2"></i> Saved models (`best_model.pth`) can be loaded to score novel drug/disease pairs via helper functions in the script.</li>
+                        <li><i class="fas fa-check text-emerald-500 mr-2"></i> Evaluate additional metrics by extending the CSV logging in <code>metrics/</code>.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Resources -->
+        <section class="py-16 px-4 sm:px-6 lg:px-8">
+            <div class="max-w-7xl mx-auto glass-panel rounded-3xl p-8 space-y-6">
+                <div class="flex flex-wrap justify-between items-center gap-4">
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-900">Resources & extensions</h2>
+                        <p class="text-sm text-slate-600">Build on top of MedLINK or integrate additional graph learning tasks.</p>
+                    </div>
+                    <a href="https://github.com/chemplusx/MedKG/issues" target="_blank" class="btn-outline text-sm">
+                        <i class="fas fa-comment-dots"></i> Share results
+                    </a>
+                </div>
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="glass-panel rounded-2xl p-6 space-y-3">
+                        <div class="pill-icon w-12 h-12 text-lg"><i class="fas fa-book"></i></div>
+                        <h3 class="text-lg font-semibold text-slate-900">MedLINK README</h3>
+                        <p class="text-sm text-slate-600">Step-by-step instructions, model architecture details, and inference helpers.</p>
+                        <a href="https://github.com/chemplusx/MedKG/blob/master/medlink/README.md" target="_blank"
+                            class="text-sm font-semibold text-teal-600 inline-flex items-center gap-2">Read guide <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                    <div class="glass-panel rounded-2xl p-6 space-y-3">
+                        <div class="pill-icon w-12 h-12 text-lg"><i class="fas fa-database"></i></div>
+                        <h3 class="text-lg font-semibold text-slate-900">PrimeKG connectors</h3>
+                        <p class="text-sm text-slate-600">Load open datasets into Neo4j/Nebula to expand the training corpus.</p>
+                        <a href="pipeline.html#domains" class="text-sm font-semibold text-teal-600 inline-flex items-center gap-2">View connectors <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                    <div class="glass-panel rounded-2xl p-6 space-y-3">
+                        <div class="pill-icon w-12 h-12 text-lg"><i class="fas fa-chart-area"></i></div>
+                        <h3 class="text-lg font-semibold text-slate-900">Custom dashboards</h3>
+                        <p class="text-sm text-slate-600">Use `metrics/*.csv` with your favourite plotting tool to extend monitoring.</p>
+                        <a href="analysis.html#metrics" class="text-sm font-semibold text-teal-600 inline-flex items-center gap-2">Use CSV logs <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto grid lg:grid-cols-4 gap-8">
+            <div class="lg:col-span-2 space-y-4">
+                <div class="flex items-center gap-3">
+                    <span class="brand-pill"><i class="fas fa-project-diagram text-lg"></i></span>
+                    <div>
+                        <p class="text-sm uppercase tracking-wide text-slate-200/80">MedLINK Benchmarks</p>
+                        <h3 class="text-lg font-semibold text-white">Quantifying graph learning on MedKG</h3>
+                    </div>
+                </div>
+                <p class="text-sm text-slate-200/80 leading-relaxed">
+                    MedLINK provides a reproducible starting point for drug–disease link prediction, with annotated datasets, scripts, and ready-to-share metrics.
+                </p>
+                <a href="https://github.com/chemplusx/MedKG" target="_blank" class="inline-flex items-center gap-2 text-sm font-semibold">
+                    <i class="fab fa-github text-lg"></i> GitHub repository
+                </a>
+            </div>
+            <div>
+                <h4 class="font-semibold text-white mb-3">Sections</h4>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="#metrics">Performance graphs</a></li>
+                    <li><a href="#metrics">Metric table</a></li>
+                    <li><a href="#metrics">Dataset snapshot</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-semibold text-white mb-3">Next steps</h4>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="pipeline.html">Return to pipeline</a></li>
+                    <li><a href="sources.html">Explore data sources</a></li>
+                    <li><a href="about.html">Learn about the project</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="border-t border-white/10 mt-10 pt-6 text-center text-xs text-slate-200/60">
+            &copy; 2025 MedKG. Open research infrastructure for biomedical knowledge graphs.
+        </div>
+    </footer>
+
+    <script src="assets/js/site.js"></script>
+</body>
+
+</html>
+
+
