@@ -397,6 +397,20 @@ main > section {
     position: relative;
 }
 
+.team-avatar {
+    width: 4.5rem;
+    height: 4.5rem;
+    border-radius: 1.5rem;
+    background: linear-gradient(135deg, rgba(13, 148, 136, 0.85), rgba(3, 105, 161, 0.85));
+    color: white;
+    font-weight: 700;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 20px rgba(13, 148, 136, 0.35);
+}
+
 @media (max-width: 768px) {
     .site-nav .desktop-nav {
         display: none;
